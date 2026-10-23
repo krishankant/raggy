@@ -41,3 +41,11 @@ def test_ingest_paths_still_works(tmp_path):
     (docs / "one.md").write_text("Refunds are paid back within 14 days.")
     report = make(tmp_path).ingest([str(docs)])
     assert (report.documents, report.chunks, report.skipped) == (1, 1, [])
+
+
+def test_ingest_documents_reports_progress(tmp_path):
+    seen = []
+    r = make(tmp_path, chunk_size=10, overlap=0)
+    r.ingest_documents([Document("a", "x" * 30), Document("b", "y" * 20)], batch_size=3,
+                       progress=lambda done, total: seen.append((done, total)))
+    assert seen == [(3, 5), (5, 5)]  # chunks embedded so far, out of all chunks

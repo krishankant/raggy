@@ -123,12 +123,15 @@ def _eval(args, config: Config) -> int:
     answers = not args.retrieval_only and suite.answers
     judge = _build_judge(config) if answers and not args.no_judge else None
 
-    def progress(i: int, total: int) -> None:
-        print(f"\r  question {i}/{total}", end="" if i < total else "\n", file=sys.stderr, flush=True)
+    def counter(what: str):
+        def show(i: int, total: int) -> None:
+            print(f"\r  {what} {i}/{total}", end="" if i < total else "\n", file=sys.stderr, flush=True)
+        return show
 
     try:
         run = run_suite(suite, raggy, judge, answers=answers, limit=args.limit,
-                        label=args.label, progress=progress)
+                        label=args.label, progress=counter("question"),
+                        ingest_progress=counter("embedded chunks"))
     except (DatasetError, GoldNotFoundError) as e:
         print(f"error: {e}", file=sys.stderr)
         return 1

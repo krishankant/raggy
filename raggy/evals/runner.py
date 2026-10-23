@@ -26,7 +26,8 @@ from raggy.types import Document
 SAVED_HITS = 10  # retrieved items kept per question in the run file
 
 
-def prepare_index(suite: Suite, raggy: Raggy, docs: list[Document] | None = None) -> dict:
+def prepare_index(suite: Suite, raggy: Raggy, docs: list[Document] | None = None,
+                  progress: Callable[[int, int], None] | None = None) -> dict:
     """Build the suite's index, or reuse it if nothing that shapes it has changed."""
     c = raggy.config
     key = {"fingerprint": suite.fingerprint(), "embedder": raggy.embedder.name,
@@ -38,7 +39,7 @@ def prepare_index(suite: Suite, raggy: Raggy, docs: list[Document] | None = None
     if c.index_dir.exists():
         shutil.rmtree(c.index_dir)  # stale: built from other data or settings
     t0 = time.perf_counter()
-    report = raggy.ingest_documents(docs if docs is not None else suite.documents())
+    report = raggy.ingest_documents(docs if docs is not None else suite.documents(), progress=progress)
     seconds = time.perf_counter() - t0
     key_file.write_text(json.dumps(key, indent=2))
     return {"cached": False, "documents": report.documents, "chunks": report.chunks,
@@ -76,13 +77,14 @@ def _aggregate(records: list[dict]) -> dict:
 
 def run_suite(suite: Suite, raggy: Raggy, judge: Judge | None, *, answers: bool = True,
               limit: int | None = None, label: str = "",
-              progress: Callable[[int, int], None] | None = None) -> dict:
+              progress: Callable[[int, int], None] | None = None,
+              ingest_progress: Callable[[int, int], None] | None = None) -> dict:
     answers = answers and suite.answers
     judge = judge if answers else None
     docs = suite.documents()
     questions = suite.questions()[:limit] if limit else suite.questions()
     gold = resolve_gold(questions, docs)  # fail now, not after 300 model calls
-    ingest = prepare_index(suite, raggy, docs)
+    ingest = prepare_index(suite, raggy, docs, ingest_progress)
 
     n = max(suite.ks)
     fetch = n * 3 if suite.unit == "document" else n  # extra chunks to fill n distinct documents

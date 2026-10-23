@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from typing import Callable
 
 from raggy.chunking.fixed import chunk_fixed
 from raggy.config import Config
@@ -64,30 +65,34 @@ class Raggy:
         report.skipped = skipped
         return report
 
-    def ingest_documents(self, docs: list[Document], batch_size: int = 256) -> IngestReport:
+    def ingest_documents(self, docs: list[Document], batch_size: int = 256,
+                         progress: Callable[[int, int], None] | None = None) -> IngestReport:
         """Chunk, embed and store documents, embedding many chunks per model call.
 
         One model call per batch is much faster than one per document. A
         document's chunks always stay in one batch, because ``store.add``
-        replaces everything from a source it sees again.
+        replaces everything from a source it sees again. ``progress`` is
+        called after each batch with (chunks embedded, total chunks).
         """
         report = IngestReport()
         store = self._open_store()
+        chunked = [c for c in (chunk_fixed(d, self.config.chunk_size, self.config.chunk_overlap)
+                               for d in docs) if c]  # chunking is cheap; embedding is the slow part
+        total = sum(len(c) for c in chunked)
         batch: list[Chunk] = []
 
         def flush() -> None:
             if batch:
                 vectors = self.embedder.embed_documents([c.text for c in batch])
                 store.add(batch, vectors, embedder_name=self.embedder.name)
+                report.chunks += len(batch)
                 batch.clear()
+                if progress:
+                    progress(report.chunks, total)
 
-        for doc in docs:
-            chunks = chunk_fixed(doc, self.config.chunk_size, self.config.chunk_overlap)
-            if not chunks:
-                continue
+        for chunks in chunked:
             batch.extend(chunks)
             report.documents += 1
-            report.chunks += len(chunks)
             if len(batch) >= batch_size:
                 flush()
         flush()
