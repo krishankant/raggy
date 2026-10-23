@@ -58,3 +58,11 @@ def test_cli_search_shows_scores(monkeypatch, tmp_path, docs, capsys):
     cli.main(["ingest", str(docs)])
     assert cli.main(["search", "refunds"]) == 0
     assert "refunds.md" in capsys.readouterr().out
+
+
+@pytest.mark.parametrize("k", ["0", "-1", "two"])
+def test_cli_rejects_bad_k(monkeypatch, tmp_path, k):
+    use_fakes(monkeypatch, tmp_path, FakeLLM())
+    with pytest.raises(SystemExit) as exc:
+        cli.main(["search", "refunds", "-k", k])
+    assert exc.value.code == 2

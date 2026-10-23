@@ -84,3 +84,10 @@ def test_store_save_empty_then_add(tmp_path):
     s = NumpyStore.load(tmp_path)
     add(s, "a.md", ["hello there"])
     assert len(s) == 1
+
+
+def test_store_non_positive_k_returns_nothing(tmp_path):
+    s = NumpyStore(tmp_path)
+    add(s, "a.md", ["one", "two", "three"])
+    assert s.search(E.embed_query("one"), k=0, embedder_name=E.name) == []
+    assert s.search(E.embed_query("one"), k=-1, embedder_name=E.name) == []

@@ -10,7 +10,7 @@
 
 **You're done when:**
 
-1. `uv run pytest` passes (44 tests, offline, no keys needed), and
+1. `uv run pytest` passes (48 tests, offline, no keys needed), and
 2. you've indexed the sample corpus, asked it a question it can answer and one it can't, and can explain every stage that ran in between.
 
 ## 1. Read first
@@ -275,7 +275,7 @@ Useful flags: `-k 6` retrieves more chunks, `--show-context` prints the retrieve
 | Numbered sources + `[n]` citations | Every claim can be traced to a passage | The model can still cite the wrong number (week 8) |
 | A fixed not-found sentence | Lets code and evals recognise a refusal | Small models don't always reply with it exactly (seen above) |
 | Interfaces for embedder, store and LLM | Each later week swaps one piece and leaves the others alone | A little indirection |
-| Fakes in tests | 44 tests in about a second, with no network or keys | Fakes can't test answer *quality*; that's what evals are for (week 2) |
+| Fakes in tests | 48 tests in about a second, with no network or keys | Fakes can't test answer *quality*; that's what evals are for (week 2) |
 
 ## 6. What breaks, and which week fixes it
 

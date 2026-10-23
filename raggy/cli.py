@@ -16,6 +16,13 @@ def _build_raggy(config: Config) -> Raggy:  # tests replace this to inject fakes
     return Raggy(config)
 
 
+def _positive_int(value: str) -> int:
+    n = int(value) if value.lstrip("-").isdigit() else 0
+    if n < 1:
+        raise argparse.ArgumentTypeError(f"must be a whole number of 1 or more, got {value!r}")
+    return n
+
+
 def _parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="raggy", description="Ask questions about your documents.")
     sub = p.add_subparsers(dest="command", required=True)
@@ -23,10 +30,10 @@ def _parser() -> argparse.ArgumentParser:
     ing.add_argument("paths", nargs="+")
     s = sub.add_parser("search", help="show the chunks retrieval finds, with scores")
     s.add_argument("query")
-    s.add_argument("-k", type=int, default=None)
+    s.add_argument("-k", type=_positive_int, default=None)
     a = sub.add_parser("ask", help="answer a question with citations")
     a.add_argument("question")
-    a.add_argument("-k", type=int, default=None)
+    a.add_argument("-k", type=_positive_int, default=None)
     a.add_argument("--show-context", action="store_true", help="also print the retrieved chunks")
     sub.add_parser("sources", help="list indexed sources")
     return p

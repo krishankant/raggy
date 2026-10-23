@@ -67,7 +67,7 @@ class NumpyStore:
 
     def search(self, query_vec: np.ndarray, k: int, embedder_name: str) -> list[Hit]:
         self._check(embedder_name)
-        if not self.chunks:
+        if not self.chunks or k < 1:
             return []
         scores = self.vectors @ np.asarray(query_vec, dtype=np.float32)  # cosine: rows are unit length
         k = min(k, len(scores))
