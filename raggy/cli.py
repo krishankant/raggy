@@ -122,6 +122,8 @@ def _eval(args, config: Config) -> int:
     suite = SUITES[args.suite]()
     answers = not args.retrieval_only and suite.answers
     judge = _build_judge(config) if answers and not args.no_judge else None
+    if judge is not None:  # say which model grades, before spending minutes on it
+        print(f"judge: {judge.name} (set RAGGY_JUDGE / RAGGY_JUDGE_MODEL to change)", file=sys.stderr)
 
     def counter(what: str):
         def show(i: int, total: int) -> None:

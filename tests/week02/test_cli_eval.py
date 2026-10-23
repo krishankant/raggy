@@ -53,3 +53,9 @@ def test_cli_compare(env, tmp_path, capsys):
     b = save_run(run_suite(tiny_suite(), make_raggy(tmp_path / "i2"), None, label="b"), tmp_path / "r")
     assert cli.main(["compare", str(a), str(b)]) == 0
     assert "recall@1" in capsys.readouterr().out
+
+
+def test_cli_eval_announces_judge_before_running(env, tmp_path, capsys):
+    cli.main(["eval", "--suite", "tiny", "--out", str(tmp_path / "runs")])
+    err = capsys.readouterr().err
+    assert "judge: fake:scripted" in err and "RAGGY_JUDGE" in err
