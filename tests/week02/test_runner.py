@@ -62,3 +62,8 @@ def test_run_document_unit_collapses(tmp_path):
 def test_limit_takes_first_questions(tmp_path, suite):
     run = run_suite(suite, make_raggy(tmp_path / "idx"), None, answers=False, limit=1)
     assert [q["id"] for q in run["questions"]] == ["a1"]
+
+
+def test_metric_order_is_recall_mrr_ndcg(tmp_path, suite):
+    keys = list(run_suite(suite, make_raggy(tmp_path / "idx"), None, answers=False)["metrics"])
+    assert keys[:5] == ["recall@1", "recall@2", "mrr", "ndcg@1", "ndcg@2"]

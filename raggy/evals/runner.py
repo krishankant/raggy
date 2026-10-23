@@ -55,8 +55,9 @@ def _git_commit() -> str | None:
 
 def _aggregate(records: list[dict]) -> dict:
     answerable = [r for r in records if r["answerable"]]
+    order = {"recall": 0, "mrr": 1, "ndcg": 2}  # recall first: did we find it at all?
     keys = sorted({k for r in answerable for k in r.get("retrieval", {})},
-                  key=lambda k: (k.split("@")[0], int(k.split("@")[1]) if "@" in k else 0))
+                  key=lambda k: (order[k.split("@")[0]], int(k.split("@")[1]) if "@" in k else 0))
     m: dict = {k: mean(r["retrieval"][k] for r in answerable if "retrieval" in r) for k in keys}
     judged = [r["judge"] for r in answerable if r.get("judge")]
     m["correctness"] = mean(j["correctness"] for j in judged)
