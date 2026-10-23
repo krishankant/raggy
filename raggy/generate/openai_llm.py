@@ -24,6 +24,8 @@ class OpenAILLM:
                 base_url=self._base_url,
                 api_key=self._api_key,
                 max_retries=0 if self.provider == "ollama" else 2,
+                # a cold local model can take ~30 s just to load on a small laptop
+                timeout=300 if self.provider == "ollama" else 120,
             )
         return self._client
 
@@ -35,11 +37,18 @@ class OpenAILLM:
     def complete(self, system: str, user: str) -> str:
         import openai
 
+        extra = {}
+        if self.provider == "ollama":
+            # Small local "thinking" models (qwen3.5, gemma4…) can reason for
+            # minutes before answering. Grounded RAG answers don't need it:
+            # on an 8 GB M2 this took a reply from a timeout to under 2 s.
+            extra["reasoning_effort"] = "none"
         try:
             response = self._get_client().chat.completions.create(
                 model=self.model,
                 messages=[{"role": "system", "content": system},
                           {"role": "user", "content": user}],
+                **extra,
             )
         except openai.OpenAIError as e:  # connection, auth, missing model, rate limit
             raise LLMError(f"{self.provider} request failed ({type(e).__name__}): {self._hint()}") from e
