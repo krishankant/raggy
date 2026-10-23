@@ -6,7 +6,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from raggy.config import Config
+from raggy.config import Config, ConfigError
 from raggy.generate.llm import LLMError
 from raggy.pipeline import Raggy
 from raggy.store.numpy_store import EmbedderMismatchError, IndexNotFoundError
@@ -48,7 +48,12 @@ def _print_hits(hits) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     args = _parser().parse_args(argv)
-    raggy = _build_raggy(Config.from_env())
+    try:
+        config = Config.from_env()
+    except ConfigError as e:
+        print(f"error: {e}", file=sys.stderr)
+        return 1
+    raggy = _build_raggy(config)
     try:
         if args.command == "ingest":
             r = raggy.ingest(args.paths)

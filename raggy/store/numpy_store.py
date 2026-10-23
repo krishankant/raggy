@@ -50,8 +50,12 @@ class NumpyStore:
     def add(self, chunks: list[Chunk], vectors: np.ndarray, embedder_name: str) -> None:
         """Add chunks, first removing any existing chunks from the same sources."""
         self._check(embedder_name)
-        for source in {c.source for c in chunks}:
-            self.remove_source(source)
+        incoming = {c.source for c in chunks}
+        stored = {c.source for c in self.chunks}
+        if incoming & stored:  # only re-ingest pays for the removal scan
+            keep = [i for i, c in enumerate(self.chunks) if c.source not in incoming]
+            self.chunks = [self.chunks[i] for i in keep]
+            self.vectors = self.vectors[keep] if self.vectors is not None else None
         vectors = np.asarray(vectors, dtype=np.float32)
         self.vectors = vectors if self.vectors is None else np.vstack([self.vectors, vectors])
         self.chunks.extend(chunks)

@@ -15,7 +15,7 @@ from raggy.generate.answer import generate_answer
 from raggy.generate.llm import LLM, make_llm
 from raggy.ingest.loaders import load_path
 from raggy.store.numpy_store import IndexNotFoundError, NumpyStore
-from raggy.types import Answer, Hit
+from raggy.types import Answer, Chunk, Document, Hit
 
 
 @dataclass
@@ -54,22 +54,43 @@ class Raggy:
             return NumpyStore(self.config.index_dir)
 
     def ingest(self, paths: list[str]) -> IngestReport:
-        report = IngestReport()
-        store = self._open_store()
+        docs, skipped = [], []
         for path in paths:
             try:
-                docs = load_path(path)
+                docs.extend(load_path(path))
             except FileNotFoundError:
-                report.skipped.append(path)
+                skipped.append(path)
+        report = self.ingest_documents(docs)
+        report.skipped = skipped
+        return report
+
+    def ingest_documents(self, docs: list[Document], batch_size: int = 256) -> IngestReport:
+        """Chunk, embed and store documents, embedding many chunks per model call.
+
+        One model call per batch is much faster than one per document. A
+        document's chunks always stay in one batch, because ``store.add``
+        replaces everything from a source it sees again.
+        """
+        report = IngestReport()
+        store = self._open_store()
+        batch: list[Chunk] = []
+
+        def flush() -> None:
+            if batch:
+                vectors = self.embedder.embed_documents([c.text for c in batch])
+                store.add(batch, vectors, embedder_name=self.embedder.name)
+                batch.clear()
+
+        for doc in docs:
+            chunks = chunk_fixed(doc, self.config.chunk_size, self.config.chunk_overlap)
+            if not chunks:
                 continue
-            for doc in docs:
-                chunks = chunk_fixed(doc, self.config.chunk_size, self.config.chunk_overlap)
-                if not chunks:
-                    continue
-                vectors = self.embedder.embed_documents([c.text for c in chunks])
-                store.add(chunks, vectors, embedder_name=self.embedder.name)
-                report.documents += 1
-                report.chunks += len(chunks)
+            batch.extend(chunks)
+            report.documents += 1
+            report.chunks += len(chunks)
+            if len(batch) >= batch_size:
+                flush()
+        flush()
         store.save()
         return report
 
