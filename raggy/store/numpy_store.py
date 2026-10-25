@@ -44,7 +44,8 @@ class NumpyStore:
             raise EmbedderMismatchError(
                 f"index was built with '{self.embedder}' but this run uses "
                 f"'{embedder_name}'. Vectors from different models can't be compared: "
-                f"re-ingest, or set RAGGY_EMBED_MODEL={self.embedder}."
+                f"delete the index folder {self.path} and ingest again, "
+                f"or set RAGGY_EMBED_MODEL={self.embedder}."
             )
 
     def add(self, chunks: list[Chunk], vectors: np.ndarray, embedder_name: str) -> None:

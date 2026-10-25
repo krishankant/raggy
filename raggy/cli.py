@@ -34,8 +34,9 @@ def _positive_int(value: str) -> int:
 def _parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="raggy", description="Ask questions about your documents.")
     sub = p.add_subparsers(dest="command", required=True)
-    ing = sub.add_parser("ingest", help="index files or folders")
+    ing = sub.add_parser("ingest", help="index files, folders or URLs (re-runs only redo what changed)")
     ing.add_argument("paths", nargs="+")
+    ing.add_argument("--full", action="store_true", help="re-read every file instead of trusting size and mtime")
     s = sub.add_parser("search", help="show the chunks retrieval finds, with scores")
     s.add_argument("query")
     s.add_argument("-k", type=_positive_int, default=None)
@@ -44,6 +45,8 @@ def _parser() -> argparse.ArgumentParser:
     a.add_argument("-k", type=_positive_int, default=None)
     a.add_argument("--show-context", action="store_true", help="also print the retrieved chunks")
     sub.add_parser("sources", help="list indexed sources")
+    rm = sub.add_parser("remove", help="drop a source, or everything under a folder or URL, from the index")
+    rm.add_argument("target")
     from raggy.evals.suites import SUITES
 
     e = sub.add_parser("eval", help="measure retrieval and answer quality on an eval suite")
@@ -59,10 +62,17 @@ def _parser() -> argparse.ArgumentParser:
     return p
 
 
+def display_source(source: str) -> str:
+    """A URL is shown whole; a file by its name."""
+    from raggy.ingest.fetch import is_url
+
+    return source if is_url(source) else Path(source).name
+
+
 def _print_hits(hits) -> None:
     for n, h in enumerate(hits, start=1):
         text = " ".join(h.chunk.text.split())
-        print(f"[{n}] {h.score:.3f}  {Path(h.chunk.source).name} (chunk {h.chunk.index})")
+        print(f"[{n}] {h.score:.3f}  {display_source(h.chunk.source)} (chunk {h.chunk.index})")
         print(f"    {text[:200]}{'…' if len(text) > 200 else ''}")
 
 
@@ -76,10 +86,19 @@ def main(argv: list[str] | None = None) -> int:
     raggy = _build_raggy(config)
     try:
         if args.command == "ingest":
-            r = raggy.ingest(args.paths)
-            print(f"Indexed {r.documents} documents as {r.chunks} chunks into {raggy.config.index_dir}")
+            def show(done: int, total: int) -> None:
+                print(f"\r  embedded chunks {done}/{total}", end="" if done < total else "\n",
+                      file=sys.stderr, flush=True)
+
+            r = raggy.ingest(args.paths, full=args.full, progress=show)
+            print(f"Indexed into {raggy.config.index_dir}: {r.added} added, {r.updated} updated, "
+                  f"{r.unchanged} unchanged, {r.removed} removed, {r.duplicates} duplicates, "
+                  f"{len(r.failed)} failed ({r.chunks} chunks embedded)")
+            for source, reason in r.failed:
+                print(f"failed: {reason}", file=sys.stderr)
             for path in r.skipped:
-                print(f"skipped (not found): {path}", file=sys.stderr)
+                print(f"not found: {path} (nothing removed; `raggy remove {path}` drops what it held)",
+                      file=sys.stderr)
         elif args.command == "search":
             _print_hits(raggy.search(args.query, args.k))
         elif args.command == "ask":
@@ -91,10 +110,19 @@ def main(argv: list[str] | None = None) -> int:
             if answer.citations:
                 print("\nSources:")
                 for c in answer.citations:
-                    print(f"[{c.number}] {Path(c.source).name} — \"{c.snippet[:100]}…\"")
+                    print(f"[{c.number}] {display_source(c.source)} — \"{c.snippet[:100]}…\"")
         elif args.command == "sources":
-            for source, count in sorted(raggy.sources().items()):
-                print(f"{count:5d} chunks  {source}")
+            counts = raggy.sources()  # raises IndexNotFoundError before anything is ingested
+            records = raggy.documents()
+            if not records:  # an index built before week 3 has no registry
+                for source, count in sorted(counts.items()):
+                    print(f"{count:5d} chunks  {source}")
+            for rec in records:
+                note = f"dup of {display_source(rec.duplicate_of)}" if rec.duplicate_of else f"{rec.chunks:5d} chunks"
+                print(f"{note:>16}  {rec.doc_type or '?':8}  {(rec.title or '')[:40]:40}  {rec.source}")
+        elif args.command == "remove":
+            n = raggy.remove(args.target)
+            print(f"Removed {n} source{'s' if n != 1 else ''} from the index (files on disk are untouched)")
         elif args.command == "eval":
             return _eval(args, raggy.config)
         elif args.command == "compare":

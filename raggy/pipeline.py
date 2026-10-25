@@ -1,29 +1,62 @@
 """The whole RAG pipeline in one place.
 
-    ingest:  path ─► load ─► chunk ─► embed ─► store (on disk)
+    ingest:  paths/URLs ─► registry: what changed? ─► load ─► dedupe ─► chunk ─► embed ─► store
     ask:     question ─► embed ─► search store ─► prompt + LLM ─► cited answer
 """
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+import json
+import os
+from dataclasses import dataclass, field, replace
+from datetime import datetime, timezone
+from pathlib import Path
 from typing import Callable
+
+import numpy as np
 
 from raggy.chunking.fixed import chunk_fixed
 from raggy.config import Config
 from raggy.embed.base import Embedder
 from raggy.generate.answer import generate_answer
 from raggy.generate.llm import LLM, make_llm
-from raggy.ingest.loaders import load_path
+from raggy.ingest.dedupe import DuplicateIndex, content_hash, minhash
+from raggy.ingest.fetch import fetch_url, is_url
+from raggy.ingest.loaders import LoadError, load_file, load_path
+from raggy.ingest.normalize import NORMALIZE_VERSION
+from raggy.ingest.registry import Record, Registry
+from raggy.ingest.walk import iter_files
 from raggy.store.numpy_store import IndexNotFoundError, NumpyStore
 from raggy.types import Answer, Chunk, Document, Hit
 
 
 @dataclass
 class IngestReport:
-    documents: int = 0
-    chunks: int = 0
-    skipped: list[str] = field(default_factory=list)
+    documents: int = 0  # documents embedded this run
+    chunks: int = 0  # chunks embedded this run
+    skipped: list[str] = field(default_factory=list)  # targets that don't exist
+    added: int = 0
+    updated: int = 0
+    unchanged: int = 0
+    removed: int = 0
+    duplicates: int = 0
+    failed: list[tuple[str, str]] = field(default_factory=list)  # (source, reason)
+
+
+def pipeline_key(config: Config, embedder_name: str) -> str:
+    """Every setting that changes what a source's chunks look like. A source
+    indexed under a different key is re-indexed even if its bytes are the same."""
+    return json.dumps({"embedder": embedder_name, "chunk_size": config.chunk_size,
+                       "chunk_overlap": config.chunk_overlap, "html_extract": config.html_extract,
+                       "normalize": NORMALIZE_VERSION, "dedupe": config.dedupe}, sort_keys=True)
+
+
+def _now() -> str:
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def _signature(rec: Record) -> np.ndarray | None:
+    return None if rec.signature is None else np.frombuffer(rec.signature, dtype=np.uint64)
 
 
 class Raggy:
@@ -54,19 +87,196 @@ class Raggy:
         except IndexNotFoundError:
             return NumpyStore(self.config.index_dir)
 
-    def ingest(self, paths: list[str]) -> IngestReport:
-        docs, skipped = [], []
-        for path in paths:
+    def _registry(self) -> Registry:
+        return Registry(Path(self.config.index_dir) / "registry.sqlite")
+
+    @property
+    def _embedder_name(self) -> str:
+        # Don't load a model just to learn its name: an unchanged re-ingest embeds nothing.
+        return self._embedder.name if self._embedder is not None else self.config.embed_model
+
+    def ingest(self, paths: list[str], full: bool = False,
+               progress: Callable[[int, int], None] | None = None) -> IngestReport:
+        """Bring the index up to date with files, folders and URLs.
+
+        New sources are added, changed ones re-indexed, unchanged ones skipped
+        (by size and mtime, then by content hash), and files deleted from a
+        folder that was walked are removed. ``full=True`` re-reads every file
+        instead of trusting size and mtime. A target that doesn't exist is
+        reported and removes nothing: an unmounted drive is not a deletion.
+        """
+        reg = self._registry()
+        try:
+            return self._sync(reg, paths, full, progress)
+        finally:
+            reg.close()  # on an exception this rolls back the uncommitted rows
+
+    def _sync(self, reg: Registry, paths: list[str], full: bool,
+              progress: Callable[[int, int], None] | None) -> IngestReport:
+        report = IngestReport()
+        store = self._open_store()
+        key, opts = pipeline_key(self.config, self._embedder_name), self.config.load_options()
+        status: dict[str, str] = {}  # source -> added | updated | unchanged | duplicate | failed | removed
+        pending: dict[str, tuple[Document, str, Record | None, tuple | None]] = {}  # to (re)index
+        known = {r.source for r in reg.all()}
+
+        def fail(source: str, reason: str) -> None:
+            status[source] = "failed"
+            report.failed.append((source, reason))
+
+        def consider(doc: Document, rec: Record | None, stat: tuple | None, force: bool = False) -> None:
+            digest = content_hash(doc.text)
+            if (not force and rec is not None and rec.content_hash == digest and rec.pipeline_key == key
+                    and not self._orphaned(rec, known)):
+                if stat is not None:  # same content, new mtime: remember it so the next run skips the read
+                    reg.upsert(replace(rec, size=stat[0], mtime_ns=stat[1]))
+                status[doc.source] = "unchanged"
+                return
+            pending[doc.source] = (doc, digest, rec, stat)
+
+        def consider_file(path: Path, force: bool = False) -> None:
+            source = str(path.resolve())
+            rec = reg.get(source)
             try:
-                docs.extend(load_path(path))
-            except FileNotFoundError:
-                skipped.append(path)
-        report = self.ingest_documents(docs)
-        report.skipped = skipped
+                st = path.stat()
+                stat = (st.st_size, st.st_mtime_ns)
+                if (not full and not force and rec is not None and rec.pipeline_key == key
+                        and (rec.size, rec.mtime_ns) == stat and not self._orphaned(rec, known)):
+                    status[source] = "unchanged"
+                    return
+                doc = load_file(path, opts)
+            except (LoadError, OSError) as e:
+                return fail(source, str(e))
+            consider(doc, rec, stat, force)
+
+        def consider_url(url: str, force: bool = False) -> None:
+            try:
+                doc = fetch_url(url, opts)
+            except LoadError as e:
+                return fail(url, str(e))
+            consider(doc, reg.get(url), None, force)
+
+        for target in paths:
+            if is_url(target):
+                consider_url(target)
+                continue
+            path = Path(target).expanduser()
+            if not path.exists():
+                report.skipped.append(target)
+            elif path.is_file():
+                consider_file(path)
+            else:
+                files = iter_files(path)
+                for f in files:
+                    consider_file(f)
+                walked = {str(f.resolve()) for f in files}
+                for rec in reg.under(str(path.resolve())):
+                    if rec.source not in walked:
+                        status[rec.source] = "removed"
+
+        # A canonical copy that is going away or changing: re-examine its
+        # duplicates now, or their content would silently leave the index.
+        gone = {s for s, st in status.items() if st == "removed"} | {s for s, p in pending.items() if p[2]}
+        for source in sorted(gone):
+            for dup in reg.duplicates_of(source):
+                if dup.source in status and status[dup.source] != "unchanged" or dup.source in pending:
+                    continue
+                if dup.kind == "url":
+                    consider_url(dup.source, force=True)
+                elif Path(dup.source).exists():
+                    consider_file(Path(dup.source), force=True)
+                else:
+                    status[dup.source] = "removed"
+
+        removed = {s for s, st in status.items() if st == "removed"}
+        index = DuplicateIndex()
+        if self.config.dedupe:
+            for rec in reg.all():
+                if rec.duplicate_of is None and rec.source not in removed and rec.source not in pending:
+                    index.add(rec.source, rec.content_hash, _signature(rec))
+
+        to_embed: list[Document] = []
+        rows: dict[str, Record] = {}
+        for source in sorted(pending, key=lambda s: (len(s), s)):  # shorter path wins a tie
+            doc, digest, rec, stat = pending[source]
+            sig = minhash(doc.text)
+            original = index.find(digest, sig) if self.config.dedupe else None
+            if original is None:
+                index.add(source, digest, sig)
+                to_embed.append(doc)
+                status[source] = "updated" if rec is not None else "added"
+            else:
+                status[source] = "duplicate"
+            m = doc.metadata
+            rows[source] = Record(
+                source=source, kind=m.get("kind", "file"), content_hash=digest,
+                size=stat[0] if stat else None, mtime_ns=stat[1] if stat else None, pipeline_key=key,
+                signature=None if sig is None else sig.tobytes(), duplicate_of=original,
+                title=m.get("title"), doc_type=m.get("type"), modified=m.get("modified"),
+                chunks=0, ingested_at=_now())
+
+        for source, st in status.items():
+            if st in ("removed", "duplicate"):
+                store.remove_source(source)  # the index only: never the file
+        done = self.ingest_documents(to_embed, progress=progress, store=store, save=False)
+        report.documents, report.chunks = done.documents, done.chunks
+        counts = store.sources()
+        for source, row in rows.items():
+            reg.upsert(replace(row, chunks=counts.get(source, 0)))
+        for source in removed:
+            reg.delete(source)
+        store.save()  # first the store ...
+        reg.commit()  # ... then the registry: a crash between the two means redo, never loss
+
+        for st in status.values():
+            if st == "duplicate":
+                report.duplicates += 1
+            elif st != "failed":
+                setattr(report, st, getattr(report, st) + 1)
         return report
 
+    @staticmethod
+    def _orphaned(rec: Record, known: set[str]) -> bool:
+        """A duplicate whose original is no longer registered must be indexed itself."""
+        return rec.duplicate_of is not None and rec.duplicate_of not in known
+
+    def remove(self, target: str) -> int:
+        """Remove a source, or everything under a folder or URL prefix, from the
+        index and the registry. Files on disk are never touched."""
+        store = NumpyStore.load(self.config.index_dir)
+        reg = self._registry()
+        try:
+            return self._remove(store, reg, target)
+        finally:
+            reg.close()
+
+    @staticmethod
+    def _remove(store: NumpyStore, reg: Registry, target: str) -> int:
+        if is_url(target):
+            exact, prefix = target, target.rstrip("/") + "/"
+        else:
+            exact = str(Path(target).expanduser().resolve())
+            prefix = exact.rstrip(os.sep) + os.sep
+        sources = {r.source for r in reg.all()} | set(store.sources())
+        matches = sorted(s for s in sources if s == exact or s.startswith(prefix))
+        for s in matches:
+            store.remove_source(s)
+            reg.delete(s)
+        store.save()
+        reg.commit()
+        return len(matches)
+
+    def documents(self) -> list[Record]:
+        """Registry rows, for `raggy sources`. Empty for an index built before week 3."""
+        reg = self._registry()
+        try:
+            return reg.all()
+        finally:
+            reg.close()
+
     def ingest_documents(self, docs: list[Document], batch_size: int = 256,
-                         progress: Callable[[int, int], None] | None = None) -> IngestReport:
+                         progress: Callable[[int, int], None] | None = None, *,
+                         store: NumpyStore | None = None, save: bool = True) -> IngestReport:
         """Chunk, embed and store documents, embedding many chunks per model call.
 
         One model call per batch is much faster than one per document. A
@@ -75,7 +285,7 @@ class Raggy:
         called after each batch with (chunks embedded, total chunks).
         """
         report = IngestReport()
-        store = self._open_store()
+        store = store if store is not None else self._open_store()
         chunked = [c for c in (chunk_fixed(d, self.config.chunk_size, self.config.chunk_overlap)
                                for d in docs) if c]  # chunking is cheap; embedding is the slow part
         total = sum(len(c) for c in chunked)
@@ -96,7 +306,8 @@ class Raggy:
             if len(batch) >= batch_size:
                 flush()
         flush()
-        store.save()
+        if save:
+            store.save()
         return report
 
     def search(self, question: str, k: int | None = None) -> list[Hit]:
