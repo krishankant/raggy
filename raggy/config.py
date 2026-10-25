@@ -44,7 +44,7 @@ class Config:
 
         load_dotenv(find_dotenv(usecwd=True))  # keys live in .env, never in your shell rc
         return cls(
-            index_dir=Path(os.environ.get("RAGGY_INDEX_DIR", ".raggy")),
+            index_dir=Path(os.environ.get("RAGGY_INDEX_DIR") or ".raggy"),  # blank means default, never "."
             embed_model=os.environ.get("RAGGY_EMBED_MODEL", DEFAULT_EMBED_MODEL),
             llm_provider=os.environ.get("RAGGY_LLM", "ollama"),
             llm_model=os.environ.get("RAGGY_LLM_MODEL") or None,

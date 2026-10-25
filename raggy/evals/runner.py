@@ -26,6 +26,10 @@ from raggy.types import Document
 SAVED_HITS = 10  # retrieved items kept per question in the run file
 
 
+class UnsafeIndexDirError(RuntimeError):
+    """The eval index folder holds files raggy didn't put there, so it won't delete it."""
+
+
 def prepare_index(suite: Suite, raggy: Raggy, docs: list[Document] | None = None,
                   progress: Callable[[int, int], None] | None = None) -> dict:
     """Build the suite's index, or reuse it if nothing that shapes it has changed."""
@@ -37,7 +41,14 @@ def prepare_index(suite: Suite, raggy: Raggy, docs: list[Document] | None = None
         if json.loads(key_file.read_text()) == key:
             return {"cached": True}
     if c.index_dir.exists():
-        shutil.rmtree(c.index_dir)  # stale: built from other data or settings
+        # Stale: built from other data or settings. Only ever delete a folder
+        # this function created (it has key.json) or an empty one; anything
+        # else may be the user's files, and a wrong path must not destroy them.
+        if not key_file.exists() and any(c.index_dir.iterdir()):
+            raise UnsafeIndexDirError(
+                f"{c.index_dir} isn't empty and wasn't created by `raggy eval`; "
+                "refusing to delete it. Check RAGGY_INDEX_DIR, or remove the folder yourself.")
+        shutil.rmtree(c.index_dir)
     t0 = time.perf_counter()
     report = raggy.ingest_documents(docs if docs is not None else suite.documents(), progress=progress)
     seconds = time.perf_counter() - t0

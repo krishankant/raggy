@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import dotenv
 import pytest
 
@@ -43,3 +45,8 @@ def test_cli_bad_top_k_one_line_error(clean_env, capsys):
     assert cli.main(["sources"]) == 1
     err = capsys.readouterr().err
     assert "RAGGY_TOP_K" in err and "Traceback" not in err
+
+
+def test_blank_index_dir_uses_default(clean_env):
+    clean_env.setenv("RAGGY_INDEX_DIR", "")  # e.g. an uncommented "RAGGY_INDEX_DIR=" in .env
+    assert Config.from_env().index_dir == Path(".raggy")

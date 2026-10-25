@@ -67,3 +67,20 @@ def test_limit_takes_first_questions(tmp_path, suite):
 def test_metric_order_is_recall_mrr_ndcg(tmp_path, suite):
     keys = list(run_suite(suite, make_raggy(tmp_path / "idx"), None, answers=False)["metrics"])
     assert keys[:5] == ["recall@1", "recall@2", "mrr", "ndcg@1", "ndcg@2"]
+
+
+def test_prepare_index_refuses_to_delete_a_folder_it_did_not_create(tmp_path, suite):
+    import pytest
+    from raggy.evals.runner import UnsafeIndexDirError
+    idx = tmp_path / "idx"
+    idx.mkdir()
+    (idx / "questions.jsonl").write_text("precious")
+    with pytest.raises(UnsafeIndexDirError, match="idx"):
+        prepare_index(suite, make_raggy(idx))
+    assert (idx / "questions.jsonl").read_text() == "precious"
+
+
+def test_prepare_index_still_rebuilds_its_own_folder(tmp_path, suite):
+    idx = tmp_path / "idx"
+    prepare_index(suite, make_raggy(idx))
+    assert prepare_index(suite, make_raggy(idx, chunk_size=20))["cached"] is False

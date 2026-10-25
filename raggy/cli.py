@@ -113,7 +113,7 @@ def main(argv: list[str] | None = None) -> int:
 def _eval(args, config: Config) -> int:
     from raggy.evals.dataset import GoldNotFoundError
     from raggy.evals.report import format_run, save_run
-    from raggy.evals.runner import run_suite
+    from raggy.evals.runner import UnsafeIndexDirError, run_suite
     from raggy.evals.suites import SUITES, DatasetError
 
     # Each suite gets its own index, so an eval never touches your documents' index.
@@ -134,7 +134,7 @@ def _eval(args, config: Config) -> int:
         run = run_suite(suite, raggy, judge, answers=answers, limit=args.limit,
                         label=args.label, progress=counter("question"),
                         ingest_progress=counter("embedded chunks"))
-    except (DatasetError, GoldNotFoundError) as e:
+    except (DatasetError, GoldNotFoundError, UnsafeIndexDirError) as e:
         print(f"error: {e}", file=sys.stderr)
         return 1
     print(format_run(run))
