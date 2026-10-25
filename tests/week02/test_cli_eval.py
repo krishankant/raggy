@@ -39,7 +39,7 @@ def test_cli_eval_rejects_unknown_suite(env, capsys):
 
 
 def test_cli_eval_dataset_error_is_one_line(env, monkeypatch, capsys):
-    def broken():
+    def broken(options=None):
         raise suites.DatasetError("could not download https://x: offline")
     monkeypatch.setitem(suites.SUITES, "tiny", lambda: tiny_suite().__class__(
         name="tiny", documents=broken, questions=broken, fingerprint=lambda: "z",

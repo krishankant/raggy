@@ -27,7 +27,7 @@ QUESTIONS = [
 
 
 def tiny_suite(fingerprint="v1", unit="chunk", answers=True) -> Suite:
-    return Suite(name="tiny", documents=lambda: list(DOCS), questions=lambda: list(QUESTIONS),
+    return Suite(name="tiny", documents=lambda options=None: list(DOCS), questions=lambda: list(QUESTIONS),
                  fingerprint=lambda: fingerprint, ks=(1, 2), unit=unit, answers=answers)
 
 

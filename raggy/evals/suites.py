@@ -2,6 +2,9 @@
 
 - fictional: a made-up bike company, so the model can't answer from memory.
   Scores retrieval *and* answers. Small enough to read every question.
+- fictional-web: the same company's docs as pages of a web site (menus,
+  cookie banner, sidebar, footer) plus two duplicate pages, with the same
+  questions. Measures what HTML extraction and dedupe are worth (week 3).
 - scifact: a public benchmark (BEIR's copy of SciFact: 5,183 paper abstracts,
   300 test claims with expert relevance labels). Retrieval only, scored per
   document, so the numbers can be checked against published results.
@@ -23,7 +26,8 @@ from pathlib import Path
 from typing import Callable
 
 from raggy.evals.dataset import EvalQuestion, GoldSpan, load_questions
-from raggy.ingest.loaders import load_path
+from raggy.ingest.loaders import LoadOptions, load_path
+from raggy.ingest.normalize import normalize_text
 from raggy.types import Document
 
 # SciFact is CC BY-NC 2.0: fine for learning, so it's downloaded on demand
@@ -39,7 +43,7 @@ class DatasetError(Exception):
 @dataclass
 class Suite:
     name: str
-    documents: Callable[[], list[Document]]
+    documents: Callable[..., list[Document]]  # documents(options: LoadOptions | None)
     questions: Callable[[], list[EvalQuestion]]
     fingerprint: Callable[[], str]  # changes whenever the corpus or questions change
     ks: tuple[int, ...]  # cut-offs for recall@k / nDCG@k
@@ -59,7 +63,7 @@ def fictional_suite(root: Path = Path("evals/fictional")) -> Suite:
 
     return Suite(
         name="fictional",
-        documents=lambda: load_path(root / "docs"),
+        documents=lambda options=None: load_path(root / "docs", options),
         questions=lambda: load_questions(root / "questions.jsonl"),
         fingerprint=fingerprint,
         ks=(1, 4, 10),
@@ -76,7 +80,7 @@ def load_beir(folder: Path, split: str = "test") -> tuple[list[Document], list[E
         for line in f:
             row = json.loads(line)
             text = f"{row.get('title', '').strip()}\n\n{row['text'].strip()}".strip()
-            docs.append(Document(source=f"scifact:{row['_id']}", text=text))
+            docs.append(Document(source=f"scifact:{row['_id']}", text=normalize_text(text)))
     relevant: dict[str, list[str]] = {}
     with open(folder / "qrels" / f"{split}.tsv", encoding="utf-8") as f:
         for row in csv.DictReader(f, delimiter="\t"):
@@ -129,7 +133,7 @@ def scifact_suite(data_dir: Path = Path("evals/data")) -> Suite:
 
     return Suite(
         name="scifact",
-        documents=lambda: data()[0],
+        documents=lambda options=None: data()[0],
         questions=lambda: data()[1],
         fingerprint=lambda: SCIFACT_SHA256,
         ks=(1, 10, 100),
@@ -138,7 +142,38 @@ def scifact_suite(data_dir: Path = Path("evals/data")) -> Suite:
     )
 
 
+def fictional_web_suite(root: Path = Path("evals/fictional-web"),
+                        questions: Path = Path("evals/fictional/questions.jsonl")) -> Suite:
+    root, questions = Path(root), Path(questions)
+    if not questions.is_absolute() and not questions.exists():
+        questions = root.parent / "fictional" / "questions.jsonl"
+
+    def load() -> list[EvalQuestion]:
+        qs = load_questions(questions)
+        for q in qs:  # same questions, same quotes; the evidence now lives in .html pages
+            q.gold = [GoldSpan(g.source.removesuffix(".md") + ".html", g.quote) for g in q.gold]
+        return qs
+
+    def fingerprint() -> str:
+        h = hashlib.sha256()
+        for f in sorted((root / "pages").rglob("*")) + [questions]:
+            if f.is_file():
+                h.update(f.name.encode() + b"\0" + f.read_bytes())
+        return h.hexdigest()
+
+    return Suite(
+        name="fictional-web",
+        documents=lambda options=None: load_path(root / "pages", options),
+        questions=load,
+        fingerprint=fingerprint,
+        ks=(1, 4, 10),
+        unit="chunk",
+        answers=True,
+    )
+
+
 SUITES: dict[str, Callable[[], Suite]] = {
     "fictional": fictional_suite,
+    "fictional-web": fictional_web_suite,
     "scifact": scifact_suite,
 }

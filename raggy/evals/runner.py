@@ -7,6 +7,7 @@ optionally generate an answer (timed), detect refusals, and ask the judge.
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import subprocess
 import time
@@ -20,6 +21,8 @@ from raggy.evals.metrics import collapse_to_documents, mean, percentile, retriev
 from raggy.evals.suites import Suite
 from raggy.generate.answer import generate_answer
 from raggy.generate.llm import LLMError
+from raggy.ingest.dedupe import drop_duplicates
+from raggy.ingest.normalize import NORMALIZE_VERSION
 from raggy.pipeline import Raggy
 from raggy.types import Document
 
@@ -35,7 +38,8 @@ def prepare_index(suite: Suite, raggy: Raggy, docs: list[Document] | None = None
     """Build the suite's index, or reuse it if nothing that shapes it has changed."""
     c = raggy.config
     key = {"fingerprint": suite.fingerprint(), "embedder": raggy.embedder.name,
-           "chunk_size": c.chunk_size, "chunk_overlap": c.chunk_overlap}
+           "chunk_size": c.chunk_size, "chunk_overlap": c.chunk_overlap,
+           "html_extract": c.html_extract, "dedupe": c.dedupe, "normalize": NORMALIZE_VERSION}
     key_file = c.index_dir / "key.json"
     if key_file.exists() and (c.index_dir / "meta.json").exists():
         if json.loads(key_file.read_text()) == key:
@@ -50,11 +54,24 @@ def prepare_index(suite: Suite, raggy: Raggy, docs: list[Document] | None = None
                 "refusing to delete it. Check RAGGY_INDEX_DIR, or remove the folder yourself.")
         shutil.rmtree(c.index_dir)
     t0 = time.perf_counter()
-    report = raggy.ingest_documents(docs if docs is not None else suite.documents(), progress=progress)
+    if docs is None:
+        docs = suite.documents(c.load_options())
+        if c.dedupe:
+            docs, _ = drop_duplicates(docs)
+    report = raggy.ingest_documents(docs, progress=progress)
     seconds = time.perf_counter() - t0
     key_file.write_text(json.dumps(key, indent=2))
     return {"cached": False, "documents": report.documents, "chunks": report.chunks,
             "seconds": round(seconds, 2)}
+
+
+def _relative(sources: list[str], docs: list[Document]) -> list[str]:
+    """Show file sources relative to the corpus folder, so run files are portable."""
+    try:
+        root = os.path.commonpath([d.source for d in docs] + sources)
+    except ValueError:
+        return sources
+    return [os.path.relpath(s, root) if os.path.isabs(s) else s for s in sources]
 
 
 def _git_commit() -> str | None:
@@ -92,10 +109,14 @@ def run_suite(suite: Suite, raggy: Raggy, judge: Judge | None, *, answers: bool 
               ingest_progress: Callable[[int, int], None] | None = None) -> dict:
     answers = answers and suite.answers
     judge = judge if answers else None
-    docs = suite.documents()
+    docs = suite.documents(raggy.config.load_options())
+    dups: dict[str, str] = {}
+    if raggy.config.dedupe:
+        docs, dups = drop_duplicates(docs)
     questions = suite.questions()[:limit] if limit else suite.questions()
     gold = resolve_gold(questions, docs)  # fail now, not after 300 model calls
     ingest = prepare_index(suite, raggy, docs, ingest_progress)
+    ingest |= {"documents": len(docs), "duplicates": _relative(sorted(dups), docs)}
 
     n = max(suite.ks)
     fetch = n * 3 if suite.unit == "document" else n  # extra chunks to fill n distinct documents
@@ -143,6 +164,8 @@ def run_suite(suite: Suite, raggy: Raggy, judge: Judge | None, *, answers: bool 
             "embed_model": raggy.embedder.name,
             "chunk_size": raggy.config.chunk_size,
             "chunk_overlap": raggy.config.chunk_overlap,
+            "html_extract": raggy.config.html_extract,
+            "dedupe": raggy.config.dedupe,
             "top_k": raggy.config.top_k,
             "ks": list(suite.ks),
             "unit": suite.unit,
