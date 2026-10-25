@@ -1,6 +1,6 @@
 # Week 1: Naive RAG, end to end
 
-**[← Course Plan](../COURSE_PLAN.md)** · **[Embeddings & Vector Search](../docs/embeddings-and-vector-search.md)** · **Week 2: Evals before optimisation →** *(coming)*
+**[← Course Plan](../COURSE_PLAN.md)** · **[Embeddings & Vector Search](../docs/embeddings-and-vector-search.md)** · **[Week 2: Evals before optimisation →](week02-evals.md)**
 
 ---
 

@@ -53,6 +53,8 @@ Point it at your own files with `uv run raggy ingest ~/notes ~/papers/summary.md
 | `uv run raggy search "query" [-k N]` | Show the chunks retrieval finds, with scores. Your first debugging step. |
 | `uv run raggy ask "question" [-k N] [--show-context]` | Answer with numbered citations. |
 | `uv run raggy sources` | List what's indexed. |
+| `uv run raggy eval [--suite fictional\|scifact] [--retrieval-only] [--no-judge] [--limit N] [--label L]` | Measure retrieval and answer quality; saves a JSON run to `evals/runs/`. |
+| `uv run raggy compare BASE.json NEW.json` | Show each metric's change between two runs. |
 | `uv run pytest` | Run the offline test suite (no keys, no downloads). |
 
 | Setting (`.env`) | Default |
@@ -62,21 +64,24 @@ Point it at your own files with `uv run raggy ingest ~/notes ~/papers/summary.md
 | `RAGGY_EMBED_MODEL` | `BAAI/bge-small-en-v1.5` |
 | `RAGGY_INDEX_DIR` | `.raggy` |
 | `RAGGY_TOP_K` | `4` |
+| `RAGGY_JUDGE` / `RAGGY_JUDGE_MODEL` | `anthropic` (`claude-opus-5-5`) if `ANTHROPIC_API_KEY` is set, else `ollama` |
 
 ## The course
 
-See **[COURSE_PLAN.md](COURSE_PLAN.md)** for all 12 weeks. Week 1 is ready:
+See **[COURSE_PLAN.md](COURSE_PLAN.md)** for all 12 weeks. Ready so far:
 
 | Week | Lesson | Code |
 | --- | --- | --- |
 | 1 | [Naive RAG, end to end](lessons/week01-naive-rag.md) | `git checkout week-01` |
+| 2 | [Evals before optimisation](lessons/week02-evals.md) | `git checkout week-02` |
 
 ## Repository layout
 
 ```
-raggy/            the package: ingest/ chunking/ embed/ store/ generate/ pipeline.py cli.py
+raggy/            the package: ingest/ chunking/ embed/ store/ generate/ evals/ pipeline.py cli.py
 lessons/          one lesson per week
 docs/             concept guides (embeddings, and more each week)
 samples/          small demo corpora (fictional, so models can't answer from memory)
+evals/            eval suites (fictional corpus + questions), committed baselines; data/ and runs/ are local
 tests/            offline pytest suite, one folder per week
 ```

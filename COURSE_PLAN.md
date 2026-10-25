@@ -20,7 +20,7 @@ For each week: check out its branch, read the lesson with the code open beside i
 | Week | Idea | Builds | Status |
 | :---: | --- | --- | --- |
 | **1** | [Naive RAG, end to end](lessons/week01-naive-rag.md) | load → fixed chunks → local embeddings → numpy cosine search → cited answer; Ollama, Claude and OpenAI adapters; CLI | ✅ `week-01` |
-| **2** | Evals before optimisation | A fictional Q&A set (with unanswerable questions) plus a public labelled benchmark of several thousand docs; recall@k, MRR, nDCG, answer correctness, faithfulness, citation precision, refusal accuracy, latency | coming |
+| **2** | [Evals before optimisation](lessons/week02-evals.md) | A fictional Q&A set (41 questions, 8 unanswerable) plus SciFact (5,183 abstracts, 300 labelled claims); recall@k, MRR, nDCG, answer correctness, faithfulness, citation precision, refusal accuracy, latency; `raggy eval` / `raggy compare`; committed baselines | ✅ `week-02` |
 | **3** | Ingestion | Folders, URLs and HTML, basic PDF; a document registry with content hashes for incremental re-ingest; dedupe; metadata | coming |
 | **4** | Chunking | Structure-aware chunking, overlap, token sizing, contextual headers, parent/child chunks, optional contextual retrieval, all compared by numbers | coming |
 | **5** | Scale | An embedded vector database, batched embedding, embedding cache, ANN vs exact, metadata filters, thousands of docs | coming |
