@@ -78,9 +78,11 @@ def resolve_gold(questions: list[EvalQuestion], docs: list[Document]) -> dict[st
             if g.quote is None:
                 spans.append(Located(doc.source, 0, len(doc.text)))
                 continue
-            # Match the quote's words with any whitespace between them, so a
-            # line break in the document doesn't make a correct quote fail.
-            pattern = r"\s+".join(re.escape(w) for w in g.quote.split())
+            # Match the quote's words with any whitespace (or table pipes)
+            # between them, so a line break, or a table rendered with or
+            # without "|" cells, doesn't make a correct quote fail.
+            words = [w for w in g.quote.split() if w != "|"]
+            pattern = r"[\s|]+".join(re.escape(w) for w in words)
             m = re.search(pattern, doc.text)
             if m is None:
                 raise GoldNotFoundError(

@@ -20,6 +20,24 @@ def _positive_int_env(name: str, default: str) -> int:
     return int(raw)
 
 
+def _choice_env(name: str, default: str, choices: tuple[str, ...]) -> str:
+    raw = (os.environ.get(name) or default).strip().lower()
+    if raw not in choices:
+        raise ConfigError(f"{name} must be one of {', '.join(choices)}, got {raw!r}")
+    return raw
+
+
+def _bool_env(name: str, default: bool) -> bool:
+    raw = (os.environ.get(name) or "").strip().lower()
+    if not raw:
+        return default
+    if raw in ("1", "true", "yes", "on"):
+        return True
+    if raw in ("0", "false", "no", "off"):
+        return False
+    raise ConfigError(f"{name} must be 1 or 0 (true/false), got {raw!r}")
+
+
 def _default_judge() -> str:
     # Judging needs a strong model, so prefer a hosted one when a key exists;
     # otherwise fall back to the local model rather than refusing to run.
@@ -37,6 +55,13 @@ class Config:
     chunk_overlap: int = 100
     judge_provider: str = "ollama"  # the model that grades answers in `raggy eval`
     judge_model: str | None = None
+    html_extract: str = "main"  # "main": article text only; "full": every visible word
+    dedupe: bool = True  # skip documents that duplicate one already indexed
+
+    def load_options(self):
+        from raggy.ingest.loaders import LoadOptions
+
+        return LoadOptions(html_extract=self.html_extract)
 
     @classmethod
     def from_env(cls) -> "Config":
@@ -51,4 +76,6 @@ class Config:
             top_k=_positive_int_env("RAGGY_TOP_K", "4"),
             judge_provider=os.environ.get("RAGGY_JUDGE") or _default_judge(),
             judge_model=os.environ.get("RAGGY_JUDGE_MODEL") or None,
+            html_extract=_choice_env("RAGGY_HTML_EXTRACT", "main", ("main", "full")),
+            dedupe=_bool_env("RAGGY_DEDUPE", True),
         )
