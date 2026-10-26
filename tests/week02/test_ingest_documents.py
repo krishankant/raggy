@@ -9,7 +9,7 @@ from raggy.types import Document
 
 
 def make(tmp_path: Path, chunk_size=800, overlap=100) -> Raggy:
-    cfg = Config(index_dir=tmp_path / "index", embed_model="fake", llm_provider="fake",
+    cfg = Config(index_dir=tmp_path / "index", embed_model="fake", llm_provider="fake", chunker="fixed",
                  llm_model=None, chunk_size=chunk_size, chunk_overlap=overlap)
     return Raggy(cfg, embedder=FakeEmbedder(), llm=FakeLLM())
 

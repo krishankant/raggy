@@ -115,11 +115,12 @@ def test_judge_sees_same_text_as_model():
 
 def test_chunker_change_reindexes(tmp_path):
     write(tmp_path / "d" / "help.md", SECTIONS)
-    make(tmp_path).ingest([str(tmp_path / "d")])
-    assert make(tmp_path).ingest([str(tmp_path / "d")]).unchanged == 1
-    for cfg in ({"chunker": "structure"}, {"chunker": "structure", "chunk_headers": False},
-                {"chunker": "structure", "chunk_headers": False, "parent_tokens": 512},
-                {"chunker": "structure", "chunk_headers": False, "parent_tokens": 512, "chunk_tokens": 128}):
+    make(tmp_path, chunker="fixed").ingest([str(tmp_path / "d")])
+    assert make(tmp_path, chunker="fixed").ingest([str(tmp_path / "d")]).unchanged == 1
+    for cfg in ({"chunker": "structure", "parent_tokens": 0, "chunk_tokens": 256},
+                {"chunker": "structure", "parent_tokens": 0, "chunk_tokens": 256, "chunk_headers": False},
+                {"chunker": "structure", "parent_tokens": 512, "chunk_tokens": 256, "chunk_headers": False},
+                {"chunker": "structure", "parent_tokens": 512, "chunk_tokens": 128, "chunk_headers": False}):
         assert make(tmp_path, **cfg).ingest([str(tmp_path / "d")]).updated == 1, cfg
 
 

@@ -68,11 +68,11 @@ class Config:
     judge_model: str | None = None
     html_extract: str = "main"  # "main": article text only; "full": every visible word
     dedupe: bool = True  # skip documents that duplicate one already indexed
-    chunker: str = "fixed"  # fixed | recursive | structure
-    chunk_tokens: int = 256  # recursive / structure chunk size, in the embedding model's tokens
-    chunk_overlap_tokens: int = 32
+    chunker: str = "structure"  # fixed | recursive | structure (week 4 measured structure best)
+    chunk_tokens: int = 128  # recursive / structure chunk size, in the embedding model's tokens
+    chunk_overlap_tokens: int = 16
     chunk_headers: bool = True  # embed "title › section" with each chunk
-    parent_tokens: int = 0  # > 0: retrieve small chunks, answer with their parent of this size
+    parent_tokens: int = 512  # > 0: retrieve small chunks, answer with their parent of this size
     chunk_context: str = "none"  # none | llm (contextual retrieval: one LLM call per chunk, cached)
 
     def chunk_settings(self):
@@ -113,10 +113,10 @@ class Config:
             judge_model=os.environ.get("RAGGY_JUDGE_MODEL") or None,
             html_extract=_choice_env("RAGGY_HTML_EXTRACT", "main", ("main", "full")),
             dedupe=_bool_env("RAGGY_DEDUPE", True),
-            chunker=_choice_env("RAGGY_CHUNKER", "fixed", ("fixed", "recursive", "structure")),
-            chunk_tokens=_positive_int_env("RAGGY_CHUNK_TOKENS", "256"),
-            chunk_overlap_tokens=_nonneg_int_env("RAGGY_CHUNK_OVERLAP_TOKENS", "32"),
+            chunker=_choice_env("RAGGY_CHUNKER", "structure", ("fixed", "recursive", "structure")),
+            chunk_tokens=_positive_int_env("RAGGY_CHUNK_TOKENS", "128"),
+            chunk_overlap_tokens=_nonneg_int_env("RAGGY_CHUNK_OVERLAP_TOKENS", "16"),
             chunk_headers=_bool_env("RAGGY_CHUNK_HEADERS", True),
-            parent_tokens=_nonneg_int_env("RAGGY_PARENT_TOKENS", "0"),
+            parent_tokens=_nonneg_int_env("RAGGY_PARENT_TOKENS", "512"),
             chunk_context=_choice_env("RAGGY_CHUNK_CONTEXT", "none", ("none", "llm")),
         )

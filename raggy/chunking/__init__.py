@@ -24,12 +24,12 @@ CHUNKERS = ("fixed", "recursive", "structure")
 @dataclass(frozen=True)
 class ChunkSettings:
     chunker: str = "structure"
-    tokens: int = 256  # recursive / structure: chunk size in model tokens
-    overlap: int = 32  # tokens shared with the previous chunk
+    tokens: int = 128  # recursive / structure: chunk size in model tokens
+    overlap: int = 16  # tokens shared with the previous chunk
     chars: int = 800  # fixed: chunk size in characters (week 1)
     char_overlap: int = 100
     headers: bool = True  # embed "title › section" in front of each chunk
-    parent_tokens: int = 0  # > 0: search these chunks, answer with the parent that holds them
+    parent_tokens: int = 512  # > 0: search these chunks, answer with the parent that holds them
 
     def key(self) -> dict:
         return asdict(self)
