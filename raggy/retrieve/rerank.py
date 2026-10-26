@@ -30,6 +30,7 @@ DEFAULT_MODEL = "Xenova/ms-marco-MiniLM-L-6-v2"
 class Reranker(Protocol):
     name: str
     failures: int
+    calls: int
 
     def rerank(self, question: str, hits: list[Hit]) -> list[Hit]: ...
 
@@ -39,6 +40,7 @@ class CrossEncoderReranker:
         self.model_name, self.name = model, f"local:{model}"
         self._model = None
         self.failures = 0
+        self.calls = 0
 
     def _load(self):
         from fastembed.rerank.cross_encoder import TextCrossEncoder  # imported here: tests never load it
@@ -48,6 +50,7 @@ class CrossEncoderReranker:
     def rerank(self, question: str, hits: list[Hit]) -> list[Hit]:
         if not hits:
             return hits
+        self.calls += 1
         try:
             if self._model is None:
                 self._model = self._load()
@@ -71,10 +74,12 @@ class LLMReranker:
     def __init__(self, llm: LLM):
         self.llm, self.name = llm, f"llm:{llm.name}"
         self.failures = 0
+        self.calls = 0
 
     def rerank(self, question: str, hits: list[Hit]) -> list[Hit]:
         if not hits:
             return hits
+        self.calls += 1
         passages = "\n\n".join(f"[{i}] {source_text(h)}" for i, h in enumerate(hits, start=1))
         user = (f"Question: {question}\n\nPassages:\n\n{passages}\n\n"
                 'Return {"ranking": [passage numbers, most relevant first]}, with every passage number once.')

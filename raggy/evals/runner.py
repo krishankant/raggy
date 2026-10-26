@@ -6,6 +6,7 @@ optionally generate an answer (timed), detect refusals, and ask the judge.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import shutil
@@ -52,7 +53,14 @@ def prepare_index(suite: Suite, raggy: Raggy, docs: list[Document] | None = None
                   progress: Callable[[int, int], None] | None = None) -> dict:
     """Build the suite's index, or reuse it if nothing that shapes it has changed."""
     c = raggy.config
-    key = {"fingerprint": suite.fingerprint(), "embedder": raggy.embedder.name,
+    if docs is None:
+        docs = suite.documents(c.load_options())
+        if c.dedupe and suite.dedupe:
+            docs, _ = drop_duplicates(docs)
+    # The index stores each chunk's source path. Same bytes in another checkout (a git
+    # worktree, a moved repo) must rebuild, or every gold span would point at stale paths.
+    sources = hashlib.sha256("\n".join(sorted(d.source for d in docs)).encode()).hexdigest()
+    key = {"fingerprint": suite.fingerprint(), "sources": sources, "embedder": raggy.embedder.name,
            "chunk_size": c.chunk_size, "chunk_overlap": c.chunk_overlap,
            "html_extract": c.html_extract, "dedupe": c.dedupe and suite.dedupe, "normalize": NORMALIZE_VERSION,
            "chunking": c.chunk_settings().key(), "chunk_context": c.chunk_context, "store": c.store,
@@ -76,10 +84,6 @@ def prepare_index(suite: Suite, raggy: Raggy, docs: list[Document] | None = None
                 continue
             shutil.rmtree(child) if child.is_dir() else child.unlink()
     t0 = time.perf_counter()
-    if docs is None:
-        docs = suite.documents(c.load_options())
-        if c.dedupe and suite.dedupe:
-            docs, _ = drop_duplicates(docs)
     report = raggy.ingest_documents(docs, progress=progress)
     seconds = time.perf_counter() - t0
     key_file.write_text(json.dumps(key, indent=2))
@@ -155,6 +159,9 @@ def run_suite(suite: Suite, raggy: Raggy, judge: Judge | None, *, answers: bool 
 
     n = max(suite.ks)
     fetch = n * 3 if suite.unit == "document" else n  # extra chunks to fill n distinct documents
+    reranker = raggy.reranker() if raggy.config.rerank != "none" else None
+    t0 = dict(raggy.transform_stats)
+    r0 = (reranker.calls, reranker.failures) if reranker is not None else (0, 0)
     records = []
     for i, q in enumerate(questions, start=1):
         rec: dict = {"id": q.id, "question": q.question, "answerable": q.answerable,
@@ -195,6 +202,16 @@ def run_suite(suite: Suite, raggy: Raggy, judge: Judge | None, *, answers: bool 
         if progress:
             progress(i, len(questions))
 
+    # A transform or reranker that fails falls back silently, by design, so a run must say so:
+    # without this, a run with every LLM call failing reports the baseline's numbers.
+    fallbacks, fallback_of = {}, {}
+    if raggy.config.query_transform != "none":
+        ts = raggy.transform_stats
+        fallbacks["transform"] = ts["failed"] - t0["failed"]
+        fallback_of["transform"] = (ts["calls"] + ts["cached"]) - (t0["calls"] + t0["cached"])
+    if reranker is not None:
+        fallbacks["rerank"] = reranker.failures - r0[1]
+        fallback_of["rerank"] = reranker.calls - r0[0]
     tags = sorted({t for q in questions for t in q.tags})
     return {
         "schema": 1,
@@ -231,6 +248,8 @@ def run_suite(suite: Suite, raggy: Raggy, judge: Judge | None, *, answers: bool 
             "judge_version": JUDGE_VERSION if judge else None,
         },
         "ingest": ingest,
+        "fallbacks": fallbacks,  # failed transform / rerank calls (each fell back to the plain path)
+        "fallback_of": fallback_of,
         "metrics": _with_budgets(_aggregate(records), raggy.config.budgets),
         "by_tag": {t: _aggregate([r for r in records if t in r["tags"]]) | {"n": sum(t in r["tags"] for r in records)}
                    for t in tags},

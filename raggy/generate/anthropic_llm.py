@@ -48,6 +48,10 @@ class AnthropicLLM:
             raise LLMError(f"anthropic: API error {e.status_code}: {e.message}") from e
         except anthropic.APIConnectionError as e:
             raise LLMError("anthropic: could not reach the API — check your network") from e
+        except TypeError as e:  # the SDK raises this when no API key or login is configured
+            if "authentication" not in str(e):
+                raise
+            raise LLMError("anthropic: no credentials — set ANTHROPIC_API_KEY in .env") from e
         if response.stop_reason == "refusal":
             raise LLMError("anthropic: the model declined to answer this request")
         return "".join(b.text for b in response.content if b.type == "text").strip()

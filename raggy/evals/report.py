@@ -56,6 +56,12 @@ def format_run(run: dict) -> str:
         if rows and any(v is not None for _, v in rows):
             lines.append(f"\n{title}")
             lines += [f"  {k:<22}{_fmt(v):>8}" for k, v in rows]
+    labels = {"transform": "query transform", "rerank": "rerank"}
+    for stage, n in (run.get("fallbacks") or {}).items():
+        if n:
+            total = (run.get("fallback_of") or {}).get(stage, n)
+            lines.append(f"\n⚠ {n} of {total} {labels.get(stage, stage)} calls failed and fell back: "
+                         "these numbers are not that technique's (check the model / API key)")
     budgets = c.get("budgets") or {}
     stages = [s for s in ("transform", "retrieve", "rerank", "generate") if m.get(f"{s}_ms_p95") is not None]
     if budgets and stages:
