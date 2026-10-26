@@ -31,7 +31,7 @@ class LoadOptions:
     ocr: bool = False  # OCR pages with no text layer (scans); slow, so a switch
 
 
-from raggy.ingest.loaders import html, pdf, pdf_layout, text  # noqa: E402  (they import LoadError above)
+from raggy.ingest.loaders import csv_loader, html, office, pdf, pdf_layout, text  # noqa: E402  (they import LoadError above)
 
 
 def _pdf(data: bytes, options: LoadOptions):
@@ -42,6 +42,10 @@ LOADERS: dict[str, Callable[[bytes, LoadOptions], tuple[str, str | None]]] = {
     "markdown": text.load_markdown,
     "html": html.load,
     "pdf": _pdf,
+    "docx": office.load_docx,
+    "pptx": office.load_pptx,
+    "xlsx": office.load_xlsx,
+    "csv": csv_loader.load,
 }
 
 SUFFIXES: dict[str, str] = {
@@ -51,6 +55,10 @@ SUFFIXES: dict[str, str] = {
     ".html": "html",
     ".htm": "html",
     ".pdf": "pdf",
+    ".docx": "docx",
+    ".pptx": "pptx",
+    ".xlsx": "xlsx",
+    ".csv": "csv",
 }
 
 

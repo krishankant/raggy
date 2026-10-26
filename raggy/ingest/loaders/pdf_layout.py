@@ -22,24 +22,10 @@ import statistics
 import warnings
 
 from raggy.ingest import loaders
+from raggy.ingest.loaders.tables import markdown_table as _markdown
 
 HEADING_RATIO = 1.2
 MIN_PAGE_CHARS = 20  # fewer than this and the page is treated as a scan
-
-
-def _cell(value) -> str:
-    return " ".join(str(value or "").split()).replace("|", "\\|")
-
-
-def _markdown(rows: list[list]) -> str:
-    rows = [[_cell(c) for c in r] for r in rows if any(c not in (None, "") for c in r)]
-    if not rows:
-        return ""
-    width = max(len(r) for r in rows)
-    rows = [r + [""] * (width - len(r)) for r in rows]
-    lines = ["| " + " | ".join(rows[0]) + " |", "|" + "---|" * width]
-    lines += ["| " + " | ".join(r) + " |" for r in rows[1:]]
-    return "\n".join(lines)
 
 
 def _inside(obj, box) -> bool:
