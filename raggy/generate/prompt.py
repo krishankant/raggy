@@ -26,9 +26,15 @@ _CITE = re.compile(r"\[(\d+(?:\s*,\s*\d+)*)\]")
 SNIPPET_CHARS = 160
 
 
+def source_text(hit: Hit) -> str:
+    """A retrieved chunk as the model reads it: its context line (section path), then its text."""
+    c = hit.chunk
+    return f"{c.context}\n{c.text.strip()}" if c.context else c.text.strip()
+
+
 def build_user_prompt(question: str, hits: list[Hit]) -> str:
     blocks = [
-        f"[{n}] (source: {Path(h.chunk.source).name})\n{h.chunk.text.strip()}"
+        f"[{n}] (source: {Path(h.chunk.source).name})\n{source_text(h)}"
         for n, h in enumerate(hits, start=1)
     ]
     return "Sources:\n\n" + "\n\n".join(blocks) + f"\n\nQuestion: {question}\n"

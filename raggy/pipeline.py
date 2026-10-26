@@ -15,7 +15,7 @@ from typing import Callable
 
 import numpy as np
 
-from raggy.chunking.fixed import chunk_fixed
+from raggy.chunking import chunk_document
 from raggy.config import Config
 from raggy.embed.base import Embedder
 from raggy.generate.answer import generate_answer
@@ -46,9 +46,18 @@ class IngestReport:
 def pipeline_key(config: Config, embedder_name: str) -> str:
     """Every setting that changes what a source's chunks look like. A source
     indexed under a different key is re-indexed even if its bytes are the same."""
-    return json.dumps({"embedder": embedder_name, "chunk_size": config.chunk_size,
-                       "chunk_overlap": config.chunk_overlap, "html_extract": config.html_extract,
+    return json.dumps({"embedder": embedder_name, "chunking": config.chunk_settings().key(),
+                       "chunk_context": config.chunk_context, "html_extract": config.html_extract,
                        "normalize": NORMALIZE_VERSION, "dedupe": config.dedupe}, sort_keys=True)
+
+
+def embed_text(chunk: Chunk) -> str:
+    """What the embedding model reads: the chunk's context (if any), then its text.
+
+    The context ("Returns and refunds › Refunds") is embedded but isn't part of
+    the chunk's span, so citations and eval gold spans still point at the
+    document's own characters."""
+    return f"{chunk.context}\n\n{chunk.text}" if chunk.context else chunk.text
 
 
 def _now() -> str:
@@ -286,14 +295,21 @@ class Raggy:
         """
         report = IngestReport()
         store = store if store is not None else self._open_store()
-        chunked = [c for c in (chunk_fixed(d, self.config.chunk_size, self.config.chunk_overlap)
-                               for d in docs) if c]  # chunking is cheap; embedding is the slow part
+        settings = self.config.chunk_settings()
+        count = lambda text: self.embedder.count_tokens(text)  # noqa: E731 (fixed never calls it)
+        chunked = [c for c in (chunk_document(d, settings, count) for d in docs) if c]
         total = sum(len(c) for c in chunked)
         batch: list[Chunk] = []
 
         def flush() -> None:
             if batch:
-                vectors = self.embedder.embed_documents([c.text for c in batch])
+                texts = [embed_text(c) for c in batch]
+                for c, t in zip(batch, texts):
+                    n = self.embedder.count_tokens(t)
+                    if n > self.embedder.max_tokens:  # the model would silently drop the rest
+                        raise ValueError(f"chunk {c.id} is {n} tokens; {self.embedder.name} reads at most "
+                                         f"{self.embedder.max_tokens}. Lower RAGGY_CHUNK_TOKENS.")
+                vectors = self.embedder.embed_documents(texts)
                 store.add(batch, vectors, embedder_name=self.embedder.name)
                 report.chunks += len(batch)
                 batch.clear()
@@ -311,9 +327,28 @@ class Raggy:
         return report
 
     def search(self, question: str, k: int | None = None) -> list[Hit]:
+        """The k best chunks, or with parent/child on, the k best distinct parents.
+
+        Small chunks are precise to search (one idea per vector); bigger parents
+        give the model the surrounding text. Each child found is swapped for its
+        parent, and a parent found twice is kept once."""
         store = NumpyStore.load(self.config.index_dir)  # raises IndexNotFoundError
         query = self.embedder.embed_query(question)
-        return store.search(query, k or self.config.top_k, embedder_name=self.embedder.name)
+        k = k or self.config.top_k
+        if not self.config.parent_tokens:
+            return store.search(query, k, embedder_name=self.embedder.name)
+        out, seen = [], set()
+        for h in store.search(query, k * 4, embedder_name=self.embedder.name):
+            c = h.chunk
+            if c.parent_text is not None:
+                c = Chunk(id=f"{c.source}#p{c.parent_start}", source=c.source, text=c.parent_text,
+                          index=c.index, start=c.parent_start, end=c.parent_end, context=c.context)
+            if (c.source, c.start) not in seen:
+                seen.add((c.source, c.start))
+                out.append(Hit(chunk=c, score=h.score))
+                if len(out) == k:
+                    break
+        return out
 
     def ask(self, question: str, k: int | None = None) -> Answer:
         return generate_answer(question, self.search(question, k), self.llm)

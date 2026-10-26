@@ -21,6 +21,7 @@ from raggy.evals.metrics import collapse_to_documents, mean, percentile, retriev
 from raggy.evals.suites import Suite
 from raggy.generate.answer import generate_answer
 from raggy.generate.llm import LLMError
+from raggy.generate.prompt import source_text
 from raggy.ingest.dedupe import drop_duplicates
 from raggy.ingest.normalize import NORMALIZE_VERSION
 from raggy.pipeline import Raggy
@@ -39,7 +40,8 @@ def prepare_index(suite: Suite, raggy: Raggy, docs: list[Document] | None = None
     c = raggy.config
     key = {"fingerprint": suite.fingerprint(), "embedder": raggy.embedder.name,
            "chunk_size": c.chunk_size, "chunk_overlap": c.chunk_overlap,
-           "html_extract": c.html_extract, "dedupe": c.dedupe and suite.dedupe, "normalize": NORMALIZE_VERSION}
+           "html_extract": c.html_extract, "dedupe": c.dedupe and suite.dedupe, "normalize": NORMALIZE_VERSION,
+           "chunking": c.chunk_settings().key(), "chunk_context": c.chunk_context}
     key_file = c.index_dir / "key.json"
     if key_file.exists() and (c.index_dir / "meta.json").exists():
         if json.loads(key_file.read_text()) == key:
@@ -96,6 +98,9 @@ def _aggregate(records: list[dict]) -> dict:
     m["refusal_accuracy"] = mean(float(r["refused"] != r["answerable"]) for r in answered)
     m["unanswerable_refused"] = mean(float(r["refused"]) for r in answered if not r["answerable"])
     m["answerable_refused"] = mean(float(r["refused"]) for r in answered if r["answerable"])
+    tokens = [r.get("context_tokens") for r in records]
+    m["context_tokens_p50"] = percentile(tokens, 50)  # a bigger context can look like better retrieval
+    m["context_tokens_p95"] = percentile(tokens, 95)
     for stage in ("retrieve", "generate"):
         times = [r["latency_ms"].get(stage) for r in records]
         m[f"{stage}_ms_p50"] = percentile(times, 50)
@@ -133,8 +138,9 @@ def run_suite(suite: Suite, raggy: Raggy, judge: Judge | None, *, answers: bool 
                              "gold": sorted(g)} for h, g in zip(ranked[:SAVED_HITS], covers)]
         if q.answerable:
             rec["retrieval"] = retrieval_metrics(covers, len(gold[q.id]), suite.ks)
+        context = hits[: raggy.config.top_k]  # what the answer model is (or would be) given
+        rec["context_tokens"] = sum(raggy.embedder.count_tokens(source_text(h)) for h in context)
         if answers:
-            context = hits[: raggy.config.top_k]
             t0 = time.perf_counter()
             try:
                 answer = generate_answer(q.question, context, raggy.llm)
@@ -165,6 +171,8 @@ def run_suite(suite: Suite, raggy: Raggy, judge: Judge | None, *, answers: bool 
             "chunk_size": raggy.config.chunk_size,
             "chunk_overlap": raggy.config.chunk_overlap,
             "html_extract": raggy.config.html_extract,
+            "chunking": raggy.config.chunk_settings().key(),
+            "chunk_context": raggy.config.chunk_context,
             "dedupe": raggy.config.dedupe and suite.dedupe,
             "top_k": raggy.config.top_k,
             "ks": list(suite.ks),

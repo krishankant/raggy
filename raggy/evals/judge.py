@@ -130,5 +130,7 @@ def _correctness_prompt(q: EvalQuestion, answer: Answer) -> str:
 
 
 def _grounding_prompt(q: EvalQuestion, answer: Answer) -> str:
-    sources = "\n\n".join(f"[{n}]\n{h.chunk.text.strip()}" for n, h in enumerate(answer.hits, start=1))
+    from raggy.generate.prompt import source_text  # the judge sees what the model saw
+
+    sources = "\n\n".join(f"[{n}]\n{source_text(h)}" for n, h in enumerate(answer.hits, start=1))
     return f"Sources:\n\n{sources}\n\nQuestion: {q.question}\n\nAnswer to check: {answer.text}\n"
