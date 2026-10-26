@@ -171,7 +171,8 @@ def main(argv: list[str] | None = None) -> int:
             if answer.citations:
                 print("\nSources:")
                 for c in answer.citations:
-                    print(f"[{c.number}] {display_source(c.source)} — \"{c.snippet[:100]}…\"")
+                    where = f", {c.location}" if c.location else ""
+                    print(f"[{c.number}] {display_source(c.source)}{where} — \"{c.snippet[:100]}…\"")
         elif args.command == "sources":
             counts = raggy.sources()  # raises IndexNotFoundError before anything is ingested
             records = raggy.documents()

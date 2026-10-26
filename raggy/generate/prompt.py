@@ -32,9 +32,27 @@ def source_text(hit: Hit) -> str:
     return f"{c.context}\n{c.text.strip()}" if c.context else c.text.strip()
 
 
+def location(meta: dict | None) -> str | None:
+    """'p. 2', or 'p. 1–2' for a passage that spans pages; None for formats without pages."""
+    meta = meta or {}
+    first, last = meta.get("page"), meta.get("page_end")
+    if not first:
+        return None
+    if not last:
+        return first
+    prefix, _, a = first.rpartition(" ")
+    prefix2, _, b = last.rpartition(" ")
+    return f"{prefix} {a}–{b}" if prefix and prefix == prefix2 else f"{first}–{last}"
+
+
+def _source_label(hit: Hit) -> str:
+    where = location(hit.chunk.meta)
+    return f"{Path(hit.chunk.source).name}, {where}" if where else Path(hit.chunk.source).name
+
+
 def build_user_prompt(question: str, hits: list[Hit]) -> str:
     blocks = [
-        f"[{n}] (source: {Path(h.chunk.source).name})\n{source_text(h)}"
+        f"[{n}] (source: {_source_label(h)})\n{source_text(h)}"
         for n, h in enumerate(hits, start=1)
     ]
     return "Sources:\n\n" + "\n\n".join(blocks) + f"\n\nQuestion: {question}\n"
@@ -52,5 +70,6 @@ def parse_citations(text: str, hits: list[Hit]) -> list[Citation]:
     for n in seen:
         chunk = hits[n - 1].chunk
         snippet = " ".join(chunk.text.split())[:SNIPPET_CHARS]
-        citations.append(Citation(number=n, source=chunk.source, chunk_id=chunk.id, snippet=snippet))
+        citations.append(Citation(number=n, source=chunk.source, chunk_id=chunk.id, snippet=snippet,
+                                  location=location(chunk.meta)))
     return citations

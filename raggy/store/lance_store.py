@@ -29,7 +29,7 @@ from raggy.types import Chunk, Hit, embed_text
 TABLE = "chunks"
 FTS_VERSION = 1  # bump when the full-text column or tokenizer settings change
 ANN_MIN_ROWS = 1000  # an IVF index trains k-means on the vectors; below this there's nothing to cluster
-META = ("type", "title", "modified")  # Document metadata copied onto every row, for filters
+META = ("type", "title", "modified", "page", "page_end")  # metadata copied onto every row, for filters
 
 
 class LanceStore:
@@ -41,6 +41,11 @@ class LanceStore:
         self.path.mkdir(parents=True, exist_ok=True)
         self._db = lancedb.connect(str(self.path))
         self._tbl = self._db.open_table(TABLE) if TABLE in self._db.list_tables().tables else None
+        if self._tbl is not None:  # a table from an earlier week: add the newer columns (nulls), keep every row
+            missing = [("doc_type" if k == "type" else k) for k in META
+                       if ("doc_type" if k == "type" else k) not in self._tbl.schema.names]
+            if missing:
+                self._tbl.add_columns({col: "CAST(NULL AS STRING)" for col in missing})
         meta = self.path / "meta.json"
         self.embedder: str | None = json.loads(meta.read_text())["embedder"] if meta.exists() else None
 

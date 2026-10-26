@@ -28,8 +28,12 @@ def _merge(a: Hit, b: Hit) -> Hit:
     ca, cb = a.chunk, b.chunk
     text = ca.text + cb.text[ca.end - cb.start:] if cb.end > ca.end else ca.text
     end = max(ca.end, cb.end)
+    meta = dict(ca.meta or {})
+    last = (cb.meta or {}).get("page_end") or (cb.meta or {}).get("page") if cb.end > ca.end else meta.get("page_end")
+    if last and last != meta.get("page"):
+        meta["page_end"] = last  # the passage now spans pages: "p. 1–2"
     chunk = Chunk(id=f"{ca.source}#{ca.start}-{end}", source=ca.source, text=text, index=ca.index,
-                  start=ca.start, end=end, context=ca.context, meta=ca.meta)
+                  start=ca.start, end=end, context=ca.context, meta=meta)
     return Hit(chunk=chunk, score=max(a.score, b.score))
 
 

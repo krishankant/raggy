@@ -62,6 +62,17 @@ def pipeline_key(config: Config, embedder_name: str) -> str:
                       sort_keys=True)
 
 
+def page_label(pages: list, start: int, end: int) -> tuple[str | None, str | None]:
+    """The location label covering ``start``, and the one covering ``end`` if it's a different one."""
+    first = last = None
+    for label, offset in pages:
+        if offset <= start:
+            first = label
+        if offset < end:
+            last = label
+    return first, (last if last != first else None)
+
+
 def _now() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
@@ -323,8 +334,14 @@ class Raggy:
         pairs = [(d, c) for d, c in ((d, chunk_document(d, settings, count)) for d in docs) if c]
         for d, cs in pairs:  # document metadata rides on every chunk, so searches can filter on it
             meta = {k: d.metadata[k] for k in ("type", "title", "modified") if d.metadata.get(k)}
+            pages = d.metadata.get("pages") or []
             for c in cs:
                 c.meta = dict(meta)
+                first, last = page_label(pages, c.start, c.end)  # "p. 3", "slide 4", "sheet Prices"
+                if first:
+                    c.meta["page"] = first
+                if last:
+                    c.meta["page_end"] = last
         if self.config.chunk_context == "llm" and pairs:
             from raggy.chunking.contextual import CACHE_NAME, ContextCache, add_llm_context
 

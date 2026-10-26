@@ -47,6 +47,7 @@ class Citation:
     source: str
     chunk_id: str
     snippet: str
+    location: str | None = None  # "p. 3", "slide 4", "sheet Prices"
 
 
 @dataclass
