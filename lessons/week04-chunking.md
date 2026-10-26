@@ -1,6 +1,6 @@
 # Week 4: Chunking — where to cut
 
-**[← Week 3: Ingestion](week03-ingestion.md)** · **[Course Plan](../COURSE_PLAN.md)** · **[Chunking (guide)](../docs/chunking.md)** · **Week 5: Scale →** *(coming)*
+**[← Week 3: Ingestion](week03-ingestion.md)** · **[Course Plan](../COURSE_PLAN.md)** · **[Chunking (guide)](../docs/chunking.md)** · **[Week 5: Scale →](week05-scale.md)**
 
 ---
 

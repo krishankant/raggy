@@ -4,7 +4,7 @@
 [![Models](https://img.shields.io/badge/answers-Ollama%20%7C%20Claude%20%7C%20OpenAI-6f42c1.svg)](lessons/week01-naive-rag.md#36-one-interface-three-model-providers)
 [![Tests](https://img.shields.io/badge/tests-offline%20pytest-2ea44f.svg)](#commands)
 
-**[Course Plan](COURSE_PLAN.md)** · **[Week 1: Naive RAG](lessons/week01-naive-rag.md)** · **[Week 4: Chunking](lessons/week04-chunking.md)** · **[Docs hub](docs/README.md)**
+**[Course Plan](COURSE_PLAN.md)** · **[Week 1: Naive RAG](lessons/week01-naive-rag.md)** · **[Week 5: Scale](lessons/week05-scale.md)** · **[Docs hub](docs/README.md)**
 
 ---
 
@@ -50,11 +50,11 @@ Point it at your own files, folders or web pages: `uv run raggy ingest ~/notes ~
 | Command | What it does |
 | --- | --- |
 | `uv run raggy ingest PATH_OR_URL... [--full]` | Index files, folders and URLs (`.md`, `.txt`, `.html`, `.pdf`). Re-runs skip unchanged sources, re-index changed ones and drop files deleted from a folder. `--full` re-reads every file. Folders honour `.raggyignore` and `.gitignore`. |
-| `uv run raggy search "query" [-k N]` | Show the chunks retrieval finds, with scores. Your first debugging step. |
+| `uv run raggy search "query" [-k N] [--type pdf] [--source DIR] [--after 2026-01-01]` | Show the chunks retrieval finds, with scores. Your first debugging step. The filters also work on `ask`. |
 | `uv run raggy ask "question" [-k N] [--show-context]` | Answer with numbered citations. |
 | `uv run raggy sources` | List what's indexed: chunks, type, title, source, and which documents were skipped as duplicates. |
 | `uv run raggy remove PATH_OR_URL` | Drop a source, or everything under a folder or URL, from the index. Never touches the files. |
-| `uv run raggy eval [--suite fictional\|fictional-web\|manual\|scifact] [--retrieval-only] [--no-judge] [--limit N] [--label L]` | Measure retrieval and answer quality; saves a JSON run to `evals/runs/`. |
+| `uv run raggy eval [--suite fictional\|fictional-web\|manual\|scifact\|fiqa] [--retrieval-only] [--no-judge] [--limit N] [--label L]` | Measure retrieval and answer quality; saves a JSON run to `evals/runs/`. |
 | `uv run raggy compare BASE.json NEW.json` | Show each metric's change between two runs. |
 | `uv run pytest` | Run the offline test suite (no keys, no downloads). |
 
@@ -73,6 +73,9 @@ Point it at your own files, folders or web pages: `uv run raggy ingest ~/notes ~
 | `RAGGY_PARENT_TOKENS` | `512` (search small chunks, answer with their parent; `0` = off) |
 | `RAGGY_CHUNK_HEADERS` | `1` (embed "title › section" with each chunk) |
 | `RAGGY_CHUNK_CONTEXT` | `none` (`llm`: contextual retrieval, one cached LLM call per chunk) |
+| `RAGGY_STORE` | `lance` (on-disk LanceDB; `numpy` = week 1's in-memory matrix) |
+| `RAGGY_EMBED_CACHE` | `1` (never embed the same text twice with the same model) |
+| `RAGGY_ANN` / `RAGGY_ANN_NPROBES` / `RAGGY_ANN_REFINE` | `off` / `20` / `4` (approximate index; worth it well past 100k chunks) |
 
 ## The course
 
@@ -84,13 +87,14 @@ See **[COURSE_PLAN.md](COURSE_PLAN.md)** for all 12 weeks. Ready so far:
 | 2 | [Evals before optimisation](lessons/week02-evals.md) | `git checkout week-02` |
 | 3 | [Ingestion: files, folders, URLs](lessons/week03-ingestion.md) | `git checkout week-03` |
 | 4 | [Chunking: where to cut](lessons/week04-chunking.md) | `git checkout week-04` |
+| 5 | [Scale: tens of thousands of documents](lessons/week05-scale.md) | `git checkout week-05` |
 
 ## Repository layout
 
 ```
 raggy/            the package: ingest/ chunking/ embed/ store/ generate/ evals/ pipeline.py cli.py
 lessons/          one lesson per week
-docs/             concept guides (embeddings, evals, ingestion, chunking, and more each week)
+docs/             concept guides (embeddings, evals, ingestion, chunking, vector search at scale, and more each week)
 samples/          small demo corpora (fictional, so models can't answer from memory)
 evals/            eval suites (fictional corpus, its web-site version, a long manual), committed baselines; data/ and runs/ are local
 tests/            offline pytest suite, one folder per week
