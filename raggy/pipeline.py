@@ -48,6 +48,9 @@ class IngestReport:
     context_calls: int = 0  # contextual retrieval: LLM calls made this run
     context_cached: int = 0
     context_failed: int = 0
+    image_calls: int = 0  # vision-model calls this run
+    image_cached: int = 0  # images whose text came from the vision cache
+    image_failed: int = 0  # descriptions that failed and fell back to the OCR text
     embedded: int = 0  # texts the model embedded this run
     embed_cached: int = 0  # texts whose vectors came from the embedding cache
 
@@ -58,6 +61,7 @@ def pipeline_key(config: Config, embedder_name: str) -> str:
     return json.dumps({"embedder": embedder_name, "chunking": config.chunk_settings().key(),
                        "chunk_context": config.chunk_context, "html_extract": config.html_extract,
                        "pdf": config.pdf, "ocr": config.ocr,
+                       "images": config.images, "vision": config.vision_key(),
                        "normalize": NORMALIZE_VERSION, "dedupe": config.dedupe, "store": config.store},
                       sort_keys=True)
 
@@ -82,7 +86,8 @@ def _signature(rec: Record) -> np.ndarray | None:
 
 
 class Raggy:
-    def __init__(self, config: Config, embedder: Embedder | None = None, llm: LLM | None = None):
+    def __init__(self, config: Config, embedder: Embedder | None = None, llm: LLM | None = None,
+                 vision_llm: LLM | None = None):
         self.config = config
         self._embedder = embedder
         self._llm = llm
@@ -92,6 +97,8 @@ class Raggy:
         self._transform_cache = None
         self.transform_stats = {"calls": 0, "cached": 0, "failed": 0}
         self.last_timings: dict[str, float] = {}  # ms per stage of the latest search
+        self._vision_llm = vision_llm
+        self._image_reader = None
 
     # Models are built on first use: `raggy sources` shouldn't load an
     # embedding model, and `raggy search` shouldn't need an LLM.
@@ -111,6 +118,36 @@ class Raggy:
         if self._llm is None:
             self._llm = make_llm(self.config.llm_provider, self.config.llm_model)
         return self._llm
+
+    def image_reader(self):
+        """The cached OCR / vision reader every loader shares; None when images are off."""
+        if self.config.images == "off":
+            return None
+        if self._image_reader is None:
+            from raggy.ingest.images import VISION_CACHE, ImageReader
+
+            llm = None
+            if self.config.images == "vision":
+                if self._vision_llm is None:
+                    self._vision_llm = make_llm(self.config.vision_provider or self.config.llm_provider,
+                                                self.config.vision_model)
+                llm = self._vision_llm
+            self._image_reader = ImageReader(self.config.images, llm=llm,
+                                             cache_path=Path(self.config.index_dir) / VISION_CACHE)
+        return self._image_reader
+
+    def image_counts(self) -> tuple[int, int, int]:
+        """(vision calls, cache hits, failed descriptions) so far, for per-run deltas."""
+        r = self._image_reader
+        return (r.calls, r.cached, r.failures) if r is not None else (0, 0, 0)
+
+    def load_options(self):
+        """The config's load options, with images read through this Raggy's cached reader."""
+        from dataclasses import replace as _replace
+
+        opts = self.config.load_options()
+        reader = self.image_reader()
+        return opts if reader is None else _replace(opts, read_image=reader.read)
 
     def _open_store(self) -> VectorStore:
         self._store = None  # we're about to write: the next search must see the new rows
@@ -151,7 +188,8 @@ class Raggy:
               progress: Callable[[int, int], None] | None) -> IngestReport:
         report = IngestReport()
         store = self._open_store()
-        key, opts = pipeline_key(self.config, self._embedder_name), self.config.load_options()
+        key, opts = pipeline_key(self.config, self._embedder_name), self.load_options()
+        images0 = self.image_counts()
         status: dict[str, str] = {}  # source -> added | updated | unchanged | duplicate | failed | removed
         pending: dict[str, tuple[Document, str, Record | None, tuple | None]] = {}  # to (re)index
         known = {r.source for r in reg.all()}
@@ -259,6 +297,8 @@ class Raggy:
         report.context_calls, report.context_cached = done.context_calls, done.context_cached
         report.context_failed = done.context_failed
         report.embedded, report.embed_cached = done.embedded, done.embed_cached
+        report.image_calls, report.image_cached, report.image_failed = (
+            now - before for now, before in zip(self.image_counts(), images0))
         counts = store.sources()
         for source, row in rows.items():
             reg.upsert(replace(row, chunks=counts.get(source, 0)))

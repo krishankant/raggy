@@ -140,6 +140,9 @@ def main(argv: list[str] | None = None) -> int:
             if raggy.config.chunk_context == "llm":
                 print(f"contextual retrieval: {r.context_calls} LLM calls ({r.context_cached} cached, "
                       f"{r.context_failed} failed)")
+            if raggy.config.images == "vision" and (r.image_calls or r.image_cached):
+                print(f"images: {r.image_calls} described, {r.image_cached} from cache, {r.image_failed} failed"
+                      + (" (those use their OCR text only; ingest again to retry)" if r.image_failed else ""))
             for source, reason in r.failed:
                 print(f"failed: {reason}", file=sys.stderr)
             for path in r.skipped:

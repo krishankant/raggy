@@ -26,7 +26,10 @@ class AnthropicLLM:
             self._client = anthropic.Anthropic()  # reads ANTHROPIC_API_KEY (or an `ant` login)
         return self._client
 
-    def complete(self, system: str, user: str, cache_prefix: str | None = None) -> str:
+    def complete(self, system: str, user: str, cache_prefix: str | None = None,
+                 images: list[bytes] | None = None) -> str:
+        import base64
+
         import anthropic
 
         content: str | list = user
@@ -36,6 +39,10 @@ class AnthropicLLM:
             # Prefixes under the model's minimum (512 tokens on Opus 5.5) silently aren't cached.
             content = [{"type": "text", "text": cache_prefix, "cache_control": {"type": "ephemeral"}},
                        {"type": "text", "text": user}]
+        if images:  # images before the text that asks about them
+            blocks = [{"type": "image", "source": {"type": "base64", "media_type": "image/png",
+                                                   "data": base64.b64encode(im).decode()}} for im in images]
+            content = blocks + (content if isinstance(content, list) else [{"type": "text", "text": content}])
         try:
             response = self._get_client().beta.messages.create(
                 model=self.model,

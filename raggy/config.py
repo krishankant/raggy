@@ -126,6 +126,9 @@ class Config:
     citation_threshold: float = 0.5  # lexical: share of a sentence's content words found in its source
     citation_action: str = "report"  # report | strip (remove unsupported markers) | refuse
     refusal_gate: dict = field(default_factory=dict)  # mode -> top-score threshold; empty = off
+    images: str = "off"  # off | ocr (text in the image) | vision (a model's description + that text)
+    vision_provider: str | None = None  # ollama | openai | anthropic; None: the answer model's provider
+    vision_model: str | None = None  # None: the answer model if same provider, else the adapter default
 
     def chunk_settings(self):
         from raggy.chunking import ChunkSettings
@@ -137,7 +140,16 @@ class Config:
     def load_options(self):
         from raggy.ingest.loaders import LoadOptions
 
-        return LoadOptions(html_extract=self.html_extract, pdf=self.pdf, ocr=self.ocr)
+        return LoadOptions(html_extract=self.html_extract, pdf=self.pdf, ocr=self.ocr, images=self.images)
+
+    def vision_key(self) -> dict | None:
+        """What decides an image's text, beyond its bytes; None unless a model reads images."""
+        if self.images != "vision":
+            return None
+        from raggy.ingest.images import VISION_VERSION
+
+        return {"provider": self.vision_provider or self.llm_provider, "model": self.vision_model,
+                "version": VISION_VERSION}
 
     def __post_init__(self):
         if self.chunk_overlap_tokens >= self.chunk_tokens:
@@ -155,6 +167,12 @@ class Config:
         from dotenv import find_dotenv, load_dotenv
 
         load_dotenv(find_dotenv(usecwd=True))  # keys live in .env, never in your shell rc
+        llm_provider = os.environ.get("RAGGY_LLM", "ollama")
+        llm_model = os.environ.get("RAGGY_LLM_MODEL") or None
+        vision_provider = (_choice_env("RAGGY_VISION", "ollama", ("ollama", "openai", "anthropic"))
+                           if os.environ.get("RAGGY_VISION") else llm_provider)
+        # One model setting is enough when the answer model can see: it reads the images too.
+        vision_model = os.environ.get("RAGGY_VISION_MODEL") or (llm_model if vision_provider == llm_provider else None)
         return cls(
             index_dir=Path(os.environ.get("RAGGY_INDEX_DIR") or ".raggy"),  # blank means default, never "."
             embed_model=os.environ.get("RAGGY_EMBED_MODEL", DEFAULT_EMBED_MODEL),
@@ -192,4 +210,7 @@ class Config:
             citation_threshold=float(os.environ.get("RAGGY_CITATION_THRESHOLD") or 0.5),
             citation_action=_choice_env("RAGGY_CITATION_ACTION", "report", ("report", "strip", "refuse")),
             refusal_gate=_gate_env(),
+            images=_choice_env("RAGGY_IMAGES", "off", ("off", "ocr", "vision")),
+            vision_provider=vision_provider,
+            vision_model=vision_model,
         )

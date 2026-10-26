@@ -12,9 +12,13 @@ class FakeLLM:
         self.reply = reply
         self.error = error
         self.calls: list[tuple[str, str]] = []
+        self.image_counts: list[int] = []  # images sent with each call that had any
 
-    def complete(self, system: str, user: str, cache_prefix: str | None = None) -> str:
+    def complete(self, system: str, user: str, cache_prefix: str | None = None,
+                 images: list[bytes] | None = None) -> str:
         user = (cache_prefix or "") + user
+        if images:
+            self.image_counts.append(len(images))
         self.calls.append((system, user))
         if self.error:
             raise self.error

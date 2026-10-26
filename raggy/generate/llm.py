@@ -14,9 +14,11 @@ class LLM(Protocol):
     name: str  # "provider:model", shown in output and later in traces
     usage: dict  # running totals: calls, input, output, cache_read, cache_write (tokens)
 
-    def complete(self, system: str, user: str, cache_prefix: str | None = None) -> str:
+    def complete(self, system: str, user: str, cache_prefix: str | None = None,
+                 images: list[bytes] | None = None) -> str:
         """``cache_prefix`` is text that comes before ``user`` and repeats across calls
-        (week 8): providers that support prompt caching may cache it."""
+        (week 8): providers that support prompt caching may cache it. ``images`` are PNG
+        bytes shown to a vision model with the user text (week 10)."""
         ...
 
 

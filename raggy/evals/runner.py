@@ -32,7 +32,7 @@ STAGES = ("transform", "retrieve", "rerank", "generate")  # in the order a quest
 SAVED_HITS = 10  # retrieved items kept per question in the run file
 # Paid-for work that doesn't depend on the settings that make an index stale:
 # a rebuild keeps these files, and a folder holding only them is raggy's own.
-CACHE_FILES = {"context-cache.sqlite", "embed-cache.sqlite", "transform-cache.sqlite"}
+CACHE_FILES = {"context-cache.sqlite", "embed-cache.sqlite", "transform-cache.sqlite", "vision-cache.sqlite"}
 
 
 class UnsafeIndexDirError(RuntimeError):
@@ -52,8 +52,9 @@ def prepare_index(suite: Suite, raggy: Raggy, docs: list[Document] | None = None
                   progress: Callable[[int, int], None] | None = None) -> dict:
     """Build the suite's index, or reuse it if nothing that shapes it has changed."""
     c = raggy.config
+    images0 = raggy.image_counts()
     if docs is None:
-        docs = suite.documents(c.load_options())
+        docs = suite.documents(raggy.load_options())
         if c.dedupe and suite.dedupe:
             docs, _ = drop_duplicates(docs)
     # The index stores each chunk's source path. Same bytes in another checkout (a git
@@ -61,13 +62,14 @@ def prepare_index(suite: Suite, raggy: Raggy, docs: list[Document] | None = None
     sources = hashlib.sha256("\n".join(sorted(d.source for d in docs)).encode()).hexdigest()
     key = {"fingerprint": suite.fingerprint(), "sources": sources, "embedder": raggy.embedder.name,
            "chunk_size": c.chunk_size, "chunk_overlap": c.chunk_overlap,
-           "html_extract": c.html_extract, "pdf": c.pdf, "ocr": c.ocr, "dedupe": c.dedupe and suite.dedupe, "normalize": NORMALIZE_VERSION,
+           "html_extract": c.html_extract, "pdf": c.pdf, "ocr": c.ocr, "images": c.images,
+           "vision": c.vision_key(), "dedupe": c.dedupe and suite.dedupe, "normalize": NORMALIZE_VERSION,
            "chunking": c.chunk_settings().key(), "chunk_context": c.chunk_context, "store": c.store,
            "ann": c.ann, "fts": FTS_VERSION}
     key_file = c.index_dir / "key.json"
     if key_file.exists() and _index_exists(c):
         if json.loads(key_file.read_text()) == key:
-            return {"cached": True}
+            return {"cached": True, **_image_delta(raggy, images0)}
     if c.index_dir.exists():
         # Stale: built from other data or settings. Only ever delete a folder
         # this function created (it has key.json) or an empty one; anything
@@ -89,7 +91,16 @@ def prepare_index(suite: Suite, raggy: Raggy, docs: list[Document] | None = None
     return {"cached": False, "documents": report.documents, "chunks": report.chunks,
             "seconds": round(seconds, 2), "embedded": report.embedded, "embed_cached": report.embed_cached,
             "context_calls": report.context_calls,
-            "context_cached": report.context_cached, "context_failed": report.context_failed}
+            "context_cached": report.context_cached, "context_failed": report.context_failed,
+            **_image_delta(raggy, images0)}
+
+
+def _image_delta(raggy: Raggy, before: tuple[int, int, int]) -> dict:
+    """Image reads while loading this suite: a failed description fell back to OCR and must show."""
+    if raggy.config.images == "off":
+        return {}
+    calls, cached, failed = (now - b for now, b in zip(raggy.image_counts(), before))
+    return {"image_calls": calls, "image_cached": cached, "image_failed": failed}
 
 
 def _relative(sources: list[str], docs: list[Document]) -> list[str]:
@@ -147,7 +158,7 @@ def run_suite(suite: Suite, raggy: Raggy, judge: Judge | None, *, answers: bool 
               ingest_progress: Callable[[int, int], None] | None = None) -> dict:
     answers = answers and suite.answers
     judge = judge if answers else None
-    docs = suite.documents(raggy.config.load_options())
+    docs = suite.documents(raggy.load_options())
     dups: dict[str, str] = {}
     if raggy.config.dedupe and suite.dedupe:
         docs, dups = drop_duplicates(docs)
@@ -232,6 +243,8 @@ def run_suite(suite: Suite, raggy: Raggy, judge: Judge | None, *, answers: bool 
             "html_extract": raggy.config.html_extract,
             "pdf": raggy.config.pdf,
             "ocr": raggy.config.ocr,
+            "images": raggy.config.images,
+            "vision": raggy.config.vision_key(),
             "chunking": raggy.config.chunk_settings().key(),
             "chunk_context": raggy.config.chunk_context,
             "store": raggy.config.store,

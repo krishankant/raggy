@@ -11,7 +11,7 @@ DOCX, PPTX and spreadsheets this way). Every loader's text goes through
 from __future__ import annotations
 
 import warnings
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Callable
@@ -29,6 +29,10 @@ class LoadOptions:
     html_extract: str = "main"  # "main": article text only; "full": every visible word (the baseline)
     pdf: str = "layout"  # "layout": headings, tables, page labels (week 9 default); "text": week 3's pypdf layer
     ocr: bool = True  # OCR pages with no text layer (scans): ~0.5 s a page, only on pages without text
+    images: str = "off"  # off | ocr | vision: how pictures become text (week 10)
+    # Bound by Raggy to a cached reader. Not settings: they never change what a key means.
+    read_image: Callable[[bytes, str], str | None] | None = field(default=None, compare=False, hash=False)
+    on_image: Callable[[bytes, str, str | None], None] | None = field(default=None, compare=False, hash=False)
 
 
 from raggy.ingest.loaders import csv_loader, html, office, pdf, pdf_layout, text  # noqa: E402  (they import LoadError above)

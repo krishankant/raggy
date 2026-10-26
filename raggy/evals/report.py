@@ -57,6 +57,10 @@ def format_run(run: dict) -> str:
             lines.append(f"\n{title}")
             lines += [f"  {k:<22}{_fmt(v):>8}" for k, v in rows]
     labels = {"transform": "query transform", "rerank": "rerank"}
+    ing = run.get("ingest") or {}
+    if ing.get("image_failed"):
+        lines.append(f"\n⚠ {ing['image_failed']} of {ing.get('image_calls', ing['image_failed'])} "
+                     "image descriptions failed and fell back to OCR text: these numbers aren't vision's")
     for stage, n in (run.get("fallbacks") or {}).items():
         if n:
             total = (run.get("fallback_of") or {}).get(stage, n)

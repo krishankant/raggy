@@ -35,7 +35,10 @@ class OpenAILLM:
             return f"is Ollama running (`ollama serve`) and is the model pulled (`ollama pull {self.model}`)?"
         return "check OPENAI_API_KEY in .env and the model name"
 
-    def complete(self, system: str, user: str, cache_prefix: str | None = None) -> str:
+    def complete(self, system: str, user: str, cache_prefix: str | None = None,
+                 images: list[bytes] | None = None) -> str:
+        import base64
+
         import openai
 
         extra = {}
@@ -44,13 +47,18 @@ class OpenAILLM:
             # minutes before answering. Grounded RAG answers don't need it:
             # on an 8 GB M2 this took a reply from a timeout to under 2 s.
             extra["reasoning_effort"] = "none"
+        # OpenAI caches long shared prefixes (1,024+ tokens) automatically:
+        # putting the repeated part first is all it needs.
+        content: str | list = (cache_prefix or "") + user
+        if images:  # Ollama's vision models take the same data-URI parts
+            content = [{"type": "text", "text": content}] + [
+                {"type": "image_url", "image_url": {"url": "data:image/png;base64," + base64.b64encode(im).decode()}}
+                for im in images]
         try:
             response = self._get_client().chat.completions.create(
                 model=self.model,
                 messages=[{"role": "system", "content": system},
-                          # OpenAI caches long shared prefixes (1,024+ tokens) automatically:
-                          # putting the repeated part first is all it needs.
-                          {"role": "user", "content": (cache_prefix or "") + user}],
+                          {"role": "user", "content": content}],
                 **extra,
             )
         except openai.OpenAIError as e:  # connection, auth, missing model, rate limit
