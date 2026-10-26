@@ -20,6 +20,17 @@ def _positive_int_env(name: str, default: str) -> int:
     return int(raw)
 
 
+MAX_EMBED_TOKENS = 512
+HEADER_BUDGET = 64  # tokens kept free for the contextual header in front of each chunk
+
+
+def _nonneg_int_env(name: str, default: str) -> int:
+    raw = os.environ.get(name) or default
+    if not raw.strip().isdigit():
+        raise ConfigError(f"{name} must be a whole number of 0 or more, got {raw!r}")
+    return int(raw)
+
+
 def _choice_env(name: str, default: str, choices: tuple[str, ...]) -> str:
     raw = (os.environ.get(name) or default).strip().lower()
     if raw not in choices:
@@ -57,11 +68,35 @@ class Config:
     judge_model: str | None = None
     html_extract: str = "main"  # "main": article text only; "full": every visible word
     dedupe: bool = True  # skip documents that duplicate one already indexed
+    chunker: str = "fixed"  # fixed | recursive | structure
+    chunk_tokens: int = 256  # recursive / structure chunk size, in the embedding model's tokens
+    chunk_overlap_tokens: int = 32
+    chunk_headers: bool = True  # embed "title › section" with each chunk
+    parent_tokens: int = 0  # > 0: retrieve small chunks, answer with their parent of this size
+    chunk_context: str = "none"  # none | llm (contextual retrieval: one LLM call per chunk, cached)
+
+    def chunk_settings(self):
+        from raggy.chunking import ChunkSettings
+
+        return ChunkSettings(chunker=self.chunker, tokens=self.chunk_tokens, overlap=self.chunk_overlap_tokens,
+                             chars=self.chunk_size, char_overlap=self.chunk_overlap,
+                             headers=self.chunk_headers, parent_tokens=self.parent_tokens)
 
     def load_options(self):
         from raggy.ingest.loaders import LoadOptions
 
         return LoadOptions(html_extract=self.html_extract)
+
+    def __post_init__(self):
+        if self.chunk_overlap_tokens >= self.chunk_tokens:
+            raise ConfigError(f"RAGGY_CHUNK_OVERLAP_TOKENS ({self.chunk_overlap_tokens}) must be smaller than "
+                              f"RAGGY_CHUNK_TOKENS ({self.chunk_tokens})")
+        if self.chunk_tokens + HEADER_BUDGET > MAX_EMBED_TOKENS:
+            raise ConfigError(f"RAGGY_CHUNK_TOKENS ({self.chunk_tokens}) plus {HEADER_BUDGET} tokens for the "
+                              f"header must fit the embedding model's 512-token limit")
+        if self.parent_tokens and self.parent_tokens <= self.chunk_tokens:
+            raise ConfigError(f"RAGGY_PARENT_TOKENS ({self.parent_tokens}) must be 0 (off) or larger than "
+                              f"RAGGY_CHUNK_TOKENS ({self.chunk_tokens})")
 
     @classmethod
     def from_env(cls) -> "Config":
@@ -78,4 +113,10 @@ class Config:
             judge_model=os.environ.get("RAGGY_JUDGE_MODEL") or None,
             html_extract=_choice_env("RAGGY_HTML_EXTRACT", "main", ("main", "full")),
             dedupe=_bool_env("RAGGY_DEDUPE", True),
+            chunker=_choice_env("RAGGY_CHUNKER", "fixed", ("fixed", "recursive", "structure")),
+            chunk_tokens=_positive_int_env("RAGGY_CHUNK_TOKENS", "256"),
+            chunk_overlap_tokens=_nonneg_int_env("RAGGY_CHUNK_OVERLAP_TOKENS", "32"),
+            chunk_headers=_bool_env("RAGGY_CHUNK_HEADERS", True),
+            parent_tokens=_nonneg_int_env("RAGGY_PARENT_TOKENS", "0"),
+            chunk_context=_choice_env("RAGGY_CHUNK_CONTEXT", "none", ("none", "llm")),
         )

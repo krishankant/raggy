@@ -10,6 +10,11 @@ import numpy as np
 class Embedder(Protocol):
     name: str  # stored in the index, so a different model can't be mixed in
     dim: int
+    max_tokens: int  # longer inputs are silently truncated by the model, so never send one
+
+    def count_tokens(self, text: str) -> int:
+        """Tokens this model sees in ``text`` (without its special start/end markers)."""
+        ...
 
     def embed_documents(self, texts: list[str]) -> np.ndarray:
         """Return a (len(texts), dim) float32 array of unit-length rows."""

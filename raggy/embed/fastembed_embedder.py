@@ -21,6 +21,18 @@ class FastEmbedEmbedder:
         self.batch_size = batch_size
         self._model = TextEmbedding(model_name=model_name)
         self.dim = self._model.embedding_size
+        self._tokenizer = None
+        self.max_tokens = 510  # bge-small: 512 including [CLS] and [SEP]
+
+    def count_tokens(self, text: str) -> int:
+        if self._tokenizer is None:
+            from tokenizers import Tokenizer
+
+            # A copy without truncation: the model's own tokenizer stops counting at 512.
+            self._tokenizer = Tokenizer.from_str(self._model.model.tokenizer.to_str())
+            self._tokenizer.no_truncation()
+            self._tokenizer.no_padding()
+        return len(self._tokenizer.encode(text, add_special_tokens=False).ids)
 
     def embed_documents(self, texts: list[str]) -> np.ndarray:
         # passage_embed adds the model's "document" prefix when it has one.

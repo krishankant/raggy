@@ -24,6 +24,10 @@ class Chunk:
     index: int  # position of the chunk inside its document
     start: int  # character offset into Document.text
     end: int
+    context: str = ""  # section path or LLM-written context: embedded and shown, not part of the span
+    parent_start: int | None = None  # the bigger span returned instead of this one (parent/child)
+    parent_end: int | None = None
+    parent_text: str | None = None
 
 
 @dataclass
