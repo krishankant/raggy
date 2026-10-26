@@ -1,0 +1,2657 @@
+{
+  "schema": 1,
+  "suite": "rich",
+  "label": "week09-layout",
+  "created": "2026-10-26T16:58:00",
+  "git_commit": "c7f5cef",
+  "config": {
+    "embed_model": "BAAI/bge-small-en-v1.5",
+    "chunk_size": 800,
+    "chunk_overlap": 100,
+    "html_extract": "main",
+    "pdf": "layout",
+    "ocr": true,
+    "chunking": {
+      "chunker": "structure",
+      "tokens": 256,
+      "overlap": 32,
+      "chars": 800,
+      "char_overlap": 100,
+      "headers": true,
+      "parent_tokens": 512
+    },
+    "chunk_context": "none",
+    "store": "lance",
+    "ann": "off",
+    "ann_nprobes": 20,
+    "ann_refine": 4,
+    "retrieval": "vector",
+    "rrf_k": 60,
+    "fusion_candidates": 50,
+    "fts_version": 1,
+    "rerank": "none",
+    "rerank_model": null,
+    "rerank_candidates": 20,
+    "query_transform": "none",
+    "budgets": {
+      "transform": 2000,
+      "retrieve": 100,
+      "rerank": 500,
+      "generate": 5000
+    },
+    "pack": false,
+    "context_tokens": 3000,
+    "citation_check": "off",
+    "citation_action": "report",
+    "refusal_gate": {},
+    "dedupe": true,
+    "top_k": 4,
+    "ks": [
+      1,
+      4,
+      10
+    ],
+    "unit": "chunk",
+    "llm": null,
+    "judge": null,
+    "judge_version": null
+  },
+  "ingest": {
+    "cached": false,
+    "documents": 6,
+    "chunks": 40,
+    "seconds": 0.19,
+    "embedded": 4,
+    "embed_cached": 36,
+    "context_calls": 0,
+    "context_cached": 0,
+    "context_failed": 0,
+    "duplicates": []
+  },
+  "fallbacks": {},
+  "fallback_of": {},
+  "gold_missing": [],
+  "llm_usage": {},
+  "metrics": {
+    "recall@1": 1.0,
+    "recall@4": 1.0,
+    "recall@10": 1.0,
+    "mrr": 1.0,
+    "ndcg@1": 1.0,
+    "ndcg@4": 1.0,
+    "ndcg@10": 1.0,
+    "correctness": null,
+    "faithfulness": null,
+    "citation_precision": null,
+    "refusal_accuracy": null,
+    "unanswerable_refused": null,
+    "answerable_refused": null,
+    "context_tokens_p50": 1101.0,
+    "context_tokens_p95": 1982.55,
+    "retrieve_ms_p50": 5.9,
+    "retrieve_ms_p95": 7.767999999999999,
+    "generate_ms_p50": null,
+    "generate_ms_p95": null,
+    "over_budget": []
+  },
+  "by_tag": {
+    "csv": {
+      "recall@1": 1.0,
+      "recall@4": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0,
+      "ndcg@1": 1.0,
+      "ndcg@4": 1.0,
+      "ndcg@10": 1.0,
+      "correctness": null,
+      "faithfulness": null,
+      "citation_precision": null,
+      "refusal_accuracy": null,
+      "unanswerable_refused": null,
+      "answerable_refused": null,
+      "context_tokens_p50": 810.0,
+      "context_tokens_p95": 825.3,
+      "retrieve_ms_p50": 5.890000000000001,
+      "retrieve_ms_p95": 6.367,
+      "generate_ms_p50": null,
+      "generate_ms_p95": null,
+      "n": 2
+    },
+    "docx-table": {
+      "recall@1": 1.0,
+      "recall@4": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0,
+      "ndcg@1": 1.0,
+      "ndcg@4": 1.0,
+      "ndcg@10": 1.0,
+      "correctness": null,
+      "faithfulness": null,
+      "citation_precision": null,
+      "refusal_accuracy": null,
+      "unanswerable_refused": null,
+      "answerable_refused": null,
+      "context_tokens_p50": 761.0,
+      "context_tokens_p95": 789.8,
+      "retrieve_ms_p50": 5.685,
+      "retrieve_ms_p95": 5.797499999999999,
+      "generate_ms_p50": null,
+      "generate_ms_p95": null,
+      "n": 2
+    },
+    "docx-text": {
+      "recall@1": 1.0,
+      "recall@4": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0,
+      "ndcg@1": 1.0,
+      "ndcg@4": 1.0,
+      "ndcg@10": 1.0,
+      "correctness": null,
+      "faithfulness": null,
+      "citation_precision": null,
+      "refusal_accuracy": null,
+      "unanswerable_refused": null,
+      "answerable_refused": null,
+      "context_tokens_p50": 1028.0,
+      "context_tokens_p95": 1040.6,
+      "retrieve_ms_p50": 4.975,
+      "retrieve_ms_p95": 5.0335,
+      "generate_ms_p50": null,
+      "generate_ms_p95": null,
+      "n": 2
+    },
+    "pdf-table": {
+      "recall@1": 1.0,
+      "recall@4": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0,
+      "ndcg@1": 1.0,
+      "ndcg@4": 1.0,
+      "ndcg@10": 1.0,
+      "correctness": null,
+      "faithfulness": null,
+      "citation_precision": null,
+      "refusal_accuracy": null,
+      "unanswerable_refused": null,
+      "answerable_refused": null,
+      "context_tokens_p50": 1254.0,
+      "context_tokens_p95": 1342.7,
+      "retrieve_ms_p50": 6.6,
+      "retrieve_ms_p95": 9.7955,
+      "generate_ms_p50": null,
+      "generate_ms_p95": null,
+      "n": 4
+    },
+    "pdf-text": {
+      "recall@1": 1.0,
+      "recall@4": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0,
+      "ndcg@1": 1.0,
+      "ndcg@4": 1.0,
+      "ndcg@10": 1.0,
+      "correctness": null,
+      "faithfulness": null,
+      "citation_precision": null,
+      "refusal_accuracy": null,
+      "unanswerable_refused": null,
+      "answerable_refused": null,
+      "context_tokens_p50": 829.0,
+      "context_tokens_p95": 1211.5,
+      "retrieve_ms_p50": 5.46,
+      "retrieve_ms_p95": 5.982,
+      "generate_ms_p50": null,
+      "generate_ms_p95": null,
+      "n": 3
+    },
+    "scanned": {
+      "recall@1": 1.0,
+      "recall@4": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0,
+      "ndcg@1": 1.0,
+      "ndcg@4": 1.0,
+      "ndcg@10": 1.0,
+      "correctness": null,
+      "faithfulness": null,
+      "citation_precision": null,
+      "refusal_accuracy": null,
+      "unanswerable_refused": null,
+      "answerable_refused": null,
+      "context_tokens_p50": 1139.0,
+      "context_tokens_p95": 1498.1,
+      "retrieve_ms_p50": 6.62,
+      "retrieve_ms_p95": 6.638,
+      "generate_ms_p50": null,
+      "generate_ms_p95": null,
+      "n": 3
+    },
+    "sheet": {
+      "recall@1": 1.0,
+      "recall@4": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0,
+      "ndcg@1": 1.0,
+      "ndcg@4": 1.0,
+      "ndcg@10": 1.0,
+      "correctness": null,
+      "faithfulness": null,
+      "citation_precision": null,
+      "refusal_accuracy": null,
+      "unanswerable_refused": null,
+      "answerable_refused": null,
+      "context_tokens_p50": 1965.0,
+      "context_tokens_p95": 2007.3,
+      "retrieve_ms_p50": 5.76,
+      "retrieve_ms_p95": 7.263,
+      "generate_ms_p50": null,
+      "generate_ms_p95": null,
+      "n": 3
+    },
+    "slide": {
+      "recall@1": 1.0,
+      "recall@4": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0,
+      "ndcg@1": 1.0,
+      "ndcg@4": 1.0,
+      "ndcg@10": 1.0,
+      "correctness": null,
+      "faithfulness": null,
+      "citation_precision": null,
+      "refusal_accuracy": null,
+      "unanswerable_refused": null,
+      "answerable_refused": null,
+      "context_tokens_p50": 1258.0,
+      "context_tokens_p95": 1276.0,
+      "retrieve_ms_p50": 5.88,
+      "retrieve_ms_p95": 7.743,
+      "generate_ms_p50": null,
+      "generate_ms_p95": null,
+      "n": 3
+    },
+    "slide-notes": {
+      "recall@1": 1.0,
+      "recall@4": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0,
+      "ndcg@1": 1.0,
+      "ndcg@4": 1.0,
+      "ndcg@10": 1.0,
+      "correctness": null,
+      "faithfulness": null,
+      "citation_precision": null,
+      "refusal_accuracy": null,
+      "unanswerable_refused": null,
+      "answerable_refused": null,
+      "context_tokens_p50": 1219.0,
+      "context_tokens_p95": 1367.5,
+      "retrieve_ms_p50": 6.385,
+      "retrieve_ms_p95": 6.7135,
+      "generate_ms_p50": null,
+      "generate_ms_p95": null,
+      "n": 2
+    },
+    "unanswerable": {
+      "correctness": null,
+      "faithfulness": null,
+      "citation_precision": null,
+      "refusal_accuracy": null,
+      "unanswerable_refused": null,
+      "answerable_refused": null,
+      "context_tokens_p50": 1049.0,
+      "context_tokens_p95": 1881.0,
+      "retrieve_ms_p50": 5.785,
+      "retrieve_ms_p95": 6.0135000000000005,
+      "generate_ms_p50": null,
+      "generate_ms_p95": null,
+      "n": 4
+    }
+  },
+  "counts": {
+    "questions": 28,
+    "answerable": 24,
+    "unanswerable": 4,
+    "errors": 0,
+    "judge_errors": 0
+  },
+  "questions": [
+    {
+      "id": "r01",
+      "question": "What does each Ebb cost if a business orders 7 of them?",
+      "answerable": true,
+      "tags": [
+        "pdf-table"
+      ],
+      "latency_ms": {
+        "retrieve": 10.34
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf",
+          "score": 0.6696,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx",
+          "score": 0.6609,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p13507",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.6005,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5965,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p3383",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5908,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p9015",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5858,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p7855",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5843,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p12395",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5817,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p5526",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.581,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p1113",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5809,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1358
+    },
+    {
+      "id": "r02",
+      "question": "What's the lead time on an order of 12 fleet bikes?",
+      "answerable": true,
+      "tags": [
+        "pdf-table"
+      ],
+      "latency_ms": {
+        "retrieve": 6.49
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf",
+          "score": 0.7444,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx",
+          "score": 0.7133,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv",
+          "score": 0.6957,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p13507",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.6817,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5645,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-rota.docx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-rota.docx",
+          "score": 0.5609,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf",
+          "score": 0.5508,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p3383",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5482,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p12395",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5476,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p7855",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5472,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1252
+    },
+    {
+      "id": "r03",
+      "question": "How much is the Plus service plan per bike?",
+      "answerable": true,
+      "tags": [
+        "pdf-table"
+      ],
+      "latency_ms": {
+        "retrieve": 6.35
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf",
+          "score": 0.7652,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx",
+          "score": 0.6901,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv",
+          "score": 0.6054,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p13507",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5467,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5205,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p7855",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.519,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p12395",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5163,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p6685",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.516,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p9015",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5146,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p4424",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5144,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1256
+    },
+    {
+      "id": "r04",
+      "question": "How many workshop visits does the Total care plan include?",
+      "answerable": true,
+      "tags": [
+        "pdf-table"
+      ],
+      "latency_ms": {
+        "retrieve": 6.71
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf",
+          "score": 0.5894,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf",
+          "score": 0.5582,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-rota.docx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-rota.docx",
+          "score": 0.5521,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p13507",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5362,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx",
+          "score": 0.5191,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p12395",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5095,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv",
+          "score": 0.508,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p2247",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5067,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5067,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p5526",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5057,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 887
+    },
+    {
+      "id": "r05",
+      "question": "Until when are the fleet prices valid?",
+      "answerable": true,
+      "tags": [
+        "pdf-text"
+      ],
+      "latency_ms": {
+        "retrieve": 5.46
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf",
+          "score": 0.8474,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx",
+          "score": 0.7074,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv",
+          "score": 0.6716,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p13507",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.6407,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf",
+          "score": 0.6361,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p6685",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5959,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p9015",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5952,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p3383",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5946,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p12395",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5933,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p5526",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5928,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1254
+    },
+    {
+      "id": "r06",
+      "question": "What happens if a fleet order is cancelled after it has been dispatched?",
+      "answerable": true,
+      "tags": [
+        "pdf-text"
+      ],
+      "latency_ms": {
+        "retrieve": 6.04
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf",
+          "score": 0.742,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv",
+          "score": 0.6147,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf",
+          "score": 0.5996,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-rota.docx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-rota.docx",
+          "score": 0.5556,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p13507",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5527,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx",
+          "score": 0.5499,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p9015",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5404,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p12395",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5397,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p6685",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5395,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p3383",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5392,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 795
+    },
+    {
+      "id": "r07",
+      "question": "When are fleet invoices due?",
+      "answerable": true,
+      "tags": [
+        "pdf-text"
+      ],
+      "latency_ms": {
+        "retrieve": 5.23
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf",
+          "score": 0.7468,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv",
+          "score": 0.6862,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx",
+          "score": 0.6235,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf",
+          "score": 0.6181,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p13507",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.6163,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-rota.docx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-rota.docx",
+          "score": 0.6101,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p6685",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5734,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p12395",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5701,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p9015",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5701,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p1113",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5693,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 829
+    },
+    {
+      "id": "r08",
+      "question": "When does the Fenwick workshop close for stocktaking?",
+      "answerable": true,
+      "tags": [
+        "scanned"
+      ],
+      "latency_ms": {
+        "retrieve": 5.7
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf",
+          "score": 0.9171,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p6685",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.6262,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p12395",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.6165,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p3383",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.6163,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-rota.docx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-rota.docx",
+          "score": 0.6161,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p5526",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.6153,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p9015",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.6142,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p7855",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.6126,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p13507",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.6126,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p4424",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.6114,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1538
+    },
+    {
+      "id": "r09",
+      "question": "Where do I collect my bike on the Fenwick stocktaking day?",
+      "answerable": true,
+      "tags": [
+        "scanned"
+      ],
+      "latency_ms": {
+        "retrieve": 6.62
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf",
+          "score": 0.7352,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv",
+          "score": 0.657,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf",
+          "score": 0.6037,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p13507",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5951,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p6685",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5833,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p3383",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5803,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p12395",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5757,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p9015",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.575,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p7855",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5744,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p5526",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.571,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1139
+    },
+    {
+      "id": "r10",
+      "question": "My repair was booked for 14 March at Fenwick. What happens to it?",
+      "answerable": true,
+      "tags": [
+        "scanned"
+      ],
+      "latency_ms": {
+        "retrieve": 6.64
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf",
+          "score": 0.7896,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-rota.docx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-rota.docx",
+          "score": 0.6291,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv",
+          "score": 0.6177,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p6685",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.606,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p13507",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5986,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p3383",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5969,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p12395",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.596,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p9015",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5921,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p5526",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.592,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p10076",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5919,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1063
+    },
+    {
+      "id": "r11",
+      "question": "Who is the mechanic on Wednesday at Merrow?",
+      "answerable": true,
+      "tags": [
+        "docx-table"
+      ],
+      "latency_ms": {
+        "retrieve": 5.81
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-rota.docx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-rota.docx",
+          "score": 0.7223,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf",
+          "score": 0.6353,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv",
+          "score": 0.5683,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx",
+          "score": 0.5569,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p13507",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5432,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p3383",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5242,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p9015",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.523,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p2247",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5228,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p6685",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5227,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5225,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 729
+    },
+    {
+      "id": "r12",
+      "question": "What hours is the Thursday shift?",
+      "answerable": true,
+      "tags": [
+        "docx-table"
+      ],
+      "latency_ms": {
+        "retrieve": 5.56
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-rota.docx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-rota.docx",
+          "score": 0.671,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv",
+          "score": 0.5998,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf",
+          "score": 0.541,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf",
+          "score": 0.524,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx",
+          "score": 0.5153,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p13507",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5091,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p3383",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5038,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p9015",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.502,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p6685",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5018,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.4998,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 793
+    },
+    {
+      "id": "r13",
+      "question": "Why is the Thursday shift late?",
+      "answerable": true,
+      "tags": [
+        "docx-text"
+      ],
+      "latency_ms": {
+        "retrieve": 5.04
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-rota.docx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-rota.docx",
+          "score": 0.6235,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv",
+          "score": 0.6024,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf",
+          "score": 0.5577,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p13507",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5218,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx",
+          "score": 0.5082,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf",
+          "score": 0.5081,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p3383",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5044,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p6685",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5027,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p9015",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.502,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p7855",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5008,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1014
+    },
+    {
+      "id": "r14",
+      "question": "Who covers Saturday shifts?",
+      "answerable": true,
+      "tags": [
+        "docx-text"
+      ],
+      "latency_ms": {
+        "retrieve": 4.91
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-rota.docx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-rota.docx",
+          "score": 0.647,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv",
+          "score": 0.5695,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf",
+          "score": 0.52,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p9015",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5178,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p13507",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5176,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p4424",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5157,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p7855",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5152,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p6685",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5146,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p3383",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5143,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p10076",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5142,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1042
+    },
+    {
+      "id": "r15",
+      "question": "When is the Ebb E-Cargo launch day?",
+      "answerable": true,
+      "tags": [
+        "slide"
+      ],
+      "latency_ms": {
+        "retrieve": 7.95
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx",
+          "score": 0.8724,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf",
+          "score": 0.6448,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv",
+          "score": 0.6328,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p13507",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5873,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf",
+          "score": 0.5726,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-rota.docx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-rota.docx",
+          "score": 0.5429,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p9015",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5282,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p6685",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5266,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p3383",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5262,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5259,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1258
+    },
+    {
+      "id": "r16",
+      "question": "What colours will the Ebb come in?",
+      "answerable": true,
+      "tags": [
+        "slide"
+      ],
+      "latency_ms": {
+        "retrieve": 5.88
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx",
+          "score": 0.7658,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf",
+          "score": 0.5793,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv",
+          "score": 0.5613,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p13507",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5601,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5535,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p9015",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5529,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p12395",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5523,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p7855",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5519,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p6685",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5514,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p4424",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5513,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1278
+    },
+    {
+      "id": "r17",
+      "question": "When does the press embargo for the launch lift?",
+      "answerable": true,
+      "tags": [
+        "slide-notes"
+      ],
+      "latency_ms": {
+        "retrieve": 6.02
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx",
+          "score": 0.8041,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf",
+          "score": 0.5963,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv",
+          "score": 0.5784,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p13507",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5661,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5581,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p9015",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5533,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p6685",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5502,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p12395",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5496,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p4424",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5482,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p3383",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5477,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1054
+    },
+    {
+      "id": "r18",
+      "question": "What range does the Ebb get with 80 kg in the box?",
+      "answerable": true,
+      "tags": [
+        "slide-notes"
+      ],
+      "latency_ms": {
+        "retrieve": 6.75
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx",
+          "score": 0.7741,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf",
+          "score": 0.5991,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p13507",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5703,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5679,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p3383",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5631,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p6685",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5628,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p9015",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5622,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p12395",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5606,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p10076",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5591,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p7855",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.559,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1384
+    },
+    {
+      "id": "r19",
+      "question": "When is dealer training for the launch?",
+      "answerable": true,
+      "tags": [
+        "slide"
+      ],
+      "latency_ms": {
+        "retrieve": 5.4
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx",
+          "score": 0.7912,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv",
+          "score": 0.62,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf",
+          "score": 0.6107,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p13507",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.6079,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-rota.docx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-rota.docx",
+          "score": 0.5939,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf",
+          "score": 0.5875,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p9015",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.553,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p6685",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5528,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5506,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p12395",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5506,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1048
+    },
+    {
+      "id": "r20",
+      "question": "How many BW-CH-1142 chains are in stock, and where?",
+      "answerable": true,
+      "tags": [
+        "sheet"
+      ],
+      "latency_ms": {
+        "retrieve": 7.43
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.7121,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p13507",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.7118,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p6685",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.7087,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p3383",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.7086,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p7855",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.7076,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p12395",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.7057,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p4424",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.7055,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p9015",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.7053,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p5526",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.7039,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p2247",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.7027,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1965
+    },
+    {
+      "id": "r21",
+      "question": "How many 500 Wh replacement batteries are in stock?",
+      "answerable": true,
+      "tags": [
+        "sheet"
+      ],
+      "latency_ms": {
+        "retrieve": 5.76
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p6685",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.6776,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p3383",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.6527,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p13507",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.6516,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p7855",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.6492,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p9015",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.6491,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p4424",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.6481,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p12395",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.6478,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.6468,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p2247",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.6446,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p5526",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.6436,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 2012
+    },
+    {
+      "id": "r22",
+      "question": "What's the lead time from the battery supplier?",
+      "answerable": true,
+      "tags": [
+        "sheet"
+      ],
+      "latency_ms": {
+        "retrieve": 5.74
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p13507",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.7556,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p6685",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5988,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv",
+          "score": 0.586,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf",
+          "score": 0.5833,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx",
+          "score": 0.5786,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p7855",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5774,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p12395",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5739,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p5526",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5719,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p9015",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5719,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p3383",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5708,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1586
+    },
+    {
+      "id": "r23",
+      "question": "How many bikes went to Calder on 13 March?",
+      "answerable": true,
+      "tags": [
+        "csv"
+      ],
+      "latency_ms": {
+        "retrieve": 5.36
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv",
+          "score": 0.6684,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf",
+          "score": 0.5377,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf",
+          "score": 0.5361,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-rota.docx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-rota.docx",
+          "score": 0.5073,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p13507",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5029,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx",
+          "score": 0.4853,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.418,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p6685",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.4132,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p5526",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.4118,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p4424",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.4098,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 793
+    },
+    {
+      "id": "r24",
+      "question": "Who drove the Arlen Islands delivery on 2 March, and how many bikes?",
+      "answerable": true,
+      "tags": [
+        "csv"
+      ],
+      "latency_ms": {
+        "retrieve": 6.42
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv",
+          "score": 0.7177,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf",
+          "score": 0.5588,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx",
+          "score": 0.5486,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf",
+          "score": 0.5282,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p13507",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5218,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-rota.docx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-rota.docx",
+          "score": 0.5016,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p6685",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.4664,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p9015",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.4632,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p12395",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.4632,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p7855",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.4607,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 827
+    },
+    {
+      "id": "u1",
+      "question": "What is the fleet price for the Kestrel Gravel?",
+      "answerable": false,
+      "tags": [
+        "unanswerable"
+      ],
+      "latency_ms": {
+        "retrieve": 5.65
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf",
+          "score": 0.7131,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx",
+          "score": 0.6967,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p13507",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.6136,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv",
+          "score": 0.6122,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5647,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p6685",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5632,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p5526",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5624,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p9015",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5619,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p7855",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5618,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf",
+          "score": 0.5616,
+          "gold": []
+        }
+      ],
+      "context_tokens": 1252
+    },
+    {
+      "id": "u2",
+      "question": "Does the Ebb launch include a test-ride event in Calder?",
+      "answerable": false,
+      "tags": [
+        "unanswerable"
+      ],
+      "latency_ms": {
+        "retrieve": 6.03
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv",
+          "score": 0.6643,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx",
+          "score": 0.6566,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/fleet-prices.pdf",
+          "score": 0.5729,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf",
+          "score": 0.5101,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p13507",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.4858,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-rota.docx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-rota.docx",
+          "score": 0.4773,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p6685",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.4742,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p5526",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.4729,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p3383",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.4728,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p10076",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.4717,
+          "gold": []
+        }
+      ],
+      "context_tokens": 827
+    },
+    {
+      "id": "u3",
+      "question": "How many XP-DL-0090 light sets are in stock?",
+      "answerable": false,
+      "tags": [
+        "unanswerable"
+      ],
+      "latency_ms": {
+        "retrieve": 5.92
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p3383",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.6655,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p4424",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.6636,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p6685",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.6616,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p13507",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.6602,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p7855",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.659,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p9015",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.6589,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p12395",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.6576,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p5526",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.6541,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.6535,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p2247",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.6526,
+          "gold": []
+        }
+      ],
+      "context_tokens": 1992
+    },
+    {
+      "id": "u4",
+      "question": "Who works the Monday shift at Merrow?",
+      "answerable": false,
+      "tags": [
+        "unanswerable"
+      ],
+      "latency_ms": {
+        "retrieve": 5.55
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-rota.docx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-rota.docx",
+          "score": 0.6687,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/workshop-notice-scan.pdf",
+          "score": 0.5639,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/ebb-launch.pptx",
+          "score": 0.5128,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p13507",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5113,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p2247",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5113,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/deliveries.csv",
+          "score": 0.51,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p1113",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5092,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p9015",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5091,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5085,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx#p3383",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week09/evals/rich/docs/parts-stock.xlsx",
+          "score": 0.5075,
+          "gold": []
+        }
+      ],
+      "context_tokens": 846
+    }
+  ]
+}

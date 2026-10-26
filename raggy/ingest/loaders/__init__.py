@@ -27,8 +27,8 @@ class LoadError(Exception):
 @dataclass(frozen=True)
 class LoadOptions:
     html_extract: str = "main"  # "main": article text only; "full": every visible word (the baseline)
-    pdf: str = "text"  # "text": week 3's pypdf text layer; "layout": headings, tables, OCR fallback
-    ocr: bool = False  # OCR pages with no text layer (scans); slow, so a switch
+    pdf: str = "layout"  # "layout": headings, tables, page labels (week 9 default); "text": week 3's pypdf layer
+    ocr: bool = True  # OCR pages with no text layer (scans): ~0.5 s a page, only on pages without text
 
 
 from raggy.ingest.loaders import csv_loader, html, office, pdf, pdf_layout, text  # noqa: E402  (they import LoadError above)
