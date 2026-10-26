@@ -106,6 +106,9 @@ class Config:
     budgets: dict = field(default_factory=lambda: dict(DEFAULT_BUDGETS))  # p95 ms per stage
     pack: bool = False  # merge overlapping passages, order them, fit context_tokens (week 8)
     context_tokens: int = 3000  # budget for the passages in the answer prompt
+    citation_check: str = "off"  # off | lexical | llm: verify each [n] against passage n
+    citation_threshold: float = 0.5  # lexical: share of a sentence's content words found in its source
+    citation_action: str = "report"  # report | strip (remove unsupported markers) | refuse
 
     def chunk_settings(self):
         from raggy.chunking import ChunkSettings
@@ -166,4 +169,7 @@ class Config:
             budgets=_budgets_env(),
             pack=_bool_env("RAGGY_PACK", False),
             context_tokens=_positive_int_env("RAGGY_CONTEXT_TOKENS", "3000"),
+            citation_check=_choice_env("RAGGY_CITATION_CHECK", "off", ("off", "lexical", "llm")),
+            citation_threshold=float(os.environ.get("RAGGY_CITATION_THRESHOLD") or 0.5),
+            citation_action=_choice_env("RAGGY_CITATION_ACTION", "report", ("report", "strip", "refuse")),
         )

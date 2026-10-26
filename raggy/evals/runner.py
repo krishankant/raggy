@@ -20,7 +20,6 @@ from raggy.evals.dataset import chunk_gold, resolve_gold
 from raggy.evals.judge import JUDGE_VERSION, Judge, Verdict, is_refusal
 from raggy.evals.metrics import collapse_to_documents, mean, percentile, retrieval_metrics
 from raggy.evals.suites import Suite
-from raggy.generate.answer import generate_answer
 from raggy.generate.llm import LLMError
 from raggy.generate.prompt import source_text
 from raggy.ingest.dedupe import drop_duplicates
@@ -186,13 +185,16 @@ def run_suite(suite: Suite, raggy: Raggy, judge: Judge | None, *, answers: bool 
         if answers:
             t0 = time.perf_counter()
             try:
-                answer = generate_answer(q.question, context, raggy.llm)
+                answer = raggy.answer_from(q.question, context)
             except LLMError as e:
                 rec["error"] = str(e)
             else:
                 rec["latency_ms"]["generate"] = round((time.perf_counter() - t0) * 1000, 2)
                 rec["answer"] = answer.text
                 rec["citations"] = [c.number for c in answer.citations]
+                if answer.verification != "off":
+                    rec["unsupported_citations"] = answer.unsupported
+                    rec["verification"] = answer.verification
                 rec["refused"] = is_refusal(answer.text)
                 if q.answerable and judge is not None:
                     verdict = (Verdict(correctness=0.0, reason="refused an answerable question")
@@ -241,6 +243,8 @@ def run_suite(suite: Suite, raggy: Raggy, judge: Judge | None, *, answers: bool 
             "budgets": dict(raggy.config.budgets),
             "pack": raggy.config.pack,
             "context_tokens": raggy.config.context_tokens,
+            "citation_check": raggy.config.citation_check,
+            "citation_action": raggy.config.citation_action,
             "dedupe": raggy.config.dedupe and suite.dedupe,
             "top_k": raggy.config.top_k,
             "ks": list(suite.ks),

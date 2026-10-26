@@ -55,6 +55,8 @@ class Answer:
     text: str
     citations: list[Citation]
     hits: list[Hit]
+    unsupported: list[int] = field(default_factory=list)  # cited passages the check found no support in
+    verification: str = "off"  # off | lexical | llm | failed
 
 
 def embed_text(chunk: Chunk) -> str:

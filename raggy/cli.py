@@ -164,6 +164,10 @@ def main(argv: list[str] | None = None) -> int:
                 stages = dict(raggy.last_timings)
                 stages["generate"] = total - sum(stages.values())
                 print("\nTimings: " + "  ".join(f"{k} {v:.0f} ms" for k, v in stages.items()))
+            for n in answer.unsupported:
+                print(f"⚠ citation [{n}] is not supported by its source ({answer.verification} check)")
+            if answer.verification == "failed":
+                print("⚠ the citation check failed; citations were not verified")
             if answer.citations:
                 print("\nSources:")
                 for c in answer.citations:

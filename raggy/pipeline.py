@@ -484,7 +484,13 @@ class Raggy:
     def ask(self, question: str, k: int | None = None, filters: Filters | None = None,
             mode: str | None = None, rerank: str | None = None, transform: str | None = None) -> Answer:
         hits = self.search(question, k, filters, mode=mode, rerank=rerank, transform=transform)
-        return generate_answer(question, self.context(hits), self.llm)
+        return self.answer_from(question, self.context(hits))
+
+    def answer_from(self, question: str, passages: list[Hit]) -> Answer:
+        """Generate (and, if configured, verify) an answer from these passages."""
+        c = self.config
+        return generate_answer(question, passages, self.llm, check=c.citation_check,
+                               threshold=c.citation_threshold, action=c.citation_action)
 
     def sources(self) -> dict[str, int]:
         return make_store(self.config, create=False).sources()
