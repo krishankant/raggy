@@ -1,6 +1,6 @@
 # Ebb E-Cargo owner's manual
 
-Edition 3, for frames with serial numbers starting EC26. Brightwater Bikes, Merrow.
+Edition 3, for frames with serial numbers starting EC26. Brightwater Bikes, assembled at the Fenwick workshop.
 
 Read this manual before your first ride, and keep it with the bike. Sections that matter for safety are marked "Safety".
 
@@ -35,7 +35,7 @@ Write your key number on the warranty card. Replacement keys can only be ordered
 | Item | Value |
 |---|---|
 | Frame | Aluminium, step-through, one size (riders 155 to 195 cm) |
-| Weight without battery | 34.5 kg |
+| Weight without battery | 35.1 kg |
 | Battery | 500 Wh lithium-ion, removable, 2.9 kg |
 | Motor | Mid-drive, 250 W nominal, 85 Nm torque |
 | Gears | 5-speed internal hub |
@@ -45,7 +45,7 @@ Write your key number on the warranty card. Replacement keys can only be ordered
 | Maximum load in the box | 80 kg |
 | Box dimensions (inside) | 80 cm long, 55 cm wide, 30 cm deep |
 
-The maximum total load includes the bike itself. A rider of 85 kg with the bike at 37.4 kg (battery fitted) can therefore carry at most 97.6 kg of cargo, but never more than 80 kg in the box.
+The maximum total load includes the bike itself. A rider of 85 kg with the bike at 38 kg (battery fitted) can therefore carry at most 97 kg of cargo, but never more than 80 kg in the box.
 
 ## 4. Controls and display
 
@@ -87,10 +87,10 @@ Range depends on assist level, load, hills, wind and temperature. Typical range 
 
 | Assist level | Rider only | Rider + 80 kg cargo |
 |---|---|---|
-| Eco | 110 km | 75 km |
-| Tour | 80 km | 55 km |
-| Sport | 60 km | 40 km |
-| Turbo | 45 km | 30 km |
+| Eco | 90 km | 70 km |
+| Tour | 80 km | 60 km |
+| Sport | 65 km | 55 km |
+| Turbo | 55 km | 50 km |
 
 In winter, expect about 30% less range.
 
@@ -137,13 +137,13 @@ Follow this schedule, whichever comes first: the distance or the time.
 | Every 1,500 km or every 6 months | Workshop service: brake pads, hub gear adjustment, steering link bolts |
 | Every 5,000 km or yearly | Major service: brake fluid change, hub oil change, bearings, firmware update |
 
-The first workshop service is free if you have it done within the first 500 km or 3 months.
+The first standard service is free if you have it done within six months of purchase.
 
 ## 10. Brakes
 
 Both brakes are hydraulic discs. The left lever works the front brake and the right lever the rear brake. With a load in the box, use both brakes together and brake earlier than on a normal bike: stopping distance with 80 kg in the box is about 40% longer.
 
-Replace the brake pads when the friction material is thinner than 1 mm. Use only Brightwater pad set BW-BP-0420 or another organic compound pad: sintered pads overheat the 203 mm rotors on long descents with a full load.
+Replace the brake pads when the friction material is thinner than 1 mm. Use only organic compound pads, which the Fenwick workshop and Saltmarsh Cycles stock for the Ebb: sintered pads overheat the 203 mm rotors on long descents with a full load.
 
 If a lever feels spongy or pulls back to the handlebar, stop riding and book a service. Air in the hydraulic line cannot be fixed at the roadside.
 
@@ -195,9 +195,9 @@ If the update stops halfway, the display may show E09. Repeat the update from st
 
 ## 16. Warranty registration
 
-Register your bike within 30 days of delivery to get the extended frame warranty of 10 years instead of 5. Register with the card from the box or in the Brightwater Ride app, using the frame serial number stamped under the bottom bracket.
+Register your bike within 30 days of delivery so we can contact you about safety recalls and handle warranty claims faster. Register with the card from the box or in the Brightwater Ride app, using the frame serial number stamped under the bottom bracket.
 
-The battery and motor warranty is 2 years whether or not you register.
+Registration doesn't change your cover. The frame has a lifetime warranty against manufacturing defects for the original owner. The battery is covered for three years or 800 full charge cycles, whichever comes first. The motor carries its maker's two-year warranty.
 
 ## 17. Troubleshooting
 

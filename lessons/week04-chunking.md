@@ -120,6 +120,8 @@ So this week adds **`evals/manual`**: one fictional owner's manual for the Ebb E
 uv run raggy eval --suite manual --retrieval-only
 ```
 
+> **Note on the numbers.** After week 4 was published, a cross-document check found that the manual contradicted the fictional policy documents in six places: frame and battery warranty terms, the free first service, a brake-pad code missing from the parts catalogue, the bike's weight (37.4 kg against 38 kg) and its range (up to 110 km against 50–90 km). The manual was corrected, and six questions' gold quotes and reference answers were updated (m03, m05, m10, m14, m15, m23). The manual numbers in this lesson and in `evals/baselines/week04/` were measured on the manual **before** that correction (commit `9e0bb1c`) and weren't re-run. Expect small differences if you run the suite today. Comparing the two is a fair experiment in its own right.
+
 ## 6. The numbers
 
 ### 6.1 Retrieval: ten settings
