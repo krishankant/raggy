@@ -37,6 +37,15 @@ class UnsafeIndexDirError(RuntimeError):
     """The eval index folder holds files raggy didn't put there, so it won't delete it."""
 
 
+def _index_exists(config) -> bool:
+    from raggy.store.base import IndexNotFoundError, make_store
+
+    try:
+        return len(make_store(config, create=False)) > 0
+    except IndexNotFoundError:
+        return False
+
+
 def prepare_index(suite: Suite, raggy: Raggy, docs: list[Document] | None = None,
                   progress: Callable[[int, int], None] | None = None) -> dict:
     """Build the suite's index, or reuse it if nothing that shapes it has changed."""
@@ -44,9 +53,10 @@ def prepare_index(suite: Suite, raggy: Raggy, docs: list[Document] | None = None
     key = {"fingerprint": suite.fingerprint(), "embedder": raggy.embedder.name,
            "chunk_size": c.chunk_size, "chunk_overlap": c.chunk_overlap,
            "html_extract": c.html_extract, "dedupe": c.dedupe and suite.dedupe, "normalize": NORMALIZE_VERSION,
-           "chunking": c.chunk_settings().key(), "chunk_context": c.chunk_context}
+           "chunking": c.chunk_settings().key(), "chunk_context": c.chunk_context, "store": c.store,
+           "ann": c.ann}
     key_file = c.index_dir / "key.json"
-    if key_file.exists() and (c.index_dir / "meta.json").exists():
+    if key_file.exists() and _index_exists(c):
         if json.loads(key_file.read_text()) == key:
             return {"cached": True}
     if c.index_dir.exists():

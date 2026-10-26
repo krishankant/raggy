@@ -34,7 +34,8 @@ SECTIONS = "# Help\n\n## Refunds\n\nRefunds are paid within 14 days of the retur
 
 
 def make(tmp_path, **cfg):
-    c = Config(index_dir=tmp_path / "index", embed_model="fake", llm_provider="fake", llm_model=None, **cfg)
+    c = Config(index_dir=tmp_path / "index", embed_model="fake", llm_provider="fake", llm_model=None,
+               **({"store": "numpy"} | cfg))
     return Raggy(c, embedder=FakeEmbedder(), llm=FakeLLM("Paid within 14 days [1]."))
 
 
@@ -52,7 +53,7 @@ def test_headers_are_embedded_not_in_span(tmp_path):
     write(tmp_path / "d" / "help.md", SECTIONS)
     emb = Recording()
     c = Config(index_dir=tmp_path / "index", embed_model="fake", llm_provider="fake", llm_model=None,
-               chunker="structure", chunk_tokens=64, chunk_overlap_tokens=8)
+               chunker="structure", chunk_tokens=64, chunk_overlap_tokens=8, store="numpy")
     Raggy(c, embedder=emb, llm=FakeLLM()).ingest([str(tmp_path / "d")])
     assert any(t.startswith("Help › Refunds\n\n## Refunds") or t.startswith("Help\n\n# Help") for t in emb.seen)
     store = NumpyStore.load(tmp_path / "index")

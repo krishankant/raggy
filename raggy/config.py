@@ -75,7 +75,10 @@ class Config:
     parent_tokens: int = 512  # > 0: retrieve small chunks, answer with their parent of this size
     chunk_context: str = "none"  # none | llm (contextual retrieval: one LLM call per chunk, cached)
     embed_cache: bool = True  # reuse vectors for text this model has embedded before
-    store: str = "numpy"  # numpy | lance
+    store: str = "lance"  # lance (on disk, filters, optional ANN) | numpy (week 1's in-memory matrix)
+    ann: str = "off"  # off: exact search | on: approximate (IVF-HNSW) index, Lance only
+    ann_nprobes: int = 20  # ANN: how many IVF partitions each search visits
+    ann_refine: int = 4  # ANN: re-rank this many times k candidates with exact scores
 
     def chunk_settings(self):
         from raggy.chunking import ChunkSettings
@@ -122,5 +125,8 @@ class Config:
             parent_tokens=_nonneg_int_env("RAGGY_PARENT_TOKENS", "512"),
             chunk_context=_choice_env("RAGGY_CHUNK_CONTEXT", "none", ("none", "llm")),
             embed_cache=_bool_env("RAGGY_EMBED_CACHE", True),
-            store=_choice_env("RAGGY_STORE", "numpy", ("numpy", "lance")),
+            store=_choice_env("RAGGY_STORE", "lance", ("numpy", "lance")),
+            ann=_choice_env("RAGGY_ANN", "off", ("off", "on")),
+            ann_nprobes=_positive_int_env("RAGGY_ANN_NPROBES", "20"),
+            ann_refine=_positive_int_env("RAGGY_ANN_REFINE", "4"),
         )

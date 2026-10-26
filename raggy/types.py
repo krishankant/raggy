@@ -28,6 +28,7 @@ class Chunk:
     parent_start: int | None = None  # the bigger span returned instead of this one (parent/child)
     parent_end: int | None = None
     parent_text: str | None = None
+    meta: dict = field(default_factory=dict)  # the document's type, title and modified date, for filters
 
 
 @dataclass

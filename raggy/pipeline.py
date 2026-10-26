@@ -27,7 +27,7 @@ from raggy.ingest.loaders import LoadError, load_file, load_path
 from raggy.ingest.normalize import NORMALIZE_VERSION
 from raggy.ingest.registry import Record, Registry
 from raggy.ingest.walk import iter_files
-from raggy.store.numpy_store import IndexNotFoundError, NumpyStore
+from raggy.store.base import Filters, IndexNotFoundError, VectorStore, make_store
 from raggy.types import Answer, Chunk, Document, Hit
 
 
@@ -54,7 +54,8 @@ def pipeline_key(config: Config, embedder_name: str) -> str:
     indexed under a different key is re-indexed even if its bytes are the same."""
     return json.dumps({"embedder": embedder_name, "chunking": config.chunk_settings().key(),
                        "chunk_context": config.chunk_context, "html_extract": config.html_extract,
-                       "normalize": NORMALIZE_VERSION, "dedupe": config.dedupe}, sort_keys=True)
+                       "normalize": NORMALIZE_VERSION, "dedupe": config.dedupe, "store": config.store},
+                      sort_keys=True)
 
 
 def embed_text(chunk: Chunk) -> str:
@@ -99,11 +100,8 @@ class Raggy:
             self._llm = make_llm(self.config.llm_provider, self.config.llm_model)
         return self._llm
 
-    def _open_store(self) -> NumpyStore:
-        try:
-            return NumpyStore.load(self.config.index_dir)
-        except IndexNotFoundError:
-            return NumpyStore(self.config.index_dir)
+    def _open_store(self) -> VectorStore:
+        return make_store(self.config, create=True)
 
     def _registry(self) -> Registry:
         return Registry(Path(self.config.index_dir) / "registry.sqlite")
@@ -264,7 +262,7 @@ class Raggy:
     def remove(self, target: str) -> int:
         """Remove a source, or everything under a folder or URL prefix, from the
         index and the registry. Files on disk are never touched."""
-        store = NumpyStore.load(self.config.index_dir)
+        store = make_store(self.config, create=False)
         reg = self._registry()
         try:
             return self._remove(store, reg, target)
@@ -272,7 +270,7 @@ class Raggy:
             reg.close()
 
     @staticmethod
-    def _remove(store: NumpyStore, reg: Registry, target: str) -> int:
+    def _remove(store: VectorStore, reg: Registry, target: str) -> int:
         if is_url(target):
             exact, prefix = target, target.rstrip("/") + "/"
         else:
@@ -297,7 +295,7 @@ class Raggy:
 
     def ingest_documents(self, docs: list[Document], batch_size: int = 256,
                          progress: Callable[[int, int], None] | None = None, *,
-                         store: NumpyStore | None = None, save: bool = True) -> IngestReport:
+                         store: VectorStore | None = None, save: bool = True) -> IngestReport:
         """Chunk, embed and store documents, embedding many chunks per model call.
 
         One model call per batch is much faster than one per document. A
@@ -312,6 +310,10 @@ class Raggy:
         settings = self.config.chunk_settings()
         count = lambda text: self.embedder.count_tokens(text)  # noqa: E731 (fixed never calls it)
         pairs = [(d, c) for d, c in ((d, chunk_document(d, settings, count)) for d in docs) if c]
+        for d, cs in pairs:  # document metadata rides on every chunk, so searches can filter on it
+            meta = {k: d.metadata[k] for k in ("type", "title", "modified") if d.metadata.get(k)}
+            for c in cs:
+                c.meta = dict(meta)
         if self.config.chunk_context == "llm" and pairs:
             from raggy.chunking.contextual import CACHE_NAME, ContextCache, add_llm_context
 
@@ -357,23 +359,25 @@ class Raggy:
             store.save()
         return report
 
-    def search(self, question: str, k: int | None = None) -> list[Hit]:
+    def search(self, question: str, k: int | None = None, filters: Filters | None = None) -> list[Hit]:
         """The k best chunks, or with parent/child on, the k best distinct parents.
 
         Small chunks are precise to search (one idea per vector); bigger parents
         give the model the surrounding text. Each child found is swapped for its
-        parent, and a parent found twice is kept once."""
-        store = NumpyStore.load(self.config.index_dir)  # raises IndexNotFoundError
+        parent, and a parent found twice is kept once. ``filters`` restrict the
+        search to some documents (type, folder or URL prefix, modified date)."""
+        store = make_store(self.config, create=False)  # raises IndexNotFoundError
         query = self.embedder.embed_query(question)
         k = k or self.config.top_k
+        exact = self.config.ann == "off"
         if not self.config.parent_tokens:
-            return store.search(query, k, embedder_name=self.embedder.name)
+            return store.search(query, k, embedder_name=self.embedder.name, where=filters, exact=exact)
         out, seen = [], set()
-        for h in store.search(query, k * 4, embedder_name=self.embedder.name):
+        for h in store.search(query, k * 4, embedder_name=self.embedder.name, where=filters, exact=exact):
             c = h.chunk
             if c.parent_text is not None:
                 c = Chunk(id=f"{c.source}#p{c.parent_start}", source=c.source, text=c.parent_text,
-                          index=c.index, start=c.parent_start, end=c.parent_end, context=c.context)
+                          index=c.index, start=c.parent_start, end=c.parent_end, context=c.context, meta=c.meta)
             if (c.source, c.start) not in seen:
                 seen.add((c.source, c.start))
                 out.append(Hit(chunk=c, score=h.score))
@@ -381,8 +385,8 @@ class Raggy:
                     break
         return out
 
-    def ask(self, question: str, k: int | None = None) -> Answer:
-        return generate_answer(question, self.search(question, k), self.llm)
+    def ask(self, question: str, k: int | None = None, filters: Filters | None = None) -> Answer:
+        return generate_answer(question, self.search(question, k, filters), self.llm)
 
     def sources(self) -> dict[str, int]:
-        return NumpyStore.load(self.config.index_dir).sources()
+        return make_store(self.config, create=False).sources()

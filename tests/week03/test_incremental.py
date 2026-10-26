@@ -24,7 +24,8 @@ def words(n, seed):
 
 
 def make(tmp_path, **cfg) -> Raggy:
-    c = Config(index_dir=tmp_path / "index", embed_model="fake", llm_provider="fake", llm_model=None, **cfg)
+    c = Config(index_dir=tmp_path / "index", embed_model="fake", llm_provider="fake", llm_model=None,
+               **({"store": "numpy"} | cfg))
     return Raggy(c, embedder=FakeEmbedder(), llm=FakeLLM())
 
 
@@ -233,7 +234,8 @@ def test_remove_folder_prefix(tmp_path, docs):
 
 def test_unchanged_run_does_not_load_embedder(tmp_path, docs):
     make(tmp_path).ingest([str(docs)])
-    c = Config(index_dir=tmp_path / "index", embed_model="fake-bow-64", llm_provider="fake", llm_model=None)
+    c = Config(index_dir=tmp_path / "index", embed_model="fake-bow-64", llm_provider="fake", llm_model=None,
+               store="numpy")
     r = Raggy(c)  # no embedder injected: touching .embedder would try to load a real model
     assert r.ingest([str(docs)]).unchanged == 2 and r._embedder is None
 

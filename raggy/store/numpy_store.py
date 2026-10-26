@@ -21,12 +21,7 @@ import numpy as np
 from raggy.types import Chunk, Hit
 
 
-class IndexNotFoundError(Exception):
-    pass
-
-
-class EmbedderMismatchError(Exception):
-    pass
+from raggy.store.base import EmbedderMismatchError, Filters, IndexNotFoundError, mismatch  # noqa: F401
 
 
 class NumpyStore:
@@ -41,12 +36,7 @@ class NumpyStore:
 
     def _check(self, embedder_name: str) -> None:
         if self.embedder is not None and self.embedder != embedder_name and self.chunks:
-            raise EmbedderMismatchError(
-                f"index was built with '{self.embedder}' but this run uses "
-                f"'{embedder_name}'. Vectors from different models can't be compared: "
-                f"delete the index folder {self.path} and ingest again, "
-                f"or set RAGGY_EMBED_MODEL={self.embedder}."
-            )
+            raise mismatch(self.embedder, embedder_name, self.path)
 
     def add(self, chunks: list[Chunk], vectors: np.ndarray, embedder_name: str) -> None:
         """Add chunks, first removing any existing chunks from the same sources."""
@@ -70,11 +60,19 @@ class NumpyStore:
             self.vectors = self.vectors[keep] if self.vectors is not None else None
         return removed
 
-    def search(self, query_vec: np.ndarray, k: int, embedder_name: str) -> list[Hit]:
+    def search(self, query_vec: np.ndarray, k: int, embedder_name: str,
+               where: Filters | None = None, exact: bool = True) -> list[Hit]:
+        """Exact search; ``exact`` is accepted for the VectorStore protocol (always exact here)."""
         self._check(embedder_name)
         if not self.chunks or k < 1:
             return []
         scores = self.vectors @ np.asarray(query_vec, dtype=np.float32)  # cosine: rows are unit length
+        if where:
+            scores = scores.copy()
+            scores[[i for i, c in enumerate(self.chunks) if not where.matches(c)]] = -np.inf
+            k = min(k, int(np.isfinite(scores).sum()))
+            if k < 1:
+                return []
         k = min(k, len(scores))
         top = np.argpartition(-scores, k - 1)[:k]  # the k best, unordered: O(n)
         top = top[np.argsort(-scores[top])]  # then sort only those k

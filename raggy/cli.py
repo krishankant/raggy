@@ -10,7 +10,7 @@ from pathlib import Path
 from raggy.config import Config, ConfigError
 from raggy.generate.llm import LLMError
 from raggy.pipeline import Raggy
-from raggy.store.numpy_store import EmbedderMismatchError, IndexNotFoundError
+from raggy.store.base import EmbedderMismatchError, IndexNotFoundError
 
 
 def _build_raggy(config: Config) -> Raggy:  # tests replace this to inject fakes
