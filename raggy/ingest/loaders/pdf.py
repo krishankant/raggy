@@ -18,7 +18,7 @@ def load(data: bytes, options) -> tuple[str, str | None]:
         title = (reader.metadata or {}).get("/Title") if reader.metadata else None
     except (PdfReadError, ValueError, KeyError, TypeError, OSError) as e:
         raise loaders.LoadError(f"not a readable PDF ({e})") from e
-    text = dehyphenate("\n\n".join(p.strip() for p in pages))
-    if not text.strip():
-        raise loaders.LoadError("no text found (scanned pages need OCR, which arrives in week 9)")
-    return text, (str(title).strip() or None) if title else None
+    if not any(p.strip() for p in pages):
+        raise loaders.LoadError("no text found (scanned pages need OCR: RAGGY_PDF=layout RAGGY_OCR=on)")
+    return [(f"p. {n}", dehyphenate(p.strip())) for n, p in enumerate(pages, start=1)], \
+        (str(title).strip() or None) if title else None

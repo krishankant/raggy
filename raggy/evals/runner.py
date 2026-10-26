@@ -61,7 +61,7 @@ def prepare_index(suite: Suite, raggy: Raggy, docs: list[Document] | None = None
     sources = hashlib.sha256("\n".join(sorted(d.source for d in docs)).encode()).hexdigest()
     key = {"fingerprint": suite.fingerprint(), "sources": sources, "embedder": raggy.embedder.name,
            "chunk_size": c.chunk_size, "chunk_overlap": c.chunk_overlap,
-           "html_extract": c.html_extract, "dedupe": c.dedupe and suite.dedupe, "normalize": NORMALIZE_VERSION,
+           "html_extract": c.html_extract, "pdf": c.pdf, "ocr": c.ocr, "dedupe": c.dedupe and suite.dedupe, "normalize": NORMALIZE_VERSION,
            "chunking": c.chunk_settings().key(), "chunk_context": c.chunk_context, "store": c.store,
            "ann": c.ann, "fts": FTS_VERSION}
     key_file = c.index_dir / "key.json"

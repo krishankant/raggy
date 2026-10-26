@@ -98,6 +98,8 @@ class Config:
     judge_provider: str = "ollama"  # the model that grades answers in `raggy eval`
     judge_model: str | None = None
     html_extract: str = "main"  # "main": article text only; "full": every visible word
+    pdf: str = "text"  # text (week 3) | layout (headings, tables, page labels)
+    ocr: bool = False  # OCR scanned PDF pages (needs pdf=layout)
     dedupe: bool = True  # skip documents that duplicate one already indexed
     chunker: str = "structure"  # fixed | recursive | structure (week 4 measured structure best)
     chunk_tokens: int = 256  # recursive / structure chunk size, in the embedding model's tokens
@@ -135,7 +137,7 @@ class Config:
     def load_options(self):
         from raggy.ingest.loaders import LoadOptions
 
-        return LoadOptions(html_extract=self.html_extract)
+        return LoadOptions(html_extract=self.html_extract, pdf=self.pdf, ocr=self.ocr)
 
     def __post_init__(self):
         if self.chunk_overlap_tokens >= self.chunk_tokens:
@@ -162,6 +164,8 @@ class Config:
             judge_provider=os.environ.get("RAGGY_JUDGE") or _default_judge(),
             judge_model=os.environ.get("RAGGY_JUDGE_MODEL") or None,
             html_extract=_choice_env("RAGGY_HTML_EXTRACT", "main", ("main", "full")),
+            pdf=_choice_env("RAGGY_PDF", "text", ("text", "layout")),
+            ocr=_bool_env("RAGGY_OCR", False),
             dedupe=_bool_env("RAGGY_DEDUPE", True),
             chunker=_choice_env("RAGGY_CHUNKER", "structure", ("fixed", "recursive", "structure")),
             chunk_tokens=_positive_int_env("RAGGY_CHUNK_TOKENS", "256"),

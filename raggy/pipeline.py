@@ -57,6 +57,7 @@ def pipeline_key(config: Config, embedder_name: str) -> str:
     indexed under a different key is re-indexed even if its bytes are the same."""
     return json.dumps({"embedder": embedder_name, "chunking": config.chunk_settings().key(),
                        "chunk_context": config.chunk_context, "html_extract": config.html_extract,
+                       "pdf": config.pdf, "ocr": config.ocr,
                        "normalize": NORMALIZE_VERSION, "dedupe": config.dedupe, "store": config.store},
                       sort_keys=True)
 

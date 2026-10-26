@@ -27,15 +27,21 @@ class LoadError(Exception):
 @dataclass(frozen=True)
 class LoadOptions:
     html_extract: str = "main"  # "main": article text only; "full": every visible word (the baseline)
+    pdf: str = "text"  # "text": week 3's pypdf text layer; "layout": headings, tables, OCR fallback
+    ocr: bool = False  # OCR pages with no text layer (scans); slow, so a switch
 
 
-from raggy.ingest.loaders import html, pdf, text  # noqa: E402  (they import LoadError above)
+from raggy.ingest.loaders import html, pdf, pdf_layout, text  # noqa: E402  (they import LoadError above)
+
+
+def _pdf(data: bytes, options: LoadOptions):
+    return (pdf_layout if options.pdf == "layout" else pdf).load(data, options)
 
 LOADERS: dict[str, Callable[[bytes, LoadOptions], tuple[str, str | None]]] = {
     "text": text.load,
     "markdown": text.load_markdown,
     "html": html.load,
-    "pdf": pdf.load,
+    "pdf": _pdf,
 }
 
 SUFFIXES: dict[str, str] = {
@@ -53,13 +59,27 @@ def load_bytes(data: bytes, source: str, kind: str, options: LoadOptions | None 
         raw, title = LOADERS[kind](data, options or LoadOptions())
     except LoadError as e:
         raise LoadError(f"{source}: {e}") from e
-    body = normalize_text(raw)
+    pages = None
+    if isinstance(raw, list):  # [(label, text)]: normalise page by page so the offsets stay exact
+        parts, pages, pos = [], [], 0
+        for label, page_text in raw:
+            t = normalize_text(page_text)
+            if not t:
+                continue
+            pages.append((label, pos))
+            parts.append(t)
+            pos += len(t) + 2
+        body = "\n\n".join(parts)
+    else:
+        body = normalize_text(raw)
     if not body:
         raise LoadError(f"{source}: no text found")
     name = source.rstrip("/").rsplit("/", 1)[-1] or source
     fallback = Path(name).stem if Path(name).suffix.lower() in SUFFIXES else name  # "2005.11401" stays whole
-    return Document(source=source, text=body,
-                    metadata={"name": name, "title": title or fallback, "type": kind})
+    meta = {"name": name, "title": title or fallback, "type": kind}
+    if pages:
+        meta["pages"] = pages  # (label, start offset): "p. 3", "slide 4", "sheet Prices"
+    return Document(source=source, text=body, metadata=meta)
 
 
 def _iso(timestamp: float) -> str:
