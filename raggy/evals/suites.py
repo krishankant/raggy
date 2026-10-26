@@ -49,6 +49,7 @@ class Suite:
     ks: tuple[int, ...]  # cut-offs for recall@k / nDCG@k
     unit: str  # "chunk": score chunks against gold spans; "document": score whole documents
     answers: bool  # does this suite have reference answers to judge?
+    dedupe: bool = True  # False for a public benchmark: its corpus is part of its definition
 
 
 def fictional_suite(root: Path = Path("evals/fictional")) -> Suite:
@@ -139,6 +140,7 @@ def scifact_suite(data_dir: Path = Path("evals/data")) -> Suite:
         ks=(1, 10, 100),
         unit="document",
         answers=False,
+        dedupe=False,  # dropping abstracts would make our numbers incomparable with published ones
     )
 
 

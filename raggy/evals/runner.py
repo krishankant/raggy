@@ -39,7 +39,7 @@ def prepare_index(suite: Suite, raggy: Raggy, docs: list[Document] | None = None
     c = raggy.config
     key = {"fingerprint": suite.fingerprint(), "embedder": raggy.embedder.name,
            "chunk_size": c.chunk_size, "chunk_overlap": c.chunk_overlap,
-           "html_extract": c.html_extract, "dedupe": c.dedupe, "normalize": NORMALIZE_VERSION}
+           "html_extract": c.html_extract, "dedupe": c.dedupe and suite.dedupe, "normalize": NORMALIZE_VERSION}
     key_file = c.index_dir / "key.json"
     if key_file.exists() and (c.index_dir / "meta.json").exists():
         if json.loads(key_file.read_text()) == key:
@@ -56,7 +56,7 @@ def prepare_index(suite: Suite, raggy: Raggy, docs: list[Document] | None = None
     t0 = time.perf_counter()
     if docs is None:
         docs = suite.documents(c.load_options())
-        if c.dedupe:
+        if c.dedupe and suite.dedupe:
             docs, _ = drop_duplicates(docs)
     report = raggy.ingest_documents(docs, progress=progress)
     seconds = time.perf_counter() - t0
@@ -111,7 +111,7 @@ def run_suite(suite: Suite, raggy: Raggy, judge: Judge | None, *, answers: bool 
     judge = judge if answers else None
     docs = suite.documents(raggy.config.load_options())
     dups: dict[str, str] = {}
-    if raggy.config.dedupe:
+    if raggy.config.dedupe and suite.dedupe:
         docs, dups = drop_duplicates(docs)
     questions = suite.questions()[:limit] if limit else suite.questions()
     gold = resolve_gold(questions, docs)  # fail now, not after 300 model calls
@@ -165,7 +165,7 @@ def run_suite(suite: Suite, raggy: Raggy, judge: Judge | None, *, answers: bool 
             "chunk_size": raggy.config.chunk_size,
             "chunk_overlap": raggy.config.chunk_overlap,
             "html_extract": raggy.config.html_extract,
-            "dedupe": raggy.config.dedupe,
+            "dedupe": raggy.config.dedupe and suite.dedupe,
             "top_k": raggy.config.top_k,
             "ks": list(suite.ks),
             "unit": suite.unit,

@@ -67,3 +67,17 @@ def test_eval_dedupe_removes_duplicate_pages(tmp_path):
     assert run["config"]["html_extract"] == "main" and run["config"]["dedupe"] is True
     kept = run_suite(fictional_web_suite(WEB), raggy_for(tmp_path / "b", dedupe=False), None, answers=False)
     assert kept["ingest"]["documents"] == 14 and kept["ingest"]["duplicates"] == []
+
+
+def test_benchmark_suite_is_never_deduped(tmp_path):
+    from raggy.evals.suites import Suite
+    from raggy.evals.dataset import EvalQuestion, GoldSpan
+    from raggy.types import Document
+    docs = [Document("bench:1", "same abstract text"), Document("bench:2", "same abstract text")]
+    qs = [EvalQuestion("q", "abstract?", True, [GoldSpan("bench:2")])]
+    suite = Suite(name="bench", documents=lambda options=None: list(docs), questions=lambda: list(qs),
+                  fingerprint=lambda: "v1", ks=(1,), unit="document", answers=False, dedupe=False)
+    run = run_suite(suite, raggy_for(tmp_path), None, answers=False)  # dedupe on in config
+    assert run["ingest"]["documents"] == 2 and run["config"]["dedupe"] is False
+    from raggy.evals.suites import scifact_suite
+    assert scifact_suite().dedupe is False and fictional_web_suite(WEB).dedupe is True
