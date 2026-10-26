@@ -104,6 +104,8 @@ class Config:
     rerank_candidates: int = 20  # how many retrieved chunks the reranker sees
     query_transform: str = "none"  # none | rewrite | multi | hyde (one cached LLM call per question)
     budgets: dict = field(default_factory=lambda: dict(DEFAULT_BUDGETS))  # p95 ms per stage
+    pack: bool = False  # merge overlapping passages, order them, fit context_tokens (week 8)
+    context_tokens: int = 3000  # budget for the passages in the answer prompt
 
     def chunk_settings(self):
         from raggy.chunking import ChunkSettings
@@ -162,4 +164,6 @@ class Config:
             rerank_candidates=_positive_int_env("RAGGY_RERANK_CANDIDATES", "20"),
             query_transform=_choice_env("RAGGY_QUERY_TRANSFORM", "none", ("none", "rewrite", "multi", "hyde")),
             budgets=_budgets_env(),
+            pack=_bool_env("RAGGY_PACK", False),
+            context_tokens=_positive_int_env("RAGGY_CONTEXT_TOKENS", "3000"),
         )

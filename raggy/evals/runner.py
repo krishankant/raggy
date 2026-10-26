@@ -181,7 +181,7 @@ def run_suite(suite: Suite, raggy: Raggy, judge: Judge | None, *, answers: bool 
                              "gold": sorted(g)} for h, g in zip(ranked[:SAVED_HITS], covers)]
         if q.answerable:
             rec["retrieval"] = retrieval_metrics(covers, len(gold[q.id]), suite.ks)
-        context = hits[: raggy.config.top_k]  # what the answer model is (or would be) given
+        context = raggy.context(hits[: raggy.config.top_k])  # what the answer model is (or would be) given
         rec["context_tokens"] = sum(raggy.embedder.count_tokens(source_text(h)) for h in context)
         if answers:
             t0 = time.perf_counter()
@@ -239,6 +239,8 @@ def run_suite(suite: Suite, raggy: Raggy, judge: Judge | None, *, answers: bool 
             "rerank_candidates": raggy.config.rerank_candidates,
             "query_transform": raggy.config.query_transform,
             "budgets": dict(raggy.config.budgets),
+            "pack": raggy.config.pack,
+            "context_tokens": raggy.config.context_tokens,
             "dedupe": raggy.config.dedupe and suite.dedupe,
             "top_k": raggy.config.top_k,
             "ks": list(suite.ks),

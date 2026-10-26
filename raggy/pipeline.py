@@ -380,6 +380,14 @@ class Raggy:
         self.transform_stats["failed"] += int(r.failed)
         return r
 
+    def context(self, hits: list[Hit]) -> list[Hit]:
+        """The passages the answer model reads: the hits, packed if RAGGY_PACK is on."""
+        if not self.config.pack:
+            return hits
+        from raggy.generate.pack import pack
+
+        return pack(hits, lambda text: self.embedder.count_tokens(text), self.config.context_tokens)
+
     def reranker(self, kind: str | None = None):
         """The configured reranker, or the one named by ``kind`` (a --rerank override)."""
         from raggy.retrieve.rerank import make_reranker
@@ -476,7 +484,7 @@ class Raggy:
     def ask(self, question: str, k: int | None = None, filters: Filters | None = None,
             mode: str | None = None, rerank: str | None = None, transform: str | None = None) -> Answer:
         hits = self.search(question, k, filters, mode=mode, rerank=rerank, transform=transform)
-        return generate_answer(question, hits, self.llm)
+        return generate_answer(question, self.context(hits), self.llm)
 
     def sources(self) -> dict[str, int]:
         return make_store(self.config, create=False).sources()
