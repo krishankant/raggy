@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import dataclasses
+import os
 import sys
 from pathlib import Path
 
@@ -31,6 +32,36 @@ def _positive_int(value: str) -> int:
     return n
 
 
+def _iso_date(value: str) -> str:
+    from datetime import datetime
+
+    try:
+        datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        raise argparse.ArgumentTypeError(f"expected a date like 2026-01-31, got {value!r}") from None
+    return value
+
+
+def _add_filters(p: argparse.ArgumentParser) -> None:
+    g = p.add_argument_group("filters")
+    g.add_argument("--type", dest="doc_type", choices=["markdown", "text", "html", "pdf"],
+                   help="only documents of this type")
+    g.add_argument("--source", help="only documents inside this folder or under this URL")
+    g.add_argument("--after", type=_iso_date, help="only documents modified on or after this date")
+
+
+def _filters(args):
+    from raggy.ingest.fetch import is_url
+    from raggy.store.base import Filters
+
+    prefix = args.source
+    if prefix and not is_url(prefix):
+        path = Path(prefix).expanduser().resolve()
+        prefix = str(path) + (os.sep if path.is_dir() else "")  # docs/ must not also match docs2/
+    f = Filters(doc_type=args.doc_type, source_prefix=prefix, modified_after=args.after)
+    return f or None
+
+
 def _parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="raggy", description="Ask questions about your documents.")
     sub = p.add_subparsers(dest="command", required=True)
@@ -40,10 +71,12 @@ def _parser() -> argparse.ArgumentParser:
     s = sub.add_parser("search", help="show the chunks retrieval finds, with scores")
     s.add_argument("query")
     s.add_argument("-k", type=_positive_int, default=None)
+    _add_filters(s)
     a = sub.add_parser("ask", help="answer a question with citations")
     a.add_argument("question")
     a.add_argument("-k", type=_positive_int, default=None)
     a.add_argument("--show-context", action="store_true", help="also print the retrieved chunks")
+    _add_filters(a)
     sub.add_parser("sources", help="list indexed sources")
     rm = sub.add_parser("remove", help="drop a source, or everything under a folder or URL, from the index")
     rm.add_argument("target")
@@ -105,9 +138,12 @@ def main(argv: list[str] | None = None) -> int:
                 print(f"not found: {path} (nothing removed; `raggy remove {path}` drops what it held)",
                       file=sys.stderr)
         elif args.command == "search":
-            _print_hits(raggy.search(args.query, args.k))
+            hits = raggy.search(args.query, args.k, _filters(args))
+            if not hits and _filters(args):
+                print("no chunks match these filters", file=sys.stderr)
+            _print_hits(hits)
         elif args.command == "ask":
-            answer = raggy.ask(args.question, args.k)
+            answer = raggy.ask(args.question, args.k, _filters(args))
             if args.show_context:
                 _print_hits(answer.hits)
                 print()
