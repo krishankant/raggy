@@ -51,7 +51,10 @@ def chunk_document(doc: Document, settings: ChunkSettings, count: Counter) -> li
         for c in chunks:
             c.context = ""
     if settings.parent_tokens and settings.chunker != "fixed":
-        parents = _base(doc, settings, count, settings.parent_tokens, 0)
+        # Parents ignore section boundaries: their job is to add the neighbouring
+        # text a small, section-bound child cut off (the "when" next to the "what").
+        parents = (chunk_structure(doc, count, settings.parent_tokens, 0, break_at_headings=False)
+                   if settings.chunker == "structure" else _base(doc, settings, count, settings.parent_tokens, 0))
         for c in chunks:
             p = next((p for p in parents if p.start <= c.start < p.end), None)
             if p is not None:

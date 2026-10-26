@@ -162,3 +162,13 @@ def test_old_chunks_jsonl_loads(tmp_path):
         {"id": "a#0", "source": "a", "text": "hi", "index": 0, "start": 0, "end": 2}) + "\n")
     store = NumpyStore.load(tmp_path)
     assert store.chunks[0].context == "" and store.chunks[0].parent_text is None
+
+
+def test_parents_span_sibling_sections():
+    doc = Document("h.md", "# Handbook\n\n## Hours\n\nOpen late on the first Thursday for the repair evening.\n\n"
+                   "## Repair evening\n\nBring a bike and fix it with our tools, free.", {"title": "Handbook"})
+    s = ChunkSettings(chunker="structure", tokens=20, overlap=0, parent_tokens=200)
+    chunks = chunk_document(doc, s, simple_count)
+    child = next(c for c in chunks if "fix it" in c.text)
+    assert "first Thursday" in child.parent_text and "fix it" in child.parent_text
+    assert child.parent_text == doc.text[child.parent_start:child.parent_end]
