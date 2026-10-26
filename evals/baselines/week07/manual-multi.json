@@ -1,0 +1,2358 @@
+{
+  "schema": 1,
+  "suite": "manual",
+  "label": "week07-multi",
+  "created": "2026-10-26T17:29:25",
+  "git_commit": "53f932a",
+  "config": {
+    "embed_model": "BAAI/bge-small-en-v1.5",
+    "chunk_size": 800,
+    "chunk_overlap": 100,
+    "html_extract": "main",
+    "chunking": {
+      "chunker": "structure",
+      "tokens": 256,
+      "overlap": 32,
+      "chars": 800,
+      "char_overlap": 100,
+      "headers": true,
+      "parent_tokens": 512
+    },
+    "chunk_context": "none",
+    "store": "lance",
+    "ann": "off",
+    "ann_nprobes": 20,
+    "ann_refine": 4,
+    "retrieval": "vector",
+    "rrf_k": 60,
+    "fusion_candidates": 50,
+    "fts_version": 1,
+    "rerank": "none",
+    "rerank_model": null,
+    "rerank_candidates": 20,
+    "query_transform": "multi",
+    "budgets": {
+      "transform": 2000,
+      "retrieve": 100,
+      "rerank": 500,
+      "generate": 5000
+    },
+    "dedupe": true,
+    "top_k": 4,
+    "ks": [
+      1,
+      4,
+      10
+    ],
+    "unit": "chunk",
+    "llm": null,
+    "judge": null,
+    "judge_version": null
+  },
+  "ingest": {
+    "cached": true,
+    "documents": 1,
+    "duplicates": []
+  },
+  "fallbacks": {
+    "transform": 0
+  },
+  "fallback_of": {
+    "transform": 29
+  },
+  "metrics": {
+    "recall@1": 0.6666666666666666,
+    "recall@4": 1.0,
+    "recall@10": 1.0,
+    "mrr": 0.8125,
+    "ndcg@1": 0.6666666666666666,
+    "ndcg@4": 0.8283726313911752,
+    "ndcg@10": 0.8283726313911752,
+    "correctness": null,
+    "faithfulness": null,
+    "citation_precision": null,
+    "refusal_accuracy": null,
+    "unanswerable_refused": null,
+    "answerable_refused": null,
+    "context_tokens_p50": 1663.0,
+    "context_tokens_p95": 1719.6000000000001,
+    "transform_ms_p50": 2201.51,
+    "transform_ms_p95": 3004.1600000000008,
+    "retrieve_ms_p50": 45.87,
+    "retrieve_ms_p95": 93.68000000000006,
+    "generate_ms_p50": null,
+    "generate_ms_p95": null,
+    "over_budget": [
+      "transform"
+    ]
+  },
+  "by_tag": {
+    "cross-section": {
+      "recall@1": 0.5,
+      "recall@4": 1.0,
+      "recall@10": 1.0,
+      "mrr": 0.75,
+      "ndcg@1": 0.5,
+      "ndcg@4": 0.622038473168458,
+      "ndcg@10": 0.622038473168458,
+      "correctness": null,
+      "faithfulness": null,
+      "citation_precision": null,
+      "refusal_accuracy": null,
+      "unanswerable_refused": null,
+      "answerable_refused": null,
+      "context_tokens_p50": 1414.0,
+      "context_tokens_p95": 1414.0,
+      "transform_ms_p50": 2170.385,
+      "transform_ms_p95": 2266.4735,
+      "retrieve_ms_p50": 50.91,
+      "retrieve_ms_p95": 56.364,
+      "generate_ms_p50": null,
+      "generate_ms_p95": null,
+      "n": 2
+    },
+    "lookup": {
+      "recall@1": 0.5,
+      "recall@4": 1.0,
+      "recall@10": 1.0,
+      "mrr": 0.6875,
+      "ndcg@1": 0.5,
+      "ndcg@4": 0.7663662191964322,
+      "ndcg@10": 0.7663662191964322,
+      "correctness": null,
+      "faithfulness": null,
+      "citation_precision": null,
+      "refusal_accuracy": null,
+      "unanswerable_refused": null,
+      "answerable_refused": null,
+      "context_tokens_p50": 1674.0,
+      "context_tokens_p95": 1751.45,
+      "transform_ms_p50": 2224.875,
+      "transform_ms_p95": 3005.8545000000004,
+      "retrieve_ms_p50": 46.55,
+      "retrieve_ms_p95": 169.58050000000006,
+      "generate_ms_p50": null,
+      "generate_ms_p95": null,
+      "n": 8
+    },
+    "numeric": {
+      "recall@1": 0.6666666666666666,
+      "recall@4": 1.0,
+      "recall@10": 1.0,
+      "mrr": 0.8333333333333334,
+      "ndcg@1": 0.6666666666666666,
+      "ndcg@4": 0.8769765845238192,
+      "ndcg@10": 0.8769765845238192,
+      "correctness": null,
+      "faithfulness": null,
+      "citation_precision": null,
+      "refusal_accuracy": null,
+      "unanswerable_refused": null,
+      "answerable_refused": null,
+      "context_tokens_p50": 1666.5,
+      "context_tokens_p95": 1716.25,
+      "transform_ms_p50": 2349.02,
+      "transform_ms_p95": 2613.6875,
+      "retrieve_ms_p50": 44.375,
+      "retrieve_ms_p95": 53.1625,
+      "generate_ms_p50": null,
+      "generate_ms_p95": null,
+      "n": 6
+    },
+    "paraphrase": {
+      "recall@1": 0.75,
+      "recall@4": 1.0,
+      "recall@10": 1.0,
+      "mrr": 0.875,
+      "ndcg@1": 0.75,
+      "ndcg@4": 0.811019236584229,
+      "ndcg@10": 0.811019236584229,
+      "correctness": null,
+      "faithfulness": null,
+      "citation_precision": null,
+      "refusal_accuracy": null,
+      "unanswerable_refused": null,
+      "answerable_refused": null,
+      "context_tokens_p50": 1677.5,
+      "context_tokens_p95": 1681.0,
+      "transform_ms_p50": 2444.37,
+      "transform_ms_p95": 3098.3495,
+      "retrieve_ms_p50": 48.615,
+      "retrieve_ms_p95": 104.9505,
+      "generate_ms_p50": null,
+      "generate_ms_p95": null,
+      "n": 4
+    },
+    "steps": {
+      "recall@1": 0.6666666666666666,
+      "recall@4": 1.0,
+      "recall@10": 1.0,
+      "mrr": 0.8333333333333334,
+      "ndcg@1": 0.6666666666666666,
+      "ndcg@4": 0.8769765845238192,
+      "ndcg@10": 0.8769765845238192,
+      "correctness": null,
+      "faithfulness": null,
+      "citation_precision": null,
+      "refusal_accuracy": null,
+      "unanswerable_refused": null,
+      "answerable_refused": null,
+      "context_tokens_p50": 1414.0,
+      "context_tokens_p95": 1650.7,
+      "transform_ms_p50": 2277.15,
+      "transform_ms_p95": 2280.021,
+      "retrieve_ms_p50": 56.97,
+      "retrieve_ms_p95": 63.225,
+      "generate_ms_p50": null,
+      "generate_ms_p95": null,
+      "n": 3
+    },
+    "table": {
+      "recall@1": 0.8,
+      "recall@4": 1.0,
+      "recall@10": 1.0,
+      "mrr": 0.9,
+      "ndcg@1": 0.8,
+      "ndcg@4": 0.8488153892673832,
+      "ndcg@10": 0.8488153892673832,
+      "correctness": null,
+      "faithfulness": null,
+      "citation_precision": null,
+      "refusal_accuracy": null,
+      "unanswerable_refused": null,
+      "answerable_refused": null,
+      "context_tokens_p50": 1566.0,
+      "context_tokens_p95": 1666.8,
+      "transform_ms_p50": 2063.62,
+      "transform_ms_p95": 2295.23,
+      "retrieve_ms_p50": 44.85,
+      "retrieve_ms_p95": 51.458,
+      "generate_ms_p50": null,
+      "generate_ms_p95": null,
+      "n": 5
+    },
+    "unanswerable": {
+      "correctness": null,
+      "faithfulness": null,
+      "citation_precision": null,
+      "refusal_accuracy": null,
+      "unanswerable_refused": null,
+      "answerable_refused": null,
+      "context_tokens_p50": 1558.0,
+      "context_tokens_p95": 1645.2,
+      "transform_ms_p50": 1993.44,
+      "transform_ms_p95": 2352.874,
+      "retrieve_ms_p50": 45.23,
+      "retrieve_ms_p95": 46.608000000000004,
+      "generate_ms_p50": null,
+      "generate_ms_p95": null,
+      "n": 5
+    }
+  },
+  "counts": {
+    "questions": 29,
+    "answerable": 24,
+    "unanswerable": 5,
+    "errors": 0,
+    "judge_errors": 0
+  },
+  "questions": [
+    {
+      "id": "m01",
+      "question": "How long does it take to charge the battery from empty?",
+      "answerable": true,
+      "tags": [
+        "lookup"
+      ],
+      "latency_ms": {
+        "transform": 2435.85,
+        "retrieve": 234.39
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p2922",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0656,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p4734",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0643,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p8494",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0611,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p11722",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0606,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p10339",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0586,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p1679",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0578,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.055,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p6532",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0513,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1674
+    },
+    {
+      "id": "m02",
+      "question": "My display shows E07. What does it mean and what should I do?",
+      "answerable": true,
+      "tags": [
+        "cross-section",
+        "table"
+      ],
+      "latency_ms": {
+        "transform": 2063.62,
+        "retrieve": 44.85
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p2922",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0656,
+          "gold": [
+            0,
+            1
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p11722",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0637,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p1679",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0628,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p10339",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.062,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0591,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p6532",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0574,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p8494",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0562,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p4734",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0538,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 0.6131471927654584,
+        "recall@10": 1.0,
+        "ndcg@10": 0.6131471927654584,
+        "mrr": 1.0
+      },
+      "context_tokens": 1414
+    },
+    {
+      "id": "m03",
+      "question": "I weigh 85 kg. How much cargo can I carry on the Ebb?",
+      "answerable": true,
+      "tags": [
+        "numeric"
+      ],
+      "latency_ms": {
+        "transform": 2692.85,
+        "retrieve": 53.2
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p1679",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0656,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p8494",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0645,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p4734",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.063,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0625,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p6532",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0607,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p10339",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0568,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p11722",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0542,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p2922",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.052,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1665
+    },
+    {
+      "id": "m04",
+      "question": "What pressure should the rear tyre be with 60 kg of cargo on board?",
+      "answerable": true,
+      "tags": [
+        "table",
+        "numeric"
+      ],
+      "latency_ms": {
+        "transform": 2139.39,
+        "retrieve": 35.56
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p8494",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0656,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p1679",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0643,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p6532",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0623,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0618,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p11722",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0607,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p4734",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0606,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p10339",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0544,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p2922",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0514,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1668
+    },
+    {
+      "id": "m05",
+      "question": "How far can I ride in Tour mode carrying 80 kg?",
+      "answerable": true,
+      "tags": [
+        "table",
+        "numeric"
+      ],
+      "latency_ms": {
+        "transform": 2334.19,
+        "retrieve": 53.05
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p1679",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0645,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p4734",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.064,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p8494",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0633,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0604,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p10339",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0586,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p6532",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0576,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p2922",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0544,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p11722",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0541,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 0.0,
+        "ndcg@1": 0.0,
+        "recall@4": 1.0,
+        "ndcg@4": 0.6309297535714575,
+        "recall@10": 1.0,
+        "ndcg@10": 0.6309297535714575,
+        "mrr": 0.5
+      },
+      "context_tokens": 1662
+    },
+    {
+      "id": "m06",
+      "question": "How often does the hub oil need changing?",
+      "answerable": true,
+      "tags": [
+        "table"
+      ],
+      "latency_ms": {
+        "transform": 2042.13,
+        "retrieve": 45.09
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p6532",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0656,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p8494",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0643,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p10339",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0623,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p11722",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0599,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p4734",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0572,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0564,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p2922",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0554,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p1679",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0529,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1544
+    },
+    {
+      "id": "m07",
+      "question": "I brought the bike in from a freezing garage. Can I plug the charger in straight away?",
+      "answerable": true,
+      "tags": [
+        "paraphrase"
+      ],
+      "latency_ms": {
+        "transform": 3211.7,
+        "retrieve": 56.39
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p2922",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0656,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p4734",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0637,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p11722",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0613,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p8494",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0596,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p10339",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0567,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p1679",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0546,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0537,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p6532",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.051,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1681
+    },
+    {
+      "id": "m08",
+      "question": "How old does a child have to be to ride in the box?",
+      "answerable": true,
+      "tags": [
+        "lookup"
+      ],
+      "latency_ms": {
+        "transform": 3312.78,
+        "retrieve": 49.22
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p6532",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0653,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0648,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p4734",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.063,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p10339",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.062,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p8494",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0609,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p1679",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0606,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p11722",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0545,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p2922",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0532,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 0.0,
+        "ndcg@1": 0.0,
+        "recall@4": 1.0,
+        "ndcg@4": 0.6309297535714575,
+        "recall@10": 1.0,
+        "ndcg@10": 0.6309297535714575,
+        "mrr": 0.5
+      },
+      "context_tokens": 1629
+    },
+    {
+      "id": "m09",
+      "question": "How should I keep the battery over the winter when I'm not riding?",
+      "answerable": true,
+      "tags": [
+        "paraphrase"
+      ],
+      "latency_ms": {
+        "transform": 2456.03,
+        "retrieve": 113.52
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p2922",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0656,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p4734",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0628,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p8494",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0625,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p11722",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0614,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p10339",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0566,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p6532",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0544,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p1679",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0541,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0532,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 0.0,
+        "ndcg@1": 0.0,
+        "recall@4": 1.0,
+        "ndcg@4": 0.6309297535714575,
+        "recall@10": 1.0,
+        "ndcg@10": 0.6309297535714575,
+        "mrr": 0.5
+      },
+      "context_tokens": 1681
+    },
+    {
+      "id": "m10",
+      "question": "Which brake pads can I fit?",
+      "answerable": true,
+      "tags": [
+        "lookup"
+      ],
+      "latency_ms": {
+        "transform": 1835.26,
+        "retrieve": 45.87
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p6532",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0656,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p8494",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0633,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p11722",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.063,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p2922",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0587,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p4734",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0585,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p1679",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0583,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.057,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p10339",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0552,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1679
+    },
+    {
+      "id": "m11",
+      "question": "What happens when the battery gets down to 5%?",
+      "answerable": true,
+      "tags": [
+        "lookup"
+      ],
+      "latency_ms": {
+        "transform": 2248.24,
+        "retrieve": 46.05
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p4734",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0653,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p2922",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0635,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p8494",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0606,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p11722",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0605,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p10339",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0584,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p1679",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0565,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0539,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p6532",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.05,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 0.0,
+        "ndcg@1": 0.0,
+        "recall@4": 1.0,
+        "ndcg@4": 0.5,
+        "recall@10": 1.0,
+        "ndcg@10": 0.5,
+        "mrr": 0.3333333333333333
+      },
+      "context_tokens": 1674
+    },
+    {
+      "id": "m12",
+      "question": "Where do I find the pairing code when updating the firmware at home?",
+      "answerable": true,
+      "tags": [
+        "steps"
+      ],
+      "latency_ms": {
+        "transform": 2045.93,
+        "retrieve": 63.92
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p10339",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0656,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p2922",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0645,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p1679",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0623,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p11722",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0618,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p8494",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0597,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0591,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p4734",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0584,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p6532",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0576,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1414
+    },
+    {
+      "id": "m13",
+      "question": "The firmware update stopped halfway and now the display says E09. What should I do?",
+      "answerable": true,
+      "tags": [
+        "steps",
+        "cross-section"
+      ],
+      "latency_ms": {
+        "transform": 2277.15,
+        "retrieve": 56.97
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p2922",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0656,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p10339",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0645,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p11722",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0632,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p1679",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.062,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p8494",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0595,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p6532",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0595,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0558,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p4734",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0541,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 0.0,
+        "ndcg@1": 0.0,
+        "recall@4": 1.0,
+        "ndcg@4": 0.6309297535714575,
+        "recall@10": 1.0,
+        "ndcg@10": 0.6309297535714575,
+        "mrr": 0.5
+      },
+      "context_tokens": 1414
+    },
+    {
+      "id": "m14",
+      "question": "How long is the frame warranty, and does registering the bike change it?",
+      "answerable": true,
+      "tags": [
+        "lookup"
+      ],
+      "latency_ms": {
+        "transform": 1963.17,
+        "retrieve": 47.05
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p10339",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0656,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p8494",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.063,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p4734",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.063,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p6532",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0628,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.06,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p11722",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0593,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p2922",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0562,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p1679",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0543,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1704
+    },
+    {
+      "id": "m15",
+      "question": "Does registering the bike extend the motor warranty?",
+      "answerable": true,
+      "tags": [
+        "paraphrase"
+      ],
+      "latency_ms": {
+        "transform": 2000.4,
+        "retrieve": 40.84
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p10339",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0656,
+          "gold": [
+            0,
+            1
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p11722",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.064,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0618,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p4734",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0614,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p6532",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0605,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p8494",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0604,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p2922",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0594,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p1679",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0548,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 0.6131471927654584,
+        "recall@10": 1.0,
+        "ndcg@10": 0.6131471927654584,
+        "mrr": 1.0
+      },
+      "context_tokens": 1462
+    },
+    {
+      "id": "m16",
+      "question": "Why does the steering feel heavy?",
+      "answerable": true,
+      "tags": [
+        "table"
+      ],
+      "latency_ms": {
+        "transform": 1830.34,
+        "retrieve": 38.3
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p11722",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0656,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p2922",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0637,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p8494",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0633,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p1679",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0623,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p6532",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0599,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p4734",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0584,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p10339",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0552,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0552,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1566
+    },
+    {
+      "id": "m17",
+      "question": "How much further does the bike take to stop with a full box?",
+      "answerable": true,
+      "tags": [
+        "numeric"
+      ],
+      "latency_ms": {
+        "transform": 2363.85,
+        "retrieve": 52.39
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p1679",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0648,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p6532",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0638,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p8494",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0638,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p4734",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0626,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p2922",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0618,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p10339",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.059,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.058,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p11722",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0516,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 0.0,
+        "ndcg@1": 0.0,
+        "recall@4": 1.0,
+        "ndcg@4": 0.6309297535714575,
+        "recall@10": 1.0,
+        "ndcg@10": 0.6309297535714575,
+        "mrr": 0.5
+      },
+      "context_tokens": 1730
+    },
+    {
+      "id": "m18",
+      "question": "Can I clean the bike with a pressure washer?",
+      "answerable": true,
+      "tags": [
+        "lookup"
+      ],
+      "latency_ms": {
+        "transform": 2201.51,
+        "retrieve": 32.45
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p6532",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0643,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p8494",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0637,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0625,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p4734",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0618,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p11722",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0599,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p10339",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0568,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p2922",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.056,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p1679",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0537,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 0.0,
+        "ndcg@1": 0.0,
+        "recall@4": 1.0,
+        "ndcg@4": 0.5,
+        "recall@10": 1.0,
+        "ndcg@10": 0.5,
+        "mrr": 0.3333333333333333
+      },
+      "context_tokens": 1777
+    },
+    {
+      "id": "m19",
+      "question": "How many charge cycles will the battery last?",
+      "answerable": true,
+      "tags": [
+        "numeric"
+      ],
+      "latency_ms": {
+        "transform": 2171.86,
+        "retrieve": 36.36
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p4734",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0656,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p2922",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0643,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p8494",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0615,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p11722",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0595,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p10339",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0593,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p1679",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0558,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p6532",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0532,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0526,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1675
+    },
+    {
+      "id": "m20",
+      "question": "What do I have to undo to fix a puncture on the back wheel?",
+      "answerable": true,
+      "tags": [
+        "lookup"
+      ],
+      "latency_ms": {
+        "transform": 2389.52,
+        "retrieve": 47.57
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p8494",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0648,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p11722",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0645,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p6532",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.064,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0611,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p2922",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0607,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p10339",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0587,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p4734",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.056,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p1679",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.056,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1620
+    },
+    {
+      "id": "m21",
+      "question": "The gears keep slipping. How do I adjust them?",
+      "answerable": true,
+      "tags": [
+        "steps"
+      ],
+      "latency_ms": {
+        "transform": 2280.34,
+        "retrieve": 38.67
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p8494",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0656,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p11722",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0645,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p2922",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.063,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p6532",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0613,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p1679",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0604,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p10339",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0597,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p4734",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.058,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0554,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1677
+    },
+    {
+      "id": "m22",
+      "question": "Do I get anything back for recycling my old battery?",
+      "answerable": true,
+      "tags": [
+        "paraphrase"
+      ],
+      "latency_ms": {
+        "transform": 2432.71,
+        "retrieve": 35.68
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p11722",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0656,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p4734",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0638,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p2922",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0625,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p8494",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0597,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p10339",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0596,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p1679",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0564,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0562,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p6532",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0516,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1674
+    },
+    {
+      "id": "m23",
+      "question": "Is the first service free?",
+      "answerable": true,
+      "tags": [
+        "lookup"
+      ],
+      "latency_ms": {
+        "transform": 2034.61,
+        "retrieve": 28.78
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p2922",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0648,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p10339",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0643,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p6532",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0624,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p11722",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.062,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p4734",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0581,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0564,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p1679",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0558,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p8494",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0513,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 0.0,
+        "ndcg@1": 0.0,
+        "recall@4": 1.0,
+        "ndcg@4": 0.5,
+        "recall@10": 1.0,
+        "ndcg@10": 0.5,
+        "mrr": 0.3333333333333333
+      },
+      "context_tokens": 1528
+    },
+    {
+      "id": "m24",
+      "question": "How fast does walk assist push the bike?",
+      "answerable": true,
+      "tags": [
+        "numeric"
+      ],
+      "latency_ms": {
+        "transform": 2376.2,
+        "retrieve": 35.05
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p4734",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0656,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p8494",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0633,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0613,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p1679",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.061,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p10339",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0582,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p11722",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0564,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p2922",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0562,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p6532",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0538,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1664
+    },
+    {
+      "id": "u1",
+      "question": "Can the Ebb E-Cargo tow a trailer?",
+      "answerable": false,
+      "tags": [
+        "unanswerable"
+      ],
+      "latency_ms": {
+        "transform": 2022.29,
+        "retrieve": 45.92
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0656,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p8494",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0643,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p1679",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0635,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p4734",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0618,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p6532",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0598,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p10339",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0595,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p11722",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0587,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p2922",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0557,
+          "gold": []
+        }
+      ],
+      "context_tokens": 1663
+    },
+    {
+      "id": "u2",
+      "question": "How much does a replacement charger cost?",
+      "answerable": false,
+      "tags": [
+        "unanswerable"
+      ],
+      "latency_ms": {
+        "transform": 1876.91,
+        "retrieve": 43.59
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p2922",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0656,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p4734",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.064,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p10339",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0628,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p11722",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0609,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0595,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p1679",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0554,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p8494",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0542,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p6532",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0518,
+          "gold": []
+        }
+      ],
+      "context_tokens": 1524
+    },
+    {
+      "id": "u3",
+      "question": "What torque should the steering link bolts be tightened to?",
+      "answerable": false,
+      "tags": [
+        "unanswerable"
+      ],
+      "latency_ms": {
+        "transform": 1993.44,
+        "retrieve": 46.78
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p8494",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0645,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p11722",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0645,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p6532",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0618,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p1679",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0609,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p2922",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0589,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p4734",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0564,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0564,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p10339",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.052,
+          "gold": []
+        }
+      ],
+      "context_tokens": 1574
+    },
+    {
+      "id": "u4",
+      "question": "Can I charge the battery with a USB-C laptop charger?",
+      "answerable": false,
+      "tags": [
+        "unanswerable"
+      ],
+      "latency_ms": {
+        "transform": 2435.52,
+        "retrieve": 45.23
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p2922",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0653,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p4734",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0635,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p11722",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.062,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p1679",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0582,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0574,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p8494",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0571,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p10339",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0556,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p6532",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0511,
+          "gold": []
+        }
+      ],
+      "context_tokens": 1558
+    },
+    {
+      "id": "u5",
+      "question": "Which version of the Brightwater Ride app do I need for firmware updates?",
+      "answerable": false,
+      "tags": [
+        "unanswerable"
+      ],
+      "latency_ms": {
+        "transform": 1922.77,
+        "retrieve": 37.28
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p10339",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0656,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0635,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p2922",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0625,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p11722",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0604,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p1679",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0584,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p6532",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.058,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p4734",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0569,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md#p8494",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/manual/docs/ebb-e-cargo-owners-manual.md",
+          "score": 0.0546,
+          "gold": []
+        }
+      ],
+      "context_tokens": 1460
+    }
+  ]
+}

@@ -12,5 +12,6 @@ Concept guides that sit beside the weekly lessons. Lessons walk through raggy's 
 | [Chunking](chunking.md) | Week 4 | Tokens vs characters; fixed, recursive and structure-aware splitting; overlap; contextual headers; parent/child retrieval and its two traps; contextual retrieval; comparing chunkers at equal context |
 | [Vector search at scale](vector-search-at-scale.md) | Week 5 | Exact search as a matrix multiply; IVF, HNSW, SQ/PQ and refine; measuring ANN by overlap with exact; when you need ANN; embedding throughput |
 | [Hybrid search](hybrid-search.md) | Week 6 | Why vectors and keywords miss different things; BM25 worked by hand (idf, saturation, length); reciprocal rank fusion worked by hand; filters and parents in hybrid search |
+| [Reranking and query transforms](reranking.md) | Week 7 | Bi-encoders against cross-encoders; what reranking can and can't fix; listwise LLM ranking; rewrite, multi-query and HyDE; latency budgets per stage |
 
-More guides arrive with each week: and reranking (week 7).
+More guides arrive with each week.

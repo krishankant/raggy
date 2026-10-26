@@ -4,7 +4,7 @@
 [![Models](https://img.shields.io/badge/answers-Ollama%20%7C%20Claude%20%7C%20OpenAI-6f42c1.svg)](lessons/week01-naive-rag.md#36-one-interface-three-model-providers)
 [![Tests](https://img.shields.io/badge/tests-offline%20pytest-2ea44f.svg)](#commands)
 
-**[Course Plan](COURSE_PLAN.md)** · **[Week 1: Naive RAG](lessons/week01-naive-rag.md)** · **[Week 6: Hybrid search](lessons/week06-hybrid-search.md)** · **[Docs hub](docs/README.md)**
+**[Course Plan](COURSE_PLAN.md)** · **[Week 1: Naive RAG](lessons/week01-naive-rag.md)** · **[Week 7: Reranking](lessons/week07-rerank-and-query-transforms.md)** · **[Docs hub](docs/README.md)**
 
 ---
 
@@ -78,6 +78,9 @@ Point it at your own files, folders or web pages: `uv run raggy ingest ~/notes ~
 | `RAGGY_ANN` / `RAGGY_ANN_NPROBES` / `RAGGY_ANN_REFINE` | `off` / `20` / `4` (approximate index; worth it well past 100k chunks) |
 | `RAGGY_RETRIEVAL` | `vector` (`keyword` = BM25, `hybrid` = both fused with RRF) |
 | `RAGGY_RRF_K` / `RAGGY_FUSION_CANDIDATES` | `60` / `50` |
+| `RAGGY_RERANK` / `RAGGY_RERANK_MODEL` / `RAGGY_RERANK_CANDIDATES` | `none` (`local` cross-encoder, `llm`) / `Xenova/ms-marco-MiniLM-L-6-v2` / `20` |
+| `RAGGY_QUERY_TRANSFORM` | `none` (`rewrite`, `multi`, `hyde`: one cached LLM call per question) |
+| `RAGGY_BUDGETS` | `transform=2000,retrieve=100,rerank=500,generate=5000` (p95 ms per stage, reported by `raggy eval`) |
 
 ## The course
 
@@ -91,13 +94,14 @@ See **[COURSE_PLAN.md](COURSE_PLAN.md)** for all 12 weeks. Ready so far:
 | 4 | [Chunking: where to cut](lessons/week04-chunking.md) | `git checkout week-04` |
 | 5 | [Scale: tens of thousands of documents](lessons/week05-scale.md) | `git checkout week-05` |
 | 6 | [Hybrid search](lessons/week06-hybrid-search.md) | `git checkout week-06` |
+| 7 | [Reranking and query transforms](lessons/week07-rerank-and-query-transforms.md) | `git checkout week-07` |
 
 ## Repository layout
 
 ```
 raggy/            the package: ingest/ chunking/ embed/ store/ generate/ evals/ pipeline.py cli.py
 lessons/          one lesson per week
-docs/             concept guides (embeddings, evals, ingestion, chunking, vector search at scale, hybrid search, and more each week)
+docs/             concept guides (embeddings, evals, ingestion, chunking, vector search at scale, hybrid search, reranking, and more each week)
 samples/          small demo corpora (fictional, so models can't answer from memory)
 evals/            eval suites (fictional corpus, its web-site version, a long manual), committed baselines; data/ and runs/ are local
 tests/            offline pytest suite, one folder per week

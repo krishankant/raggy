@@ -1,6 +1,6 @@
 # Week 6: Hybrid search — keywords and vectors together
 
-**[← Week 5: Scale](week05-scale.md)** · **[Course Plan](../COURSE_PLAN.md)** · **[Hybrid search (guide)](../docs/hybrid-search.md)** · **Week 7: Reranking →** *(coming)*
+**[← Week 5: Scale](week05-scale.md)** · **[Course Plan](../COURSE_PLAN.md)** · **[Hybrid search (guide)](../docs/hybrid-search.md)** · **[Week 7: Reranking →](week07-rerank-and-query-transforms.md)**
 
 ---
 

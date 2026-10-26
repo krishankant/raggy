@@ -1,0 +1,3693 @@
+{
+  "schema": 1,
+  "suite": "fictional",
+  "label": "week07-llmrerank",
+  "created": "2026-10-26T17:04:19",
+  "git_commit": "53f932a",
+  "config": {
+    "embed_model": "BAAI/bge-small-en-v1.5",
+    "chunk_size": 800,
+    "chunk_overlap": 100,
+    "html_extract": "main",
+    "chunking": {
+      "chunker": "structure",
+      "tokens": 256,
+      "overlap": 32,
+      "chars": 800,
+      "char_overlap": 100,
+      "headers": true,
+      "parent_tokens": 512
+    },
+    "chunk_context": "none",
+    "store": "lance",
+    "ann": "off",
+    "ann_nprobes": 20,
+    "ann_refine": 4,
+    "retrieval": "vector",
+    "rrf_k": 60,
+    "fusion_candidates": 50,
+    "fts_version": 1,
+    "rerank": "llm",
+    "rerank_model": null,
+    "rerank_candidates": 20,
+    "query_transform": "none",
+    "budgets": {
+      "transform": 2000,
+      "retrieve": 100,
+      "rerank": 500,
+      "generate": 5000
+    },
+    "dedupe": true,
+    "top_k": 4,
+    "ks": [
+      1,
+      4,
+      10
+    ],
+    "unit": "chunk",
+    "llm": null,
+    "judge": null,
+    "judge_version": null
+  },
+  "ingest": {
+    "cached": false,
+    "documents": 12,
+    "chunks": 33,
+    "seconds": 0.17,
+    "embedded": 0,
+    "embed_cached": 33,
+    "context_calls": 0,
+    "context_cached": 0,
+    "context_failed": 0,
+    "duplicates": []
+  },
+  "fallbacks": {
+    "rerank": 0
+  },
+  "fallback_of": {
+    "rerank": 41
+  },
+  "metrics": {
+    "recall@1": 1.0,
+    "recall@4": 1.0,
+    "recall@10": 1.0,
+    "mrr": 1.0,
+    "ndcg@1": 1.0,
+    "ndcg@4": 0.964831562978678,
+    "ndcg@10": 0.964831562978678,
+    "correctness": null,
+    "faithfulness": null,
+    "citation_precision": null,
+    "refusal_accuracy": null,
+    "unanswerable_refused": null,
+    "answerable_refused": null,
+    "context_tokens_p50": 966.0,
+    "context_tokens_p95": 1134.0,
+    "retrieve_ms_p50": 19.13,
+    "retrieve_ms_p95": 49.19,
+    "rerank_ms_p50": 7435.8,
+    "rerank_ms_p95": 9047.31,
+    "generate_ms_p50": null,
+    "generate_ms_p95": null,
+    "over_budget": [
+      "rerank"
+    ]
+  },
+  "by_tag": {
+    "exact-term": {
+      "recall@1": 1.0,
+      "recall@4": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0,
+      "ndcg@1": 1.0,
+      "ndcg@4": 0.9226294385530917,
+      "ndcg@10": 0.9226294385530917,
+      "correctness": null,
+      "faithfulness": null,
+      "citation_precision": null,
+      "refusal_accuracy": null,
+      "unanswerable_refused": null,
+      "answerable_refused": null,
+      "context_tokens_p50": 1025.0,
+      "context_tokens_p95": 1109.4,
+      "retrieve_ms_p50": 18.19,
+      "retrieve_ms_p95": 45.272,
+      "rerank_ms_p50": 7400.64,
+      "rerank_ms_p95": 9408.246,
+      "generate_ms_p50": null,
+      "generate_ms_p95": null,
+      "n": 5
+    },
+    "lookup": {
+      "recall@1": 1.0,
+      "recall@4": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0,
+      "ndcg@1": 1.0,
+      "ndcg@4": 0.9447353132522084,
+      "ndcg@10": 0.9447353132522084,
+      "correctness": null,
+      "faithfulness": null,
+      "citation_precision": null,
+      "refusal_accuracy": null,
+      "unanswerable_refused": null,
+      "answerable_refused": null,
+      "context_tokens_p50": 975.5,
+      "context_tokens_p95": 1134.0,
+      "retrieve_ms_p50": 18.5,
+      "retrieve_ms_p95": 51.086999999999996,
+      "rerank_ms_p50": 7234.88,
+      "rerank_ms_p95": 8362.021,
+      "generate_ms_p50": null,
+      "generate_ms_p95": null,
+      "n": 14
+    },
+    "multi-doc": {
+      "recall@1": 1.0,
+      "recall@4": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0,
+      "ndcg@1": 1.0,
+      "ndcg@4": 1.0,
+      "ndcg@10": 1.0,
+      "correctness": null,
+      "faithfulness": null,
+      "citation_precision": null,
+      "refusal_accuracy": null,
+      "unanswerable_refused": null,
+      "answerable_refused": null,
+      "context_tokens_p50": 949.0,
+      "context_tokens_p95": 970.6,
+      "retrieve_ms_p50": 19.16,
+      "retrieve_ms_p95": 19.187,
+      "rerank_ms_p50": 6712.565,
+      "rerank_ms_p95": 7801.7135,
+      "generate_ms_p50": null,
+      "generate_ms_p95": null,
+      "n": 2
+    },
+    "numeric": {
+      "recall@1": 1.0,
+      "recall@4": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0,
+      "ndcg@1": 1.0,
+      "ndcg@4": 0.9516433990956823,
+      "ndcg@10": 0.9516433990956823,
+      "correctness": null,
+      "faithfulness": null,
+      "citation_precision": null,
+      "refusal_accuracy": null,
+      "unanswerable_refused": null,
+      "answerable_refused": null,
+      "context_tokens_p50": 939.5,
+      "context_tokens_p95": 1109.55,
+      "retrieve_ms_p50": 17.555,
+      "retrieve_ms_p95": 49.734500000000004,
+      "rerank_ms_p50": 7321.285,
+      "rerank_ms_p95": 8870.6335,
+      "generate_ms_p50": null,
+      "generate_ms_p95": null,
+      "n": 8
+    },
+    "paraphrase": {
+      "recall@1": 1.0,
+      "recall@4": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0,
+      "ndcg@1": 1.0,
+      "ndcg@4": 0.9677622660637882,
+      "ndcg@10": 0.9677622660637882,
+      "correctness": null,
+      "faithfulness": null,
+      "citation_precision": null,
+      "refusal_accuracy": null,
+      "unanswerable_refused": null,
+      "answerable_refused": null,
+      "context_tokens_p50": 964.0,
+      "context_tokens_p95": 1133.2,
+      "retrieve_ms_p50": 18.58,
+      "retrieve_ms_p95": 47.93899999999998,
+      "rerank_ms_p50": 7728.36,
+      "rerank_ms_p95": 9025.1655,
+      "generate_ms_p50": null,
+      "generate_ms_p95": null,
+      "n": 12
+    },
+    "unanswerable": {
+      "correctness": null,
+      "faithfulness": null,
+      "citation_precision": null,
+      "refusal_accuracy": null,
+      "unanswerable_refused": null,
+      "answerable_refused": null,
+      "context_tokens_p50": 942.5,
+      "context_tokens_p95": 1127.3,
+      "retrieve_ms_p50": 18.92,
+      "retrieve_ms_p95": 37.923,
+      "rerank_ms_p50": 7606.905,
+      "rerank_ms_p95": 8764.836000000001,
+      "generate_ms_p50": null,
+      "generate_ms_p95": null,
+      "n": 8
+    }
+  },
+  "counts": {
+    "questions": 41,
+    "answerable": 33,
+    "unanswerable": 8,
+    "errors": 0,
+    "judge_errors": 0
+  },
+  "questions": [
+    {
+      "id": "f01",
+      "question": "How long do refunds take to arrive?",
+      "answerable": true,
+      "tags": [
+        "lookup"
+      ],
+      "latency_ms": {
+        "rerank": 4492.46,
+        "retrieve": 34.37
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 20.0,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 19.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 18.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 17.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md",
+          "score": 16.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md",
+          "score": 15.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 14.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 13.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 12.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md",
+          "score": 4.0,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 964
+    },
+    {
+      "id": "f02",
+      "question": "How long until I get my money back after sending a bike back?",
+      "answerable": true,
+      "tags": [
+        "paraphrase"
+      ],
+      "latency_ms": {
+        "rerank": 7176.32,
+        "retrieve": 14.21
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 20.0,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 19.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md",
+          "score": 18.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 17.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 16.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md",
+          "score": 15.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 14.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 11.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 6.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md",
+          "score": 3.0,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 867
+    },
+    {
+      "id": "f03",
+      "question": "Which bike is available in an XS frame?",
+      "answerable": true,
+      "tags": [
+        "lookup"
+      ],
+      "latency_ms": {
+        "rerank": 8112.03,
+        "retrieve": 7.91
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md",
+          "score": 20.0,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md",
+          "score": 19.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 16.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 15.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 10.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 9.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 8.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 7.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 5.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md",
+          "score": 2.0,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1134
+    },
+    {
+      "id": "f04",
+      "question": "Who founded Brightwater and when?",
+      "answerable": true,
+      "tags": [
+        "lookup"
+      ],
+      "latency_ms": {
+        "rerank": 5631.87,
+        "retrieve": 14.12
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/company-history.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/company-history.md",
+          "score": 20.0,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 19.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md",
+          "score": 18.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md",
+          "score": 14.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 13.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 12.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 11.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md",
+          "score": 10.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 5.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 3.0,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 929
+    },
+    {
+      "id": "f05",
+      "question": "Why is the first frame line called Heron?",
+      "answerable": true,
+      "tags": [
+        "paraphrase"
+      ],
+      "latency_ms": {
+        "rerank": 8019.19,
+        "retrieve": 9.89
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/company-history.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/company-history.md",
+          "score": 20.0,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md",
+          "score": 19.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 18.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md",
+          "score": 17.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 15.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 14.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 11.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 8.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 7.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 5.0,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 955
+    },
+    {
+      "id": "f06",
+      "question": "How much does it cost to ship a bike to the Arlen Islands?",
+      "answerable": true,
+      "tags": [
+        "lookup",
+        "numeric"
+      ],
+      "latency_ms": {
+        "rerank": 7105.81,
+        "retrieve": 17.08
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 20.0,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 19.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 18.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 17.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md",
+          "score": 15.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md",
+          "score": 14.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 6.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 5.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 4.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md",
+          "score": 2.0,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 899
+    },
+    {
+      "id": "f07",
+      "question": "Can I get next-day delivery on a new bike?",
+      "answerable": true,
+      "tags": [
+        "paraphrase"
+      ],
+      "latency_ms": {
+        "rerank": 8850.48,
+        "retrieve": 35.15
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 20.0,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 19.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 18.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md",
+          "score": 17.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 16.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md",
+          "score": 15.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md",
+          "score": 14.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 11.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 9.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 8.0,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 867
+    },
+    {
+      "id": "f08",
+      "question": "How long is the battery on the Ebb E-Cargo guaranteed for?",
+      "answerable": true,
+      "tags": [
+        "paraphrase",
+        "numeric"
+      ],
+      "latency_ms": {
+        "rerank": 8542.52,
+        "retrieve": 14.46
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 20.0,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 19.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 17.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md",
+          "score": 16.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md",
+          "score": 14.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 13.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 12.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 11.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 10.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md",
+          "score": 3.0,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1126
+    },
+    {
+      "id": "f09",
+      "question": "Is crash damage covered by the warranty?",
+      "answerable": true,
+      "tags": [
+        "lookup"
+      ],
+      "latency_ms": {
+        "rerank": 7626.51,
+        "retrieve": 20.45
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 20.0,
+          "gold": [
+            0,
+            1
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 19.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 18.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 17.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md",
+          "score": 15.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 14.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md",
+          "score": 13.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 10.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md",
+          "score": 9.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 8.0,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 0.6131471927654584,
+        "recall@10": 1.0,
+        "ndcg@10": 0.6131471927654584,
+        "mrr": 1.0
+      },
+      "context_tokens": 1066
+    },
+    {
+      "id": "f10",
+      "question": "What days are the workshops open?",
+      "answerable": true,
+      "tags": [
+        "lookup"
+      ],
+      "latency_ms": {
+        "rerank": 8826.29,
+        "retrieve": 11.18
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md",
+          "score": 20.0,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md",
+          "score": 19.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 18.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 15.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 14.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 9.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 7.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 2.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/company-history.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/company-history.md",
+          "score": 0.4195,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 0.415,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 963
+    },
+    {
+      "id": "f11",
+      "question": "When can I come and fix my own bike for free with your tools?",
+      "answerable": true,
+      "tags": [
+        "paraphrase"
+      ],
+      "latency_ms": {
+        "rerank": 8264.0,
+        "retrieve": 63.57
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md",
+          "score": 20.0,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 18.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 14.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 12.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 11.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md",
+          "score": 10.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 8.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 7.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 4.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md",
+          "score": 3.0,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1077
+    },
+    {
+      "id": "f12",
+      "question": "What does it take to become a Master Mechanic?",
+      "answerable": true,
+      "tags": [
+        "lookup"
+      ],
+      "latency_ms": {
+        "rerank": 6197.15,
+        "retrieve": 41.14
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md",
+          "score": 20.0,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 16.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 13.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md",
+          "score": 11.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 9.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 8.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 5.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 4.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md",
+          "score": 1.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/company-history.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/company-history.md",
+          "score": 0.3856,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1119
+    },
+    {
+      "id": "f13",
+      "question": "What is part BW-CH-1142?",
+      "answerable": true,
+      "tags": [
+        "exact-term"
+      ],
+      "latency_ms": {
+        "rerank": 7969.71,
+        "retrieve": 18.19
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 20.0,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 18.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 17.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 16.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md",
+          "score": 15.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 14.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 9.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md",
+          "score": 8.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 7.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md",
+          "score": 4.0,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1022
+    },
+    {
+      "id": "f14",
+      "question": "How much is XP-TY-4545 and what does it fit?",
+      "answerable": true,
+      "tags": [
+        "exact-term"
+      ],
+      "latency_ms": {
+        "rerank": 9767.88,
+        "retrieve": 38.88
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 20.0,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md",
+          "score": 19.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 17.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 16.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 15.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 14.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md",
+          "score": 11.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 5.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 1.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md",
+          "score": 0.4666,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1025
+    },
+    {
+      "id": "f15",
+      "question": "Which part code is the replacement battery for the cargo bike, and can I fit it myself?",
+      "answerable": true,
+      "tags": [
+        "exact-term",
+        "paraphrase"
+      ],
+      "latency_ms": {
+        "rerank": 7400.64,
+        "retrieve": 16.59
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 20.0,
+          "gold": [
+            0,
+            1
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 18.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md",
+          "score": 17.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 16.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 15.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md",
+          "score": 14.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 13.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 12.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 11.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md",
+          "score": 9.0,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 0.6131471927654584,
+        "recall@10": 1.0,
+        "ndcg@10": 0.6131471927654584,
+        "mrr": 1.0
+      },
+      "context_tokens": 1126
+    },
+    {
+      "id": "f16",
+      "question": "What's the phone number of The Spoke Room?",
+      "answerable": true,
+      "tags": [
+        "exact-term"
+      ],
+      "latency_ms": {
+        "rerank": 6624.39,
+        "retrieve": 14.33
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 20.0,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md",
+          "score": 16.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/company-history.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/company-history.md",
+          "score": 13.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md",
+          "score": 12.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 11.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 10.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md",
+          "score": 9.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 7.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md",
+          "score": 5.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 4.0,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 935
+    },
+    {
+      "id": "f17",
+      "question": "Where can I get my Ebb's motor repaired apart from your own workshops?",
+      "answerable": true,
+      "tags": [
+        "paraphrase"
+      ],
+      "latency_ms": {
+        "rerank": 7435.8,
+        "retrieve": 12.52
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 20.0,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 19.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 15.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md",
+          "score": 14.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md",
+          "score": 12.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 10.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md",
+          "score": 9.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 8.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 7.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 6.0,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1126
+    },
+    {
+      "id": "f18",
+      "question": "What's the difference between a standard and a full service, and what do they cost?",
+      "answerable": true,
+      "tags": [
+        "lookup",
+        "numeric"
+      ],
+      "latency_ms": {
+        "rerank": 7000.3,
+        "retrieve": 15.08
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 20.0,
+          "gold": [
+            0,
+            1
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 18.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 17.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md",
+          "score": 16.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md",
+          "score": 13.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 12.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 11.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 9.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md",
+          "score": 8.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 6.0,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 0.6131471927654584,
+        "recall@10": 1.0,
+        "ndcg@10": 0.6131471927654584,
+        "mrr": 1.0
+      },
+      "context_tokens": 1079
+    },
+    {
+      "id": "f19",
+      "question": "I live on the Arlen Islands. Do I have to ship my bike to the mainland for a warranty claim?",
+      "answerable": true,
+      "tags": [
+        "paraphrase",
+        "multi-doc"
+      ],
+      "latency_ms": {
+        "rerank": 5502.4,
+        "retrieve": 19.19
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 20.0,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 19.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 17.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 16.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 15.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md",
+          "score": 14.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 13.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md",
+          "score": 11.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md",
+          "score": 10.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md",
+          "score": 5.0,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 925
+    },
+    {
+      "id": "f20",
+      "question": "Can I put a rear rack on the Kestrel?",
+      "answerable": true,
+      "tags": [
+        "lookup"
+      ],
+      "latency_ms": {
+        "rerank": 7459.13,
+        "retrieve": 19.92
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 20.0,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md",
+          "score": 19.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 16.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md",
+          "score": 15.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 12.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 11.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 9.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 6.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 4.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md",
+          "score": 3.0,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1134
+    },
+    {
+      "id": "f21",
+      "question": "Which child seat fits the Kestrel Gravel?",
+      "answerable": true,
+      "tags": [
+        "paraphrase"
+      ],
+      "latency_ms": {
+        "rerank": 7533.99,
+        "retrieve": 33.98
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 20.0,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md",
+          "score": 18.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 14.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md",
+          "score": 12.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 10.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 9.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 8.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 5.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 4.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/company-history.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/company-history.md",
+          "score": 1.0,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1142
+    },
+    {
+      "id": "f22",
+      "question": "Can I return a helmet I tried on?",
+      "answerable": true,
+      "tags": [
+        "lookup"
+      ],
+      "latency_ms": {
+        "rerank": 7850.64,
+        "retrieve": 21.9
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 20.0,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 19.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 18.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 17.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md",
+          "score": 15.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 14.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md",
+          "score": 13.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 8.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 7.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md",
+          "score": 3.0,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 964
+    },
+    {
+      "id": "f23",
+      "question": "My inside leg is 78 cm. What frame size should I get?",
+      "answerable": true,
+      "tags": [
+        "numeric"
+      ],
+      "latency_ms": {
+        "rerank": 4829.69,
+        "retrieve": 16.41
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md",
+          "score": 20.0,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md",
+          "score": 17.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 14.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 13.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 12.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 8.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 7.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 6.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md",
+          "score": 2.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 0.4903,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 966
+    },
+    {
+      "id": "f24",
+      "question": "Is a professional bike fit free?",
+      "answerable": true,
+      "tags": [
+        "lookup"
+      ],
+      "latency_ms": {
+        "rerank": 7363.95,
+        "retrieve": 11.52
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md",
+          "score": 20.0,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 17.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 16.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 15.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md",
+          "score": 14.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md",
+          "score": 13.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 10.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 7.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 6.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 2.0,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 987
+    },
+    {
+      "id": "f25",
+      "question": "I've ridden my new bike 50 km and it's the wrong size. Can I swap it?",
+      "answerable": true,
+      "tags": [
+        "paraphrase",
+        "multi-doc"
+      ],
+      "latency_ms": {
+        "rerank": 7922.73,
+        "retrieve": 19.13
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md",
+          "score": 20.0,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 19.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 18.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md",
+          "score": 15.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 12.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 11.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 9.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md",
+          "score": 8.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 3.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md",
+          "score": 1.0,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 973
+    },
+    {
+      "id": "f26",
+      "question": "How long do you keep my order history?",
+      "answerable": true,
+      "tags": [
+        "lookup"
+      ],
+      "latency_ms": {
+        "rerank": 6354.1,
+        "retrieve": 49.19
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md",
+          "score": 20.0,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 19.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 18.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 17.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 16.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 14.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 13.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md",
+          "score": 12.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 11.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md",
+          "score": 4.0,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 782
+    },
+    {
+      "id": "f27",
+      "question": "Who is the data protection officer?",
+      "answerable": true,
+      "tags": [
+        "exact-term"
+      ],
+      "latency_ms": {
+        "rerank": 2686.4,
+        "retrieve": 46.87
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md",
+          "score": 20.0,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md",
+          "score": 19.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 18.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 15.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 12.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 10.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 8.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md",
+          "score": 2.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md",
+          "score": 0.3731,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/company-history.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/company-history.md",
+          "score": 0.3635,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1043
+    },
+    {
+      "id": "f28",
+      "question": "Do you use tracking cookies?",
+      "answerable": true,
+      "tags": [
+        "lookup"
+      ],
+      "latency_ms": {
+        "rerank": 3667.9,
+        "retrieve": 13.89
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md",
+          "score": 20.0,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 19.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 18.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md",
+          "score": 17.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 16.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 15.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 14.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 13.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md",
+          "score": 9.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 7.0,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1048
+    },
+    {
+      "id": "f29",
+      "question": "Can I buy the Ebb E-Cargo through the cycle-to-work scheme?",
+      "answerable": true,
+      "tags": [
+        "lookup",
+        "numeric"
+      ],
+      "latency_ms": {
+        "rerank": 7376.32,
+        "retrieve": 54.61
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 20.0,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md",
+          "score": 17.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 16.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 15.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 14.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md",
+          "score": 13.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 11.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 10.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 9.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md",
+          "score": 3.0,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 898
+    },
+    {
+      "id": "f30",
+      "question": "Can I get a refund on a bike bought through Ride to Work?",
+      "answerable": true,
+      "tags": [
+        "paraphrase"
+      ],
+      "latency_ms": {
+        "rerank": 9238.67,
+        "retrieve": 27.94
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 20.0,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 19.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md",
+          "score": 17.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 16.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 14.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md",
+          "score": 13.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 10.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 9.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 5.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md",
+          "score": 4.0,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 901
+    },
+    {
+      "id": "f31",
+      "question": "What is the lightest adult bike Brightwater sells, and how much does it weigh?",
+      "answerable": true,
+      "tags": [
+        "numeric"
+      ],
+      "latency_ms": {
+        "rerank": 7487.67,
+        "retrieve": 22.0
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md",
+          "score": 20.0,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md",
+          "score": 15.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 14.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 13.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 11.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 10.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 8.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 7.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 6.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/company-history.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/company-history.md",
+          "score": 5.0,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 1031
+    },
+    {
+      "id": "f32",
+      "question": "If I return a bike after 45 days, what do I get back?",
+      "answerable": true,
+      "tags": [
+        "numeric",
+        "paraphrase"
+      ],
+      "latency_ms": {
+        "rerank": 7266.25,
+        "retrieve": 18.03
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 20.0,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 19.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md",
+          "score": 18.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 17.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md",
+          "score": 16.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 13.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 11.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md",
+          "score": 10.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 9.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 7.0,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 867
+    },
+    {
+      "id": "f33",
+      "question": "How much does a staff member pay for a 1,000-credit bike after probation?",
+      "answerable": true,
+      "tags": [
+        "numeric"
+      ],
+      "latency_ms": {
+        "rerank": 9047.31,
+        "retrieve": 40.68
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md",
+          "score": 20.0,
+          "gold": [
+            0
+          ]
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 19.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 18.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md",
+          "score": 15.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 14.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 13.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md",
+          "score": 12.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 8.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 7.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 4.0,
+          "gold": []
+        }
+      ],
+      "retrieval": {
+        "recall@1": 1.0,
+        "ndcg@1": 1.0,
+        "recall@4": 1.0,
+        "ndcg@4": 1.0,
+        "recall@10": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0
+      },
+      "context_tokens": 913
+    },
+    {
+      "id": "u01",
+      "question": "Do you offer gift wrapping on orders?",
+      "answerable": false,
+      "tags": [
+        "unanswerable"
+      ],
+      "latency_ms": {
+        "rerank": 8345.93,
+        "retrieve": 14.03
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 20.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 19.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 18.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md",
+          "score": 17.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 15.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 14.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md",
+          "score": 12.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 11.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 7.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md",
+          "score": 4.0,
+          "gold": []
+        }
+      ],
+      "context_tokens": 897
+    },
+    {
+      "id": "u02",
+      "question": "What is the top speed of the Ebb E-Cargo's motor?",
+      "answerable": false,
+      "tags": [
+        "unanswerable"
+      ],
+      "latency_ms": {
+        "rerank": 7025.3,
+        "retrieve": 35.7
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 20.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md",
+          "score": 19.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 18.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 17.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 15.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 14.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 13.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md",
+          "score": 12.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 11.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md",
+          "score": 1.0,
+          "gold": []
+        }
+      ],
+      "context_tokens": 1126
+    },
+    {
+      "id": "u03",
+      "question": "Who is the current CEO of Brightwater Bikes?",
+      "answerable": false,
+      "tags": [
+        "unanswerable"
+      ],
+      "latency_ms": {
+        "rerank": 5940.68,
+        "retrieve": 20.11
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/company-history.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/company-history.md",
+          "score": 20.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md",
+          "score": 19.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md",
+          "score": 18.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 16.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 13.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 12.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 11.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 9.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md",
+          "score": 8.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 3.0,
+          "gold": []
+        }
+      ],
+      "context_tokens": 933
+    },
+    {
+      "id": "u04",
+      "question": "Do you sell electric scooters?",
+      "answerable": false,
+      "tags": [
+        "unanswerable"
+      ],
+      "latency_ms": {
+        "rerank": 8780.95,
+        "retrieve": 39.12
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md",
+          "score": 20.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 19.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 14.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 13.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 12.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 9.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 7.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 6.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md",
+          "score": 3.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md",
+          "score": 1.0,
+          "gold": []
+        }
+      ],
+      "context_tokens": 898
+    },
+    {
+      "id": "u05",
+      "question": "What is the part code for Kestrel Gravel brake rotors?",
+      "answerable": false,
+      "tags": [
+        "unanswerable"
+      ],
+      "latency_ms": {
+        "rerank": 6102.85,
+        "retrieve": 22.84
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 20.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md",
+          "score": 19.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 17.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 16.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md",
+          "score": 15.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 14.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 10.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md",
+          "score": 8.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 6.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 2.0,
+          "gold": []
+        }
+      ],
+      "context_tokens": 1128
+    },
+    {
+      "id": "u06",
+      "question": "Can I pay for a bike in monthly instalments with a credit card?",
+      "answerable": false,
+      "tags": [
+        "unanswerable"
+      ],
+      "latency_ms": {
+        "rerank": 8089.9,
+        "retrieve": 15.0
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 20.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 17.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md",
+          "score": 16.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md",
+          "score": 15.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md",
+          "score": 14.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 13.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 12.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 10.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 8.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 4.0,
+          "gold": []
+        }
+      ],
+      "context_tokens": 952
+    },
+    {
+      "id": "u07",
+      "question": "What is the phone number of the Fenwick workshop?",
+      "answerable": false,
+      "tags": [
+        "unanswerable"
+      ],
+      "latency_ms": {
+        "rerank": 7123.91,
+        "retrieve": 17.73
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 20.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md",
+          "score": 18.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/shipping.md",
+          "score": 17.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md",
+          "score": 16.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/company-history.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/company-history.md",
+          "score": 15.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md",
+          "score": 12.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 11.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/parts-catalogue.md",
+          "score": 10.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 5.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 2.0,
+          "gold": []
+        }
+      ],
+      "context_tokens": 996
+    },
+    {
+      "id": "u08",
+      "question": "How many bikes did Brightwater sell last year?",
+      "answerable": false,
+      "tags": [
+        "unanswerable"
+      ],
+      "latency_ms": {
+        "rerank": 8734.91,
+        "retrieve": 9.37
+      },
+      "retrieved": [
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/company-history.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/company-history.md",
+          "score": 20.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/privacy-policy.md",
+          "score": 19.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/service-centres.md",
+          "score": 18.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/returns-and-refunds.md",
+          "score": 17.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/staff-handbook.md",
+          "score": 16.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/cycle-to-work-scheme.md",
+          "score": 15.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-models.md",
+          "score": 14.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/bike-fitting.md",
+          "score": 8.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/warranty.md",
+          "score": 7.0,
+          "gold": []
+        },
+        {
+          "chunk_id": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md#p0",
+          "source": "/Users/krishankantsinghal/claudecode/raggy-week07/evals/fictional/docs/accessories.md",
+          "score": 6.0,
+          "gold": []
+        }
+      ],
+      "context_tokens": 884
+    }
+  ]
+}
