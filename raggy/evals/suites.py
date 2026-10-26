@@ -5,6 +5,8 @@
 - fictional-web: the same company's docs as pages of a web site (menus,
   cookie banner, sidebar, footer) plus two duplicate pages, with the same
   questions. Measures what HTML extraction and dedupe are worth (week 3).
+- manual: one long owner's manual with tables and numbered steps, where
+  chunking decides what can be found (week 4).
 - scifact: a public benchmark (BEIR's copy of SciFact: 5,183 paper abstracts,
   300 test claims with expert relevance labels). Retrieval only, scored per
   document, so the numbers can be checked against published results.
@@ -52,7 +54,7 @@ class Suite:
     dedupe: bool = True  # False for a public benchmark: its corpus is part of its definition
 
 
-def fictional_suite(root: Path = Path("evals/fictional")) -> Suite:
+def fictional_suite(root: Path = Path("evals/fictional"), name: str = "fictional") -> Suite:
     root = Path(root)
 
     def fingerprint() -> str:
@@ -63,7 +65,7 @@ def fictional_suite(root: Path = Path("evals/fictional")) -> Suite:
         return h.hexdigest()
 
     return Suite(
-        name="fictional",
+        name=name,
         documents=lambda options=None: load_path(root / "docs", options),
         questions=lambda: load_questions(root / "questions.jsonl"),
         fingerprint=fingerprint,
@@ -174,7 +176,14 @@ def fictional_web_suite(root: Path = Path("evals/fictional-web"),
     )
 
 
+def manual_suite(root: Path = Path("evals/manual")) -> Suite:
+    """One long document (a fictional owner's manual, ~3,000 tokens): the suite
+    where chunk boundaries matter, because most answers sit in one section of many."""
+    return fictional_suite(root, name="manual")
+
+
 SUITES: dict[str, Callable[[], Suite]] = {
+    "manual": manual_suite,
     "fictional": fictional_suite,
     "fictional-web": fictional_web_suite,
     "scifact": scifact_suite,
