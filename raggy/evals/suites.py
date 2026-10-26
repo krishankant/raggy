@@ -5,6 +5,8 @@
 - fictional-web: the same company's docs as pages of a web site (menus,
   cookie banner, sidebar, footer) plus two duplicate pages, with the same
   questions. Measures what HTML extraction and dedupe are worth (week 3).
+- fiqa: BEIR FiQA-2018, 57,638 forum posts and 648 questions: the scale suite
+  where exact and approximate (ANN) search are compared (week 5).
 - manual: one long owner's manual with tables and numbered steps, where
   chunking decides what can be found (week 4).
 - scifact: a public benchmark (BEIR's copy of SciFact: 5,183 paper abstracts,
@@ -36,6 +38,10 @@ from raggy.types import Document
 # and never committed. The hash pins the exact bytes the baseline used.
 SCIFACT_URL = "https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/scifact.zip"
 SCIFACT_SHA256 = "536e14446a0ba56ed1398ab1055f39fe852686ecad24a6306c80c490fa8e0165"
+# FiQA-2018 (BEIR copy): 57,638 financial Q&A posts, 648 test questions. Downloaded,
+# never committed; the dataset carries no licence statement, so it isn't redistributed.
+FIQA_URL = "https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/fiqa.zip"
+FIQA_SHA256 = "32c7df99ed21252fdfb2cf3f5673502a8d245ee0c44c4a133570d92ce2b3ad02"
 
 
 class DatasetError(Exception):
@@ -75,7 +81,7 @@ def fictional_suite(root: Path = Path("evals/fictional"), name: str = "fictional
     )
 
 
-def load_beir(folder: Path, split: str = "test") -> tuple[list[Document], list[EvalQuestion]]:
+def load_beir(folder: Path, split: str = "test", prefix: str = "scifact") -> tuple[list[Document], list[EvalQuestion]]:
     """Read a BEIR-format dataset: corpus.jsonl, queries.jsonl, qrels/<split>.tsv."""
     folder = Path(folder)
     docs = []
@@ -83,7 +89,7 @@ def load_beir(folder: Path, split: str = "test") -> tuple[list[Document], list[E
         for line in f:
             row = json.loads(line)
             text = f"{row.get('title', '').strip()}\n\n{row['text'].strip()}".strip()
-            docs.append(Document(source=f"scifact:{row['_id']}", text=normalize_text(text)))
+            docs.append(Document(source=f"{prefix}:{row['_id']}", text=normalize_text(text)))
     relevant: dict[str, list[str]] = {}
     with open(folder / "qrels" / f"{split}.tsv", encoding="utf-8") as f:
         for row in csv.DictReader(f, delimiter="\t"):
@@ -96,19 +102,19 @@ def load_beir(folder: Path, split: str = "test") -> tuple[list[Document], list[E
             if row["_id"] in relevant:
                 questions.append(EvalQuestion(
                     id=row["_id"], question=row["text"], answerable=True,
-                    gold=[GoldSpan(f"scifact:{d}") for d in relevant[row["_id"]]], tags=["scifact"],
+                    gold=[GoldSpan(f"{prefix}:{d}") for d in relevant[row["_id"]]], tags=[prefix],
                 ))
     return docs, questions
 
 
-def download_scifact(data_dir: Path, url: str = SCIFACT_URL, sha256: str = SCIFACT_SHA256) -> Path:
-    """Fetch and unpack SciFact once. Verifies the checksum before trusting a byte."""
+def download_beir(name: str, data_dir: Path, url: str, sha256: str) -> Path:
+    """Fetch and unpack a BEIR dataset once. Verifies the checksum before trusting a byte."""
     data_dir = Path(data_dir)
-    target = data_dir / "scifact"
+    target = data_dir / name
     if (target / "corpus.jsonl").exists():
         return target
     data_dir.mkdir(parents=True, exist_ok=True)
-    part = data_dir / "scifact.zip.part"
+    part = data_dir / f"{name}.zip.part"
     try:
         try:
             with urllib.request.urlopen(url, timeout=60) as resp, open(part, "wb") as out:
@@ -123,10 +129,14 @@ def download_scifact(data_dir: Path, url: str = SCIFACT_URL, sha256: str = SCIFA
         with tempfile.TemporaryDirectory(dir=data_dir) as tmp:
             with zipfile.ZipFile(part) as z:
                 z.extractall(tmp)
-            shutil.move(str(Path(tmp) / "scifact"), target)
+            shutil.move(str(Path(tmp) / name), target)
     finally:
         part.unlink(missing_ok=True)
     return target
+
+
+def download_scifact(data_dir: Path, url: str = SCIFACT_URL, sha256: str = SCIFACT_SHA256) -> Path:
+    return download_beir("scifact", data_dir, url, sha256)
 
 
 def scifact_suite(data_dir: Path = Path("evals/data")) -> Suite:
@@ -182,7 +192,19 @@ def manual_suite(root: Path = Path("evals/manual")) -> Suite:
     return fictional_suite(root, name="manual")
 
 
+def fiqa_suite(data_dir: Path = Path("evals/data")) -> Suite:
+    """The scale suite: about 10x SciFact's corpus, where exact and approximate search can differ."""
+    @lru_cache(maxsize=1)
+    def data():
+        return load_beir(download_beir("fiqa", data_dir, FIQA_URL, FIQA_SHA256), prefix="fiqa")
+
+    return Suite(name="fiqa", documents=lambda options=None: data()[0], questions=lambda: data()[1],
+                 fingerprint=lambda: FIQA_SHA256, ks=(1, 10, 100), unit="document", answers=False,
+                 dedupe=False)
+
+
 SUITES: dict[str, Callable[[], Suite]] = {
+    "fiqa": fiqa_suite,
     "manual": manual_suite,
     "fictional": fictional_suite,
     "fictional-web": fictional_web_suite,
