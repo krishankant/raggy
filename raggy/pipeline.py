@@ -28,7 +28,7 @@ from raggy.ingest.normalize import NORMALIZE_VERSION
 from raggy.ingest.registry import Record, Registry
 from raggy.ingest.walk import iter_files
 from raggy.store.base import Filters, IndexNotFoundError, VectorStore, make_store
-from raggy.types import Answer, Chunk, Document, Hit
+from raggy.types import Answer, Chunk, Document, Hit, embed_text  # noqa: F401 (embed_text re-exported)
 
 
 @dataclass
@@ -56,15 +56,6 @@ def pipeline_key(config: Config, embedder_name: str) -> str:
                        "chunk_context": config.chunk_context, "html_extract": config.html_extract,
                        "normalize": NORMALIZE_VERSION, "dedupe": config.dedupe, "store": config.store},
                       sort_keys=True)
-
-
-def embed_text(chunk: Chunk) -> str:
-    """What the embedding model reads: the chunk's context (if any), then its text.
-
-    The context ("Returns and refunds › Refunds") is embedded but isn't part of
-    the chunk's span, so citations and eval gold spans still point at the
-    document's own characters."""
-    return f"{chunk.context}\n\n{chunk.text}" if chunk.context else chunk.text
 
 
 def _now() -> str:

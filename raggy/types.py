@@ -55,3 +55,12 @@ class Answer:
     text: str
     citations: list[Citation]
     hits: list[Hit]
+
+
+def embed_text(chunk: Chunk) -> str:
+    """What the embedding model reads: the chunk's context (if any), then its text.
+
+    The context ("Returns and refunds › Refunds") is embedded but isn't part of
+    the chunk's span, so citations and eval gold spans still point at the
+    document's own characters."""
+    return f"{chunk.context}\n\n{chunk.text}" if chunk.context else chunk.text

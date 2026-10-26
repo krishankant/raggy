@@ -26,6 +26,10 @@ class EmbedderMismatchError(Exception):
     pass
 
 
+class KeywordSearchUnavailable(Exception):
+    """Keyword (BM25) search needs a LanceDB index that has the full-text column."""
+
+
 def mismatch(stored: str, given: str, path) -> EmbedderMismatchError:
     return EmbedderMismatchError(
         f"index was built with '{stored}' but this run uses '{given}'. Vectors from different "
@@ -86,6 +90,9 @@ class VectorStore(Protocol):
     def sources(self) -> dict[str, int]: ...
 
     def save(self) -> None: ...
+
+    def keyword_search(self, question: str, k: int, where: Filters | None = None) -> list[Hit]:
+        """BM25 full-text search. Raises KeywordSearchUnavailable where there's no full-text index."""
 
     def finish(self, build_ann: bool) -> None:
         """After an ingest: build or update an ANN index if the store has one."""

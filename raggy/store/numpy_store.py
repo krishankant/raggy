@@ -21,7 +21,8 @@ import numpy as np
 from raggy.types import Chunk, Hit
 
 
-from raggy.store.base import EmbedderMismatchError, Filters, IndexNotFoundError, mismatch  # noqa: F401
+from raggy.store.base import (EmbedderMismatchError, Filters, IndexNotFoundError,  # noqa: F401
+                              KeywordSearchUnavailable, mismatch)
 
 
 class NumpyStore:
@@ -83,6 +84,10 @@ class NumpyStore:
         for c in self.chunks:
             counts[c.source] = counts.get(c.source, 0) + 1
         return counts
+
+    def keyword_search(self, question: str, k: int, where: Filters | None = None) -> list[Hit]:
+        raise KeywordSearchUnavailable("keyword and hybrid search need the LanceDB store: "
+                                       "set RAGGY_STORE=lance and run `raggy ingest` again")
 
     def finish(self, build_ann: bool) -> None:
         """Exact search only: there is no index to build."""

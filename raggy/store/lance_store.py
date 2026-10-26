@@ -23,10 +23,11 @@ from pathlib import Path
 
 import numpy as np
 
-from raggy.store.base import EmbedderMismatchError, Filters, _quote, mismatch
-from raggy.types import Chunk, Hit
+from raggy.store.base import EmbedderMismatchError, Filters, KeywordSearchUnavailable, _quote, mismatch
+from raggy.types import Chunk, Hit, embed_text
 
 TABLE = "chunks"
+FTS_VERSION = 1  # bump when the full-text column or tokenizer settings change
 ANN_MIN_ROWS = 1000  # an IVF index trains k-means on the vectors; below this there's nothing to cluster
 META = ("type", "title", "modified")  # Document metadata copied onto every row, for filters
 
@@ -64,6 +65,9 @@ class LanceStore:
         }
         for key in META:
             cols["doc_type" if key == "type" else key] = pa.array([(c.meta or {}).get(key) for c in chunks], pa.string())
+        # What BM25 indexes: the same text the embedder reads (section path + chunk),
+        # so a heading word like "Warranty" is findable by keyword too.
+        cols["fts_text"] = [embed_text(c) for c in chunks]
         cols["vector"] = pa.FixedSizeListArray.from_arrays(pa.array(vectors.ravel()), vectors.shape[1])
         return pa.table(cols)
 
@@ -119,6 +123,37 @@ class LanceStore:
     def has_index(self) -> bool:
         return self._tbl is not None and any("vector" in i.columns for i in self._tbl.list_indices())
 
+    def has_fts_index(self) -> bool:
+        return self._tbl is not None and any("fts_text" in i.columns for i in self._tbl.list_indices())
+
+    def _has_fts_column(self) -> bool:
+        return self._tbl is not None and "fts_text" in self._tbl.schema.names
+
+    def _build_fts(self) -> None:
+        from lancedb.index import FTS
+
+        # Lower-case, fold accents, stem ("refunds" → "refund") and drop stop words
+        # ("the", "is"), so BM25 scores the words that carry meaning.
+        self._tbl.create_index("fts_text", config=FTS(lower_case=True, ascii_folding=True, stem=True,
+                                                       remove_stop_words=True, with_position=False))
+
+    def keyword_search(self, question: str, k: int, where: Filters | None = None) -> list[Hit]:
+        """BM25 over the full-text index. The question is passed as a MatchQuery,
+        so quotes, AND, brackets or a stray '?' are words, never query syntax."""
+        from lancedb.query import MatchQuery
+
+        if self._tbl is None or k < 1 or not question.strip():
+            return []
+        if not self._has_fts_column():
+            raise KeywordSearchUnavailable("this index was built before week 6 (no full-text column): "
+                                           "run `raggy ingest` again, or delete the index folder and re-ingest")
+        if not self.has_fts_index():
+            self._build_fts()
+        q = self._tbl.search(MatchQuery(question, "fts_text"), query_type="fts").limit(k)
+        if where:
+            q = q.where(where.sql(), prefilter=True)
+        return [Hit(chunk=self._chunk(r), score=float(r["_score"])) for r in q.to_list()]
+
     def finish(self, build_ann: bool) -> None:
         """Build the ANN index once the table is big enough, or fold new rows into it.
 
@@ -127,9 +162,11 @@ class LanceStore:
         them into the index so that scan stays small."""
         if self._tbl is None:
             return
-        if self.has_index():
-            self._tbl.optimize()
-        elif build_ann and len(self) >= ANN_MIN_ROWS:
+        if self._has_fts_column() and len(self) and not self.has_fts_index():
+            self._build_fts()
+        elif self.has_fts_index() or self.has_index():
+            self._tbl.optimize()  # fold new rows into the existing indexes
+        if not self.has_index() and build_ann and len(self) >= ANN_MIN_ROWS:
             from lancedb.index import IvfHnswSq
 
             self._tbl.create_index("vector", config=IvfHnswSq(distance_type="dot"))
