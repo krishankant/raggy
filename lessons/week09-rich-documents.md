@@ -1,6 +1,6 @@
 # Week 9: Rich documents — PDF layout, tables, OCR and Office files
 
-**[← Week 8: Grounded generation](week08-grounded-generation.md)** · **[Course Plan](../COURSE_PLAN.md)** · **[Rich documents (guide)](../docs/rich-documents.md)** · **Week 10: Images →** *(coming)*
+**[← Week 8: Grounded generation](week08-grounded-generation.md)** · **[Course Plan](../COURSE_PLAN.md)** · **[Rich documents (guide)](../docs/rich-documents.md)** · **[Week 10: Images →](week10-images.md)**
 
 ---
 

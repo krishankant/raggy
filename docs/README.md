@@ -15,5 +15,6 @@ Concept guides that sit beside the weekly lessons. Lessons walk through raggy's 
 | [Reranking and query transforms](reranking.md) | Week 7 | Bi-encoders against cross-encoders; what reranking can and can't fix; listwise LLM ranking; rewrite, multi-query and HyDE; latency budgets per stage |
 | [Grounded generation](grounded-generation.md) | Week 8 | Packing (merge, order, budget); lexical citation support worked by hand; LLM checks; refusal gates and split-half calibration; run-to-run noise; when prompt caching pays |
 | [Rich documents](rich-documents.md) | Week 9 | What a PDF really stores; rebuilding headings and ruled tables; OCR's costs; locations for pages, slides and sheets; what retrieval metrics can't see about tables |
+| [Images](images.md) | Week 10 | OCR vs a vision model vs CLIP; why OCR text is kept beside a description; the header as citation and gold; caching by image bytes; what gets skipped |
 
 More guides arrive with each week.

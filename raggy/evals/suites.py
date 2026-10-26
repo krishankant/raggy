@@ -195,6 +195,15 @@ def rich_suite(root: Path = Path("evals/rich")) -> Suite:
     return s
 
 
+def images_suite(root: Path = Path("evals/images")) -> Suite:
+    """Answers that exist only in pictures (week 10). Gold is each picture's header,
+    "[Image: <label>]", which every image mode writes the same way; with images off
+    there's no header, and that's the measurement, so gold isn't strict."""
+    s = fictional_suite(root, name="images")
+    s.strict_gold = False
+    return s
+
+
 def manual_suite(root: Path = Path("evals/manual")) -> Suite:
     """One long document (a fictional owner's manual, ~3,000 tokens): the suite
     where chunk boundaries matter, because most answers sit in one section of many."""
@@ -214,6 +223,7 @@ def fiqa_suite(data_dir: Path = Path("evals/data")) -> Suite:
 
 SUITES: dict[str, Callable[[], Suite]] = {
     "rich": rich_suite,
+    "images": images_suite,
     "fiqa": fiqa_suite,
     "manual": manual_suite,
     "fictional": fictional_suite,
