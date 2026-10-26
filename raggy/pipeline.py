@@ -41,6 +41,9 @@ class IngestReport:
     removed: int = 0
     duplicates: int = 0
     failed: list[tuple[str, str]] = field(default_factory=list)  # (source, reason)
+    context_calls: int = 0  # contextual retrieval: LLM calls made this run
+    context_cached: int = 0
+    context_failed: int = 0
 
 
 def pipeline_key(config: Config, embedder_name: str) -> str:
@@ -229,6 +232,8 @@ class Raggy:
                 store.remove_source(source)  # the index only: never the file
         done = self.ingest_documents(to_embed, progress=progress, store=store, save=False)
         report.documents, report.chunks = done.documents, done.chunks
+        report.context_calls, report.context_cached = done.context_calls, done.context_cached
+        report.context_failed = done.context_failed
         counts = store.sources()
         for source, row in rows.items():
             reg.upsert(replace(row, chunks=counts.get(source, 0)))
@@ -297,7 +302,18 @@ class Raggy:
         store = store if store is not None else self._open_store()
         settings = self.config.chunk_settings()
         count = lambda text: self.embedder.count_tokens(text)  # noqa: E731 (fixed never calls it)
-        chunked = [c for c in (chunk_document(d, settings, count) for d in docs) if c]
+        pairs = [(d, c) for d, c in ((d, chunk_document(d, settings, count)) for d in docs) if c]
+        if self.config.chunk_context == "llm" and pairs:
+            from raggy.chunking.contextual import CACHE_NAME, ContextCache, add_llm_context
+
+            cache = ContextCache(Path(self.config.index_dir) / CACHE_NAME)
+            for d, cs in pairs:
+                st = add_llm_context(d, cs, self.llm, cache, count, self.embedder.max_tokens)
+                report.context_calls += st.calls
+                report.context_cached += st.cached
+                report.context_failed += st.failed
+                cache.commit()  # paid-for results are kept even if a later step fails
+        chunked = [cs for _, cs in pairs]
         total = sum(len(c) for c in chunked)
         batch: list[Chunk] = []
 
