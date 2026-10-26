@@ -56,6 +56,13 @@ def format_run(run: dict) -> str:
         if rows and any(v is not None for _, v in rows):
             lines.append(f"\n{title}")
             lines += [f"  {k:<22}{_fmt(v):>8}" for k, v in rows]
+    budgets = c.get("budgets") or {}
+    stages = [s for s in ("transform", "retrieve", "rerank", "generate") if m.get(f"{s}_ms_p95") is not None]
+    if budgets and stages:
+        lines.append(f"\n{'Stage':<12}{'p50 ms':>9}{'p95 ms':>9}{'budget':>9}")
+        for s in stages:
+            ok = "✓" if m[f"{s}_ms_p95"] <= budgets.get(s, float("inf")) else "✗"
+            lines.append(f"  {s:<10}{_fmt(m[f'{s}_ms_p50']):>9}{_fmt(m[f'{s}_ms_p95']):>9}{budgets.get(s, '—'):>8} {ok}")
     rk = next((k for k in m if k.startswith("recall@") and k != "recall@1"), "recall@1")
     lines.append(f"\nBy tag            n  {rk:>9}      mrr  correct")
     for tag, t in run["by_tag"].items():
@@ -77,8 +84,13 @@ def format_compare(base: dict, new: dict) -> str:
         if k not in new["metrics"]:
             continue
         a, b = base["metrics"][k], new["metrics"][k]
+        if isinstance(a, list) or isinstance(b, list):  # e.g. over_budget: shown below, not subtracted
+            continue
         delta = f"{b - a:+.3f}" if a is not None and b is not None else "—"
         lines.append(f"{k:<22}{_fmt(a):>{w}}{_fmt(b):>{w}}{delta:>10}")
+    for side, run in (("base", base), ("new", new)):
+        if run["metrics"].get("over_budget"):
+            lines.append(f"{side}: over budget at p95: {', '.join(run['metrics']['over_budget'])}")
     for side, run in (("base", base), ("new", new)):
         c = run.get("config", {})
         if c:

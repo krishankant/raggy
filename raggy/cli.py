@@ -6,6 +6,7 @@ import argparse
 import dataclasses
 import os
 import sys
+import time
 from pathlib import Path
 
 from raggy.config import Config, ConfigError
@@ -50,6 +51,10 @@ def _add_filters(p: argparse.ArgumentParser) -> None:
     g.add_argument("--after", type=_iso_date, help="only documents modified on or after this date")
     p.add_argument("--mode", choices=["vector", "keyword", "hybrid"], default=None,
                    help="retrieval: embeddings, BM25 keywords, or both fused (default: RAGGY_RETRIEVAL)")
+    p.add_argument("--transform", choices=["none", "rewrite", "multi", "hyde"], default=None,
+                   help="rewrite the question with the chat model before searching (default: RAGGY_QUERY_TRANSFORM)")
+    p.add_argument("--rerank", choices=["none", "local", "llm"], default=None,
+                   help="rerank the candidates with a cross-encoder or the chat model (default: RAGGY_RERANK)")
 
 
 def _filters(args):
@@ -78,6 +83,7 @@ def _parser() -> argparse.ArgumentParser:
     a.add_argument("question")
     a.add_argument("-k", type=_positive_int, default=None)
     a.add_argument("--show-context", action="store_true", help="also print the retrieved chunks")
+    a.add_argument("--timings", action="store_true", help="print how long each stage took")
     _add_filters(a)
     sub.add_parser("sources", help="list indexed sources")
     rm = sub.add_parser("remove", help="drop a source, or everything under a folder or URL, from the index")
@@ -140,16 +146,24 @@ def main(argv: list[str] | None = None) -> int:
                 print(f"not found: {path} (nothing removed; `raggy remove {path}` drops what it held)",
                       file=sys.stderr)
         elif args.command == "search":
-            hits = raggy.search(args.query, args.k, _filters(args), mode=args.mode)
+            hits = raggy.search(args.query, args.k, _filters(args), mode=args.mode, rerank=args.rerank,
+                                transform=args.transform)
             if not hits and _filters(args):
                 print("no chunks match these filters", file=sys.stderr)
             _print_hits(hits)
         elif args.command == "ask":
-            answer = raggy.ask(args.question, args.k, _filters(args), mode=args.mode)
+            t0 = time.perf_counter()
+            answer = raggy.ask(args.question, args.k, _filters(args), mode=args.mode, rerank=args.rerank,
+                               transform=args.transform)
+            total = (time.perf_counter() - t0) * 1000
             if args.show_context:
                 _print_hits(answer.hits)
                 print()
             print(answer.text)
+            if args.timings:
+                stages = dict(raggy.last_timings)
+                stages["generate"] = total - sum(stages.values())
+                print("\nTimings: " + "  ".join(f"{k} {v:.0f} ms" for k, v in stages.items()))
             if answer.citations:
                 print("\nSources:")
                 for c in answer.citations:

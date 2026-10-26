@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 from raggy.embed.fastembed_embedder import DEFAULT_MODEL as DEFAULT_EMBED_MODEL
@@ -18,6 +18,23 @@ def _positive_int_env(name: str, default: str) -> int:
     if not raw.strip().isdigit() or int(raw) < 1:
         raise ConfigError(f"{name} must be a whole number of 1 or more, got {raw!r}")
     return int(raw)
+
+
+DEFAULT_BUDGETS = {"transform": 2000, "retrieve": 100, "rerank": 500, "generate": 5000}  # ms, on an M2 laptop
+
+
+def _budgets_env() -> dict:
+    """RAGGY_BUDGETS="rerank=300,transform=1500" overrides some stages' p95 budgets (ms)."""
+    budgets = dict(DEFAULT_BUDGETS)
+    for part in filter(None, (p.strip() for p in (os.environ.get("RAGGY_BUDGETS") or "").split(","))):
+        stage, _, ms = part.partition("=")
+        stage = stage.strip()
+        if stage not in budgets:
+            raise ConfigError(f"RAGGY_BUDGETS: unknown stage {stage!r} (stages: {', '.join(budgets)})")
+        if not ms.strip().isdigit():
+            raise ConfigError(f"RAGGY_BUDGETS: {stage} needs a whole number of milliseconds, got {ms!r}")
+        budgets[stage] = int(ms)
+    return budgets
 
 
 MAX_EMBED_TOKENS = 512
@@ -82,6 +99,11 @@ class Config:
     retrieval: str = "vector"  # vector | keyword (BM25) | hybrid (both, fused with RRF)
     rrf_k: int = 60  # reciprocal rank fusion constant
     fusion_candidates: int = 50  # hybrid: candidates taken from each side before fusing
+    rerank: str = "none"  # none | local (cross-encoder) | llm (the chat model ranks the candidates)
+    rerank_model: str = "Xenova/ms-marco-MiniLM-L-6-v2"  # local cross-encoder; BAAI/bge-reranker-base is the larger option
+    rerank_candidates: int = 20  # how many retrieved chunks the reranker sees
+    query_transform: str = "none"  # none | rewrite | multi | hyde (one cached LLM call per question)
+    budgets: dict = field(default_factory=lambda: dict(DEFAULT_BUDGETS))  # p95 ms per stage
 
     def chunk_settings(self):
         from raggy.chunking import ChunkSettings
@@ -135,4 +157,9 @@ class Config:
             retrieval=_choice_env("RAGGY_RETRIEVAL", "vector", ("vector", "keyword", "hybrid")),
             rrf_k=_positive_int_env("RAGGY_RRF_K", "60"),
             fusion_candidates=_positive_int_env("RAGGY_FUSION_CANDIDATES", "50"),
+            rerank=_choice_env("RAGGY_RERANK", "none", ("none", "local", "llm")),
+            rerank_model=os.environ.get("RAGGY_RERANK_MODEL") or "Xenova/ms-marco-MiniLM-L-6-v2",
+            rerank_candidates=_positive_int_env("RAGGY_RERANK_CANDIDATES", "20"),
+            query_transform=_choice_env("RAGGY_QUERY_TRANSFORM", "none", ("none", "rewrite", "multi", "hyde")),
+            budgets=_budgets_env(),
         )

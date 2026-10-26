@@ -28,10 +28,11 @@ from raggy.store.lance_store import FTS_VERSION
 from raggy.pipeline import Raggy
 from raggy.types import Document
 
+STAGES = ("transform", "retrieve", "rerank", "generate")  # in the order a question goes through them
 SAVED_HITS = 10  # retrieved items kept per question in the run file
 # Paid-for work that doesn't depend on the settings that make an index stale:
 # a rebuild keeps these files, and a folder holding only them is raggy's own.
-CACHE_FILES = {"context-cache.sqlite", "embed-cache.sqlite"}
+CACHE_FILES = {"context-cache.sqlite", "embed-cache.sqlite", "transform-cache.sqlite"}
 
 
 class UnsafeIndexDirError(RuntimeError):
@@ -105,6 +106,11 @@ def _git_commit() -> str | None:
         return None
 
 
+def _with_budgets(m: dict, budgets: dict) -> dict:
+    m["over_budget"] = [s for s in STAGES if m.get(f"{s}_ms_p95") is not None and m[f"{s}_ms_p95"] > budgets[s]]
+    return m
+
+
 def _aggregate(records: list[dict]) -> dict:
     answerable = [r for r in records if r["answerable"]]
     order = {"recall": 0, "mrr": 1, "ndcg": 2}  # recall first: did we find it at all?
@@ -124,10 +130,11 @@ def _aggregate(records: list[dict]) -> dict:
     tokens = [r.get("context_tokens") for r in records]
     m["context_tokens_p50"] = percentile(tokens, 50)  # a bigger context can look like better retrieval
     m["context_tokens_p95"] = percentile(tokens, 95)
-    for stage in ("retrieve", "generate"):
+    for stage in STAGES:
         times = [r["latency_ms"].get(stage) for r in records]
-        m[f"{stage}_ms_p50"] = percentile(times, 50)
-        m[f"{stage}_ms_p95"] = percentile(times, 95)
+        if stage in ("retrieve", "generate") or any(t is not None for t in times):
+            m[f"{stage}_ms_p50"] = percentile(times, 50)
+            m[f"{stage}_ms_p95"] = percentile(times, 95)
     return m
 
 
@@ -152,9 +159,8 @@ def run_suite(suite: Suite, raggy: Raggy, judge: Judge | None, *, answers: bool 
     for i, q in enumerate(questions, start=1):
         rec: dict = {"id": q.id, "question": q.question, "answerable": q.answerable,
                      "tags": q.tags, "latency_ms": {}}
-        t0 = time.perf_counter()
         hits = raggy.search(q.question, k=fetch)
-        rec["latency_ms"]["retrieve"] = round((time.perf_counter() - t0) * 1000, 2)
+        rec["latency_ms"].update(raggy.last_timings)  # transform / retrieve / rerank, ms
         ranked = (collapse_to_documents(hits) if suite.unit == "document" else hits)[:n]
         covers = [chunk_gold(h.chunk, gold[q.id]) for h in ranked]
         if raggy.config.ann == "on":  # how much of the exact answer did the approximate search find?
@@ -211,6 +217,11 @@ def run_suite(suite: Suite, raggy: Raggy, judge: Judge | None, *, answers: bool 
             "rrf_k": raggy.config.rrf_k,
             "fusion_candidates": raggy.config.fusion_candidates,
             "fts_version": FTS_VERSION,
+            "rerank": raggy.config.rerank,
+            "rerank_model": raggy.config.rerank_model if raggy.config.rerank == "local" else None,
+            "rerank_candidates": raggy.config.rerank_candidates,
+            "query_transform": raggy.config.query_transform,
+            "budgets": dict(raggy.config.budgets),
             "dedupe": raggy.config.dedupe and suite.dedupe,
             "top_k": raggy.config.top_k,
             "ks": list(suite.ks),
@@ -220,7 +231,7 @@ def run_suite(suite: Suite, raggy: Raggy, judge: Judge | None, *, answers: bool 
             "judge_version": JUDGE_VERSION if judge else None,
         },
         "ingest": ingest,
-        "metrics": _aggregate(records),
+        "metrics": _with_budgets(_aggregate(records), raggy.config.budgets),
         "by_tag": {t: _aggregate([r for r in records if t in r["tags"]]) | {"n": sum(t in r["tags"] for r in records)}
                    for t in tags},
         "counts": {

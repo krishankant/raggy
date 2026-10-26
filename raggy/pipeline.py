@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import json
+import time
 import os
 from dataclasses import dataclass, field, replace
 from datetime import datetime, timezone
@@ -73,6 +74,11 @@ class Raggy:
         self._embedder = embedder
         self._llm = llm
         self._store: VectorStore | None = None  # opened once for searching; any write closes it
+        self._reranker = None  # built on first use, like the embedder
+        self._other_rerankers: dict[str, object] = {}
+        self._transform_cache = None
+        self.transform_stats = {"calls": 0, "cached": 0, "failed": 0}
+        self.last_timings: dict[str, float] = {}  # ms per stage of the latest search
 
     # Models are built on first use: `raggy sources` shouldn't load an
     # embedding model, and `raggy search` shouldn't need an LLM.
@@ -363,8 +369,33 @@ class Raggy:
             store.finish(build_ann=self.config.ann == "on")
         return report
 
+    def _transform(self, kind: str, question: str):
+        from raggy.retrieve.transforms import CACHE_NAME, TransformCache, transform
+
+        if self._transform_cache is None:
+            self._transform_cache = TransformCache(Path(self.config.index_dir) / CACHE_NAME)
+        r = transform(kind, question, self.llm, self._transform_cache)
+        self._transform_cache.commit()
+        self.transform_stats["cached" if r.cached else "calls"] += 1
+        self.transform_stats["failed"] += int(r.failed)
+        return r
+
+    def reranker(self, kind: str | None = None):
+        """The configured reranker, or the one named by ``kind`` (a --rerank override)."""
+        from raggy.retrieve.rerank import make_reranker
+
+        kind = kind or self.config.rerank
+        if kind == self.config.rerank:
+            if self._reranker is None:
+                self._reranker = make_reranker(self.config, lambda: self.llm, kind)
+            return self._reranker
+        if kind not in self._other_rerankers:
+            self._other_rerankers[kind] = make_reranker(self.config, lambda: self.llm, kind)
+        return self._other_rerankers[kind]
+
     def search(self, question: str, k: int | None = None, filters: Filters | None = None,
-               exact: bool | None = None, mode: str | None = None) -> list[Hit]:
+               exact: bool | None = None, mode: str | None = None, rerank: str | None = None,
+               transform: str | None = None) -> list[Hit]:
         """The k best chunks, or with parent/child on, the k best distinct parents.
 
         ``mode`` is vector (embeddings), keyword (BM25) or hybrid (both, fused by
@@ -375,19 +406,52 @@ class Raggy:
         k = k or self.config.top_k
         mode = mode or self.config.retrieval
         exact = self.config.ann == "off" if exact is None else exact
-        query = self.embedder.embed_query(question) if mode != "keyword" else None
+        timings: dict[str, float] = {}
+        start = time.perf_counter()
+        kind = transform or self.config.query_transform
+        t = self._transform(kind, question) if kind != "none" else None
+        if t is not None:
+            timings["transform"] = (time.perf_counter() - start) * 1000
+        texts = t.queries if t else [question]  # one search text per variant
+        if mode == "keyword":
+            vectors = [None] * len(texts)
+        elif t is not None and t.hyde_passage:  # HyDE: the vector side searches with the invented answer
+            vectors = [self.embedder.embed_documents([t.hyde_passage])[0]]
+        else:
+            vectors = [self.embedder.embed_query(x) for x in texts]
+
+        def one(text: str, vec, want: int) -> list[Hit]:
+            if mode == "vector":
+                return store.search(vec, want, embedder_name=self.embedder.name, where=filters, exact=exact)
+            if mode == "keyword":
+                return store.keyword_search(text, want, where=filters)
+            n = max(want, self.config.fusion_candidates)
+            v = store.search(vec, n, embedder_name=self.embedder.name, where=filters, exact=exact)
+            return rrf([v, store.keyword_search(text, n, where=filters)], k=self.config.rrf_k)[:want]
 
         def ranked(want: int) -> list[Hit]:
-            if mode == "vector":
-                return store.search(query, want, embedder_name=self.embedder.name, where=filters, exact=exact)
-            if mode == "keyword":
-                return store.keyword_search(question, want, where=filters)
-            n = max(want, self.config.fusion_candidates)
-            vec = store.search(query, n, embedder_name=self.embedder.name, where=filters, exact=exact)
-            return rrf([vec, store.keyword_search(question, n, where=filters)], k=self.config.rrf_k)[:want]
+            lists = [one(x, v, want) for x, v in zip(texts, vectors)]
+            return lists[0] if len(lists) == 1 else rrf(lists, k=self.config.rrf_k)[:want]
+
+        reranker = self.reranker(rerank)
+        if reranker is not None:
+            first = ranked
+
+            def ranked(want: int) -> list[Hit]:  # noqa: F811 — retrieve a wider pool, rerank, keep `want`
+                pool = first(max(self.config.rerank_candidates, want))
+                t0 = time.perf_counter()
+                out = reranker.rerank(question, pool)[:want]
+                timings["rerank"] = timings.get("rerank", 0.0) + (time.perf_counter() - t0) * 1000
+                return out
+
+        def done(hits: list[Hit]) -> list[Hit]:
+            total = (time.perf_counter() - start) * 1000
+            timings["retrieve"] = total - timings.get("transform", 0.0) - timings.get("rerank", 0.0)
+            self.last_timings = {k: round(v, 2) for k, v in timings.items()}
+            return hits
 
         if not self.config.parent_tokens:
-            return ranked(k)
+            return done(ranked(k))
         # Children of one parent often rank together, so k*4 children can hold fewer
         # than k distinct parents. Fetch more until there are k, or nothing more to fetch.
         want = k * 4
@@ -404,12 +468,13 @@ class Raggy:
                     seen.add((c.source, c.start))
                     out.append(Hit(chunk=c, score=h.score))
             if len(out) >= k or len(hits) < want or want >= k * 64:
-                return out[:k]
+                return done(out[:k])
             want *= 2
 
     def ask(self, question: str, k: int | None = None, filters: Filters | None = None,
-            mode: str | None = None) -> Answer:
-        return generate_answer(question, self.search(question, k, filters, mode=mode), self.llm)
+            mode: str | None = None, rerank: str | None = None, transform: str | None = None) -> Answer:
+        hits = self.search(question, k, filters, mode=mode, rerank=rerank, transform=transform)
+        return generate_answer(question, hits, self.llm)
 
     def sources(self) -> dict[str, int]:
         return make_store(self.config, create=False).sources()
