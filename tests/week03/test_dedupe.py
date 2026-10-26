@@ -66,3 +66,18 @@ def test_minhash_deterministic():
 def test_signature_roundtrips_through_bytes():
     sig = minhash(BODY)
     assert np.array_equal(np.frombuffer(sig.tobytes(), dtype=np.uint64), sig)
+
+
+def test_minhash_estimate_is_accurate():
+    # 128 independent hashes give a standard error of about sqrt(J(1-J)/128) ≈ 0.027 at J = 0.9.
+    # Correlated "permutations" (a hash family that doesn't mix) show up as a much larger spread.
+    errors = []
+    for seed in range(60):
+        base = words(420, 1000 + seed).split()
+        a, b = " ".join(base[:400]), " ".join(base[20:])
+        sa = {" ".join(base[i:i + 5]) for i in range(0, 396)}
+        sb = {" ".join(base[20:][i:i + 5]) for i in range(0, 396)}
+        true = len(sa & sb) / len(sa | sb)
+        errors.append(similarity(minhash(a), minhash(b)) - true)
+    errors = np.array(errors)
+    assert abs(errors.mean()) < 0.02 and errors.std() < 0.05

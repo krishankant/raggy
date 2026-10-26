@@ -30,10 +30,14 @@ SHINGLE = 5
 MIN_WORDS = 50  # shorter texts share too few shingles to judge; exact match only
 NEAR_DUP = 0.9  # estimated Jaccard similarity at or above which we call it a copy
 
-_PRIME = np.uint64((1 << 61) - 1)
+# Each of the 128 "permutations" is h(x) = (a*x + b) mod p. The product must wrap
+# around p many times or every h orders shingles almost the same way, and the
+# 128 positions stop being independent (the estimate's error grows ~5x).
+# With p = 2^31 - 1 and a, x < p, a*x < 2^62: it wraps ~2^31 times and fits uint64.
+_PRIME = np.uint64((1 << 31) - 1)
 _rng = np.random.default_rng(20261025)  # fixed seed: signatures must match across runs
-_A = _rng.integers(1, 1 << 32, NUM_PERM, dtype=np.uint64)
-_B = _rng.integers(0, 1 << 32, NUM_PERM, dtype=np.uint64)
+_A = _rng.integers(1, int(_PRIME), NUM_PERM, dtype=np.uint64)
+_B = _rng.integers(0, int(_PRIME), NUM_PERM, dtype=np.uint64)
 _WORD = re.compile(r"\w+")
 
 
@@ -46,9 +50,8 @@ def minhash(text: str) -> np.ndarray | None:
     if len(words) < MIN_WORDS:
         return None
     shingles = {" ".join(words[i:i + SHINGLE]) for i in range(len(words) - SHINGLE + 1)}
-    x = np.fromiter((int.from_bytes(hashlib.blake2b(s.encode(), digest_size=4).digest(), "little")
+    x = np.fromiter((int.from_bytes(hashlib.blake2b(s.encode(), digest_size=8).digest(), "little") % int(_PRIME)
                      for s in shingles), dtype=np.uint64, count=len(shingles))
-    # a < 2^32 and x < 2^32, so a*x + b fits in 64 bits without overflow.
     return ((np.outer(_A, x) + _B[:, None]) % _PRIME).min(axis=1)
 
 
