@@ -14,6 +14,7 @@ import io
 import zipfile
 
 from raggy.ingest import loaders
+from raggy.ingest.images import FigureReader
 from raggy.ingest.loaders.tables import markdown_table
 
 
@@ -31,12 +32,24 @@ def load_docx(data: bytes, options) -> tuple[str, str | None]:
         d = Document(io.BytesIO(data))
     except (PackageNotFoundError, zipfile.BadZipFile, KeyError, ValueError) as e:
         raise _bad(e, "DOCX") from e
+    from docx.oxml.ns import qn
+
     out = []
+    figures, k = FigureReader(options), 0
     for el in d.element.body.iterchildren():  # paragraphs and tables, in document order
         tag = el.tag.rsplit("}", 1)[-1]
         if tag == "p":
             p = Paragraph(el, d)
             text = p.text.strip()
+            blocks = []
+            for blip in el.iter(qn("a:blip")):  # pictures anchored in this paragraph, in order
+                part = d.part.related_parts.get(blip.get(qn("r:embed")))
+                if part is None:
+                    continue  # a linked (not embedded) picture: no bytes to read
+                k += 1
+                if (block := figures.read(part.blob, f"{figures.name} figure {k}")) is not None:
+                    blocks.append(block)
+            out += blocks if not text else []
             if not text:
                 continue
             style = (p.style.name if p.style is not None else "") or ""
@@ -45,6 +58,7 @@ def load_docx(data: bytes, options) -> tuple[str, str | None]:
             elif style.startswith("Heading ") and style[8:].isdigit():
                 text = "#" * min(int(style[8:]), 6) + " " + text
             out.append(text)
+            out += blocks
         elif tag == "tbl":
             t = Table(el, d)
             out.append(markdown_table([[c.text for c in row.cells] for row in t.rows]))
@@ -59,8 +73,12 @@ def load_pptx(data: bytes, options) -> tuple[list[tuple[str, str]], str | None]:
         prs = Presentation(io.BytesIO(data))
     except (PackageNotFoundError, zipfile.BadZipFile, KeyError, ValueError) as e:
         raise _bad(e, "PPTX") from e
+    from pptx.enum.shapes import MSO_SHAPE_TYPE
+
     pages, first_title = [], None
+    figures = FigureReader(options)
     for n, slide in enumerate(prs.slides, start=1):
+        k = 0
         title_shape = slide.shapes.title
         title = title_shape.text.strip() if title_shape is not None and title_shape.has_text_frame else ""
         first_title = first_title or title or None
@@ -69,7 +87,15 @@ def load_pptx(data: bytes, options) -> tuple[list[tuple[str, str]], str | None]:
         for shape in slide.shapes:
             if shape.shape_id == title_id:  # python-pptx returns a new proxy per access: compare ids, not objects
                 continue
-            if getattr(shape, "has_table", False) and shape.has_table:
+            if shape.shape_type == MSO_SHAPE_TYPE.PICTURE:
+                k += 1
+                try:
+                    blob = shape.image.blob
+                except (ValueError, KeyError, AttributeError):
+                    continue  # an empty picture placeholder or a linked image
+                if (block := figures.read(blob, f"{figures.name} slide {n}, picture {k}", f"slide {n}")) is not None:
+                    parts.append(block)
+            elif getattr(shape, "has_table", False) and shape.has_table:
                 parts.append(markdown_table([[c.text for c in row.cells] for row in shape.table.rows]))
             elif shape.has_text_frame and shape.text_frame.text.strip():
                 parts.append(shape.text_frame.text.strip())

@@ -33,9 +33,10 @@ class LoadOptions:
     # Bound by Raggy to a cached reader. Not settings: they never change what a key means.
     read_image: Callable[[bytes, str], str | None] | None = field(default=None, compare=False, hash=False)
     on_image: Callable[[bytes, str, str | None], None] | None = field(default=None, compare=False, hash=False)
+    name: str = field(default="", compare=False, hash=False)  # the file's name, set by load_bytes for labels
 
 
-from raggy.ingest.loaders import csv_loader, html, office, pdf, pdf_layout, text  # noqa: E402  (they import LoadError above)
+from raggy.ingest.loaders import csv_loader, html, image, office, pdf, pdf_layout, text  # noqa: E402  (they import LoadError above)
 
 
 def _pdf(data: bytes, options: LoadOptions):
@@ -50,6 +51,7 @@ LOADERS: dict[str, Callable[[bytes, LoadOptions], tuple[str, str | None]]] = {
     "pptx": office.load_pptx,
     "xlsx": office.load_xlsx,
     "csv": csv_loader.load,
+    "image": image.load,
 }
 
 SUFFIXES: dict[str, str] = {
@@ -63,12 +65,23 @@ SUFFIXES: dict[str, str] = {
     ".pptx": "pptx",
     ".xlsx": "xlsx",
     ".csv": "csv",
+    ".png": "image",
+    ".jpg": "image",
+    ".jpeg": "image",
+    ".webp": "image",
+    ".gif": "image",
+    ".bmp": "image",
+    ".tif": "image",
+    ".tiff": "image",
 }
 
 
 def load_bytes(data: bytes, source: str, kind: str, options: LoadOptions | None = None) -> Document:
+    from dataclasses import replace
+
+    name = source.rstrip("/").rsplit("/", 1)[-1] or source
     try:
-        raw, title = LOADERS[kind](data, options or LoadOptions())
+        raw, title = LOADERS[kind](data, replace(options or LoadOptions(), name=name))
     except LoadError as e:
         raise LoadError(f"{source}: {e}") from e
     pages = None
@@ -86,7 +99,6 @@ def load_bytes(data: bytes, source: str, kind: str, options: LoadOptions | None 
         body = normalize_text(raw)
     if not body:
         raise LoadError(f"{source}: no text found")
-    name = source.rstrip("/").rsplit("/", 1)[-1] or source
     fallback = Path(name).stem if Path(name).suffix.lower() in SUFFIXES else name  # "2005.11401" stays whole
     meta = {"name": name, "title": title or fallback, "type": kind}
     if pages:

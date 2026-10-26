@@ -34,4 +34,5 @@ def test_walk_skips_node_modules_and_hidden(tmp_path):
 def test_walk_includes_html_and_pdf(tmp_path):
     for n in ("b.html", "a.pdf", "c.htm", "d.png", "e.markdown"):
         write(tmp_path / n, "x")
-    assert names(tmp_path) == ["a.pdf", "b.html", "c.htm", "e.markdown"]
+    # Week 10 reads images, so the walk includes them (loading one with images off is a named error).
+    assert names(tmp_path) == ["a.pdf", "b.html", "c.htm", "d.png", "e.markdown"]

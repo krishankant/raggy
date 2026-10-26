@@ -163,3 +163,33 @@ def read_image(options, data: bytes, label: str) -> str | None:
 
 
 _plain_ocr: ImageReader | None = None
+
+
+class FigureReader:
+    """Reads the pictures inside one document: each distinct image once (a logo on every
+    slide is read at its first appearance), and a bad one is skipped with a warning
+    instead of failing the whole document."""
+
+    def __init__(self, options):
+        self.options = options
+        self.name = getattr(options, "name", "") or "document"
+        self.on = getattr(options, "images", "off") != "off"
+        self._seen: set[str] = set()
+
+    def read(self, data: bytes, label: str, page: str | None = None) -> str | None:
+        if not self.on:
+            return None
+        digest = hashlib.sha256(data).hexdigest()
+        if digest in self._seen:
+            return None
+        self._seen.add(digest)
+        try:
+            block = read_image(self.options, data, label)
+        except ImageError as e:
+            import warnings
+
+            warnings.warn(f"{self.name}: {label} skipped ({e})", UserWarning, stacklevel=2)
+            return None
+        if block is not None and self.options.on_image is not None:
+            self.options.on_image(data, label, page)
+        return block
