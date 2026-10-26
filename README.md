@@ -4,7 +4,7 @@
 [![Models](https://img.shields.io/badge/answers-Ollama%20%7C%20Claude%20%7C%20OpenAI-6f42c1.svg)](lessons/week01-naive-rag.md#36-one-interface-three-model-providers)
 [![Tests](https://img.shields.io/badge/tests-offline%20pytest-2ea44f.svg)](#commands)
 
-**[Course Plan](COURSE_PLAN.md)** · **[Week 1: Naive RAG](lessons/week01-naive-rag.md)** · **[Docs hub](docs/README.md)**
+**[Course Plan](COURSE_PLAN.md)** · **[Week 1: Naive RAG](lessons/week01-naive-rag.md)** · **[Week 3: Ingestion](lessons/week03-ingestion.md)** · **[Docs hub](docs/README.md)**
 
 ---
 
@@ -19,7 +19,7 @@ No RAG framework (no LangChain or LlamaIndex): only focused libraries and the of
 ## Quick start
 
 ```bash
-git clone <this repo> && cd raggy
+git clone https://github.com/krishankant/raggy.git && cd raggy
 uv sync
 ollama pull qwen3.5:4b                      # free local answers (or use Claude/OpenAI, below)
 
@@ -33,7 +33,7 @@ Sources:
 [1] bike-models.md — "# The Brightwater range (2026) ## Heron Commuter A steel city bike with an 8-speed hub gear, hub dyn…"
 ```
 
-Point it at your own files with `uv run raggy ingest ~/notes ~/papers/summary.md`.
+Point it at your own files, folders or web pages: `uv run raggy ingest ~/notes ~/papers/report.pdf https://example.com/faq`. Run it again any time: only what changed is re-indexed.
 
 ## Setup
 
@@ -49,11 +49,12 @@ Point it at your own files with `uv run raggy ingest ~/notes ~/papers/summary.md
 
 | Command | What it does |
 | --- | --- |
-| `uv run raggy ingest PATH...` | Index files or folders (`.md`, `.txt` in week 1). Re-ingesting a file replaces it. |
+| `uv run raggy ingest PATH_OR_URL... [--full]` | Index files, folders and URLs (`.md`, `.txt`, `.html`, `.pdf`). Re-runs skip unchanged sources, re-index changed ones and drop files deleted from a folder. `--full` re-reads every file. Folders honour `.raggyignore` and `.gitignore`. |
 | `uv run raggy search "query" [-k N]` | Show the chunks retrieval finds, with scores. Your first debugging step. |
 | `uv run raggy ask "question" [-k N] [--show-context]` | Answer with numbered citations. |
-| `uv run raggy sources` | List what's indexed. |
-| `uv run raggy eval [--suite fictional\|scifact] [--retrieval-only] [--no-judge] [--limit N] [--label L]` | Measure retrieval and answer quality; saves a JSON run to `evals/runs/`. |
+| `uv run raggy sources` | List what's indexed: chunks, type, title, source, and which documents were skipped as duplicates. |
+| `uv run raggy remove PATH_OR_URL` | Drop a source, or everything under a folder or URL, from the index. Never touches the files. |
+| `uv run raggy eval [--suite fictional\|fictional-web\|scifact] [--retrieval-only] [--no-judge] [--limit N] [--label L]` | Measure retrieval and answer quality; saves a JSON run to `evals/runs/`. |
 | `uv run raggy compare BASE.json NEW.json` | Show each metric's change between two runs. |
 | `uv run pytest` | Run the offline test suite (no keys, no downloads). |
 
@@ -65,6 +66,8 @@ Point it at your own files with `uv run raggy ingest ~/notes ~/papers/summary.md
 | `RAGGY_INDEX_DIR` | `.raggy` |
 | `RAGGY_TOP_K` | `4` |
 | `RAGGY_JUDGE` / `RAGGY_JUDGE_MODEL` | `anthropic` (`claude-opus-5-5`) if `ANTHROPIC_API_KEY` is set, else `ollama` |
+| `RAGGY_HTML_EXTRACT` | `main` (article text only; `full` keeps every visible word) |
+| `RAGGY_DEDUPE` | `1` (skip exact and near-duplicate documents; `0` indexes them) |
 
 ## The course
 
@@ -74,14 +77,15 @@ See **[COURSE_PLAN.md](COURSE_PLAN.md)** for all 12 weeks. Ready so far:
 | --- | --- | --- |
 | 1 | [Naive RAG, end to end](lessons/week01-naive-rag.md) | `git checkout week-01` |
 | 2 | [Evals before optimisation](lessons/week02-evals.md) | `git checkout week-02` |
+| 3 | [Ingestion: files, folders, URLs](lessons/week03-ingestion.md) | `git checkout week-03` |
 
 ## Repository layout
 
 ```
 raggy/            the package: ingest/ chunking/ embed/ store/ generate/ evals/ pipeline.py cli.py
 lessons/          one lesson per week
-docs/             concept guides (embeddings, and more each week)
+docs/             concept guides (embeddings, evals, ingestion, and more each week)
 samples/          small demo corpora (fictional, so models can't answer from memory)
-evals/            eval suites (fictional corpus + questions), committed baselines; data/ and runs/ are local
+evals/            eval suites (fictional corpus, its web-site version, questions), committed baselines; data/ and runs/ are local
 tests/            offline pytest suite, one folder per week
 ```

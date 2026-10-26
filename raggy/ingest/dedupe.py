@@ -12,7 +12,7 @@ copies of one paragraph take two of the model's four context slots.
   similarity. Locality-sensitive hashing (LSH) then only compares documents
   that agree on at least one band of 8 positions.
 
-    P(candidate) = 1 - (1 - s^8)^16   ≈ 0.98 at s=0.9, ≈ 0.01 at s=0.5
+    P(candidate) = 1 - (1 - s^8)^16   ≈ 1.00 at s=0.9, 0.61 at s=0.7, 0.06 at s=0.5
 """
 
 from __future__ import annotations

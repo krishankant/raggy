@@ -1,6 +1,6 @@
 # Week 2: Evals before optimisation
 
-**[← Week 1: Naive RAG](week01-naive-rag.md)** · **[Course Plan](../COURSE_PLAN.md)** · **[Evaluating RAG (guide)](../docs/evaluating-rag.md)** · **Week 3: Ingestion →** *(coming)*
+**[← Week 1: Naive RAG](week01-naive-rag.md)** · **[Course Plan](../COURSE_PLAN.md)** · **[Evaluating RAG (guide)](../docs/evaluating-rag.md)** · **[Week 3: Ingestion →](week03-ingestion.md)**
 
 ---
 

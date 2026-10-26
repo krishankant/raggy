@@ -21,7 +21,7 @@ For each week: check out its branch, read the lesson with the code open beside i
 | :---: | --- | --- | --- |
 | **1** | [Naive RAG, end to end](lessons/week01-naive-rag.md) | load → fixed chunks → local embeddings → numpy cosine search → cited answer; Ollama, Claude and OpenAI adapters; CLI | ✅ `week-01` |
 | **2** | [Evals before optimisation](lessons/week02-evals.md) | A fictional Q&A set (41 questions, 8 unanswerable) plus SciFact (5,183 abstracts, 300 labelled claims); recall@k, MRR, nDCG, answer correctness, faithfulness, citation precision, refusal accuracy, latency; `raggy eval` / `raggy compare`; committed baselines | ✅ `week-02` |
-| **3** | Ingestion | Folders, URLs and HTML, basic PDF; a document registry with content hashes for incremental re-ingest; dedupe; metadata | coming |
+| **3** | [Ingestion: files, folders, URLs](lessons/week03-ingestion.md) | A loader per file type (Markdown, text, HTML main content, PDF text); folders with `.raggyignore`/`.gitignore`; URLs; normalisation; exact and near-duplicate removal (MinHash); a SQLite registry so re-ingest skips, updates and deletes; `raggy remove`; a `fictional-web` eval suite | ✅ `week-03` |
 | **4** | Chunking | Structure-aware chunking, overlap, token sizing, contextual headers, parent/child chunks, optional contextual retrieval, all compared by numbers | coming |
 | **5** | Scale | An embedded vector database, batched embedding, embedding cache, ANN vs exact, metadata filters, thousands of docs | coming |
 | **6** | Hybrid search | BM25 full-text plus vectors, reciprocal rank fusion, filters | coming |
