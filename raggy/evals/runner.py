@@ -24,6 +24,7 @@ from raggy.generate.llm import LLMError
 from raggy.generate.prompt import source_text
 from raggy.ingest.dedupe import drop_duplicates
 from raggy.ingest.normalize import NORMALIZE_VERSION
+from raggy.store.lance_store import FTS_VERSION
 from raggy.pipeline import Raggy
 from raggy.types import Document
 
@@ -54,7 +55,7 @@ def prepare_index(suite: Suite, raggy: Raggy, docs: list[Document] | None = None
            "chunk_size": c.chunk_size, "chunk_overlap": c.chunk_overlap,
            "html_extract": c.html_extract, "dedupe": c.dedupe and suite.dedupe, "normalize": NORMALIZE_VERSION,
            "chunking": c.chunk_settings().key(), "chunk_context": c.chunk_context, "store": c.store,
-           "ann": c.ann}
+           "ann": c.ann, "fts": FTS_VERSION}
     key_file = c.index_dir / "key.json"
     if key_file.exists() and _index_exists(c):
         if json.loads(key_file.read_text()) == key:
@@ -206,6 +207,10 @@ def run_suite(suite: Suite, raggy: Raggy, judge: Judge | None, *, answers: bool 
             "ann": raggy.config.ann,
             "ann_nprobes": raggy.config.ann_nprobes,
             "ann_refine": raggy.config.ann_refine,
+            "retrieval": raggy.config.retrieval,
+            "rrf_k": raggy.config.rrf_k,
+            "fusion_candidates": raggy.config.fusion_candidates,
+            "fts_version": FTS_VERSION,
             "dedupe": raggy.config.dedupe and suite.dedupe,
             "top_k": raggy.config.top_k,
             "ks": list(suite.ks),

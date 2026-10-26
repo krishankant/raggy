@@ -11,7 +11,7 @@ from pathlib import Path
 from raggy.config import Config, ConfigError
 from raggy.generate.llm import LLMError
 from raggy.pipeline import Raggy
-from raggy.store.base import EmbedderMismatchError, IndexNotFoundError
+from raggy.store.base import EmbedderMismatchError, IndexNotFoundError, KeywordSearchUnavailable
 
 
 def _build_raggy(config: Config) -> Raggy:  # tests replace this to inject fakes
@@ -48,6 +48,8 @@ def _add_filters(p: argparse.ArgumentParser) -> None:
                    help="only documents of this type")
     g.add_argument("--source", help="only documents inside this folder or under this URL")
     g.add_argument("--after", type=_iso_date, help="only documents modified on or after this date")
+    p.add_argument("--mode", choices=["vector", "keyword", "hybrid"], default=None,
+                   help="retrieval: embeddings, BM25 keywords, or both fused (default: RAGGY_RETRIEVAL)")
 
 
 def _filters(args):
@@ -138,12 +140,12 @@ def main(argv: list[str] | None = None) -> int:
                 print(f"not found: {path} (nothing removed; `raggy remove {path}` drops what it held)",
                       file=sys.stderr)
         elif args.command == "search":
-            hits = raggy.search(args.query, args.k, _filters(args))
+            hits = raggy.search(args.query, args.k, _filters(args), mode=args.mode)
             if not hits and _filters(args):
                 print("no chunks match these filters", file=sys.stderr)
             _print_hits(hits)
         elif args.command == "ask":
-            answer = raggy.ask(args.question, args.k, _filters(args))
+            answer = raggy.ask(args.question, args.k, _filters(args), mode=args.mode)
             if args.show_context:
                 _print_hits(answer.hits)
                 print()
@@ -173,7 +175,7 @@ def main(argv: list[str] | None = None) -> int:
     except IndexNotFoundError:
         print("No index found — run `raggy ingest <path>` first.", file=sys.stderr)
         return 1
-    except (LLMError, EmbedderMismatchError) as e:
+    except (LLMError, EmbedderMismatchError, KeywordSearchUnavailable) as e:
         print(f"error: {e}", file=sys.stderr)
         return 1
     return 0

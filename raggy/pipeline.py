@@ -27,6 +27,7 @@ from raggy.ingest.loaders import LoadError, load_file, load_path
 from raggy.ingest.normalize import NORMALIZE_VERSION
 from raggy.ingest.registry import Record, Registry
 from raggy.ingest.walk import iter_files
+from raggy.retrieve.fusion import rrf
 from raggy.store.base import Filters, IndexNotFoundError, VectorStore, make_store
 from raggy.types import Answer, Chunk, Document, Hit, embed_text  # noqa: F401 (embed_text re-exported)
 
@@ -363,34 +364,52 @@ class Raggy:
         return report
 
     def search(self, question: str, k: int | None = None, filters: Filters | None = None,
-               exact: bool | None = None) -> list[Hit]:
+               exact: bool | None = None, mode: str | None = None) -> list[Hit]:
         """The k best chunks, or with parent/child on, the k best distinct parents.
 
-        Small chunks are precise to search (one idea per vector); bigger parents
-        give the model the surrounding text. Each child found is swapped for its
-        parent, and a parent found twice is kept once. ``filters`` restrict the
-        search to some documents (type, folder or URL prefix, modified date)."""
+        ``mode`` is vector (embeddings), keyword (BM25) or hybrid (both, fused by
+        rank with RRF); it defaults to RAGGY_RETRIEVAL. ``filters`` restrict both
+        sides to some documents before anything is ranked. Each child found is
+        then swapped for its parent, and a parent found twice is kept once."""
         store = self._search_store()  # raises IndexNotFoundError
-        query = self.embedder.embed_query(question)
         k = k or self.config.top_k
+        mode = mode or self.config.retrieval
         exact = self.config.ann == "off" if exact is None else exact
-        if not self.config.parent_tokens:
-            return store.search(query, k, embedder_name=self.embedder.name, where=filters, exact=exact)
-        out, seen = [], set()
-        for h in store.search(query, k * 4, embedder_name=self.embedder.name, where=filters, exact=exact):
-            c = h.chunk
-            if c.parent_text is not None:
-                c = Chunk(id=f"{c.source}#p{c.parent_start}", source=c.source, text=c.parent_text,
-                          index=c.index, start=c.parent_start, end=c.parent_end, context=c.context, meta=c.meta)
-            if (c.source, c.start) not in seen:
-                seen.add((c.source, c.start))
-                out.append(Hit(chunk=c, score=h.score))
-                if len(out) == k:
-                    break
-        return out
+        query = self.embedder.embed_query(question) if mode != "keyword" else None
 
-    def ask(self, question: str, k: int | None = None, filters: Filters | None = None) -> Answer:
-        return generate_answer(question, self.search(question, k, filters), self.llm)
+        def ranked(want: int) -> list[Hit]:
+            if mode == "vector":
+                return store.search(query, want, embedder_name=self.embedder.name, where=filters, exact=exact)
+            if mode == "keyword":
+                return store.keyword_search(question, want, where=filters)
+            n = max(want, self.config.fusion_candidates)
+            vec = store.search(query, n, embedder_name=self.embedder.name, where=filters, exact=exact)
+            return rrf([vec, store.keyword_search(question, n, where=filters)], k=self.config.rrf_k)[:want]
+
+        if not self.config.parent_tokens:
+            return ranked(k)
+        # Children of one parent often rank together, so k*4 children can hold fewer
+        # than k distinct parents. Fetch more until there are k, or nothing more to fetch.
+        want = k * 4
+        while True:
+            hits = ranked(want)
+            out, seen = [], set()
+            for h in hits:
+                c = h.chunk
+                if c.parent_text is not None:
+                    c = Chunk(id=f"{c.source}#p{c.parent_start}", source=c.source, text=c.parent_text,
+                              index=c.index, start=c.parent_start, end=c.parent_end, context=c.context,
+                              meta=c.meta)
+                if (c.source, c.start) not in seen:
+                    seen.add((c.source, c.start))
+                    out.append(Hit(chunk=c, score=h.score))
+            if len(out) >= k or len(hits) < want or want >= k * 64:
+                return out[:k]
+            want *= 2
+
+    def ask(self, question: str, k: int | None = None, filters: Filters | None = None,
+            mode: str | None = None) -> Answer:
+        return generate_answer(question, self.search(question, k, filters, mode=mode), self.llm)
 
     def sources(self) -> dict[str, int]:
         return make_store(self.config, create=False).sources()

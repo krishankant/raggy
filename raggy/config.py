@@ -79,6 +79,9 @@ class Config:
     ann: str = "off"  # off: exact search | on: approximate (IVF-HNSW) index, Lance only
     ann_nprobes: int = 20  # ANN: how many IVF partitions each search visits
     ann_refine: int = 4  # ANN: re-rank this many times k candidates with exact scores
+    retrieval: str = "vector"  # vector | keyword (BM25) | hybrid (both, fused with RRF)
+    rrf_k: int = 60  # reciprocal rank fusion constant
+    fusion_candidates: int = 50  # hybrid: candidates taken from each side before fusing
 
     def chunk_settings(self):
         from raggy.chunking import ChunkSettings
@@ -129,4 +132,7 @@ class Config:
             ann=_choice_env("RAGGY_ANN", "off", ("off", "on")),
             ann_nprobes=_positive_int_env("RAGGY_ANN_NPROBES", "20"),
             ann_refine=_positive_int_env("RAGGY_ANN_REFINE", "4"),
+            retrieval=_choice_env("RAGGY_RETRIEVAL", "vector", ("vector", "keyword", "hybrid")),
+            rrf_k=_positive_int_env("RAGGY_RRF_K", "60"),
+            fusion_candidates=_positive_int_env("RAGGY_FUSION_CANDIDATES", "50"),
         )
