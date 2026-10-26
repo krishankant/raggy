@@ -51,12 +51,24 @@ def chunk_document(doc: Document, settings: ChunkSettings, count: Counter) -> li
         for c in chunks:
             c.context = ""
     if settings.parent_tokens and settings.chunker != "fixed":
-        # Parents ignore section boundaries: their job is to add the neighbouring
-        # text a small, section-bound child cut off (the "when" next to the "what").
-        parents = (chunk_structure(doc, count, settings.parent_tokens, 0, break_at_headings=False)
-                   if settings.chunker == "structure" else _base(doc, settings, count, settings.parent_tokens, 0))
-        for c in chunks:
-            p = next((p for p in parents if p.start <= c.start < p.end), None)
-            if p is not None:
-                c.parent_start, c.parent_end, c.parent_text = p.start, p.end, p.text
+        _add_parents(doc, chunks, count, settings.parent_tokens)
     return chunks
+
+
+def _add_parents(doc: Document, chunks: list[Chunk], count: Counter, size: int) -> None:
+    """Group consecutive chunks into parents of up to ``size`` tokens.
+
+    Parents are built from the children, not chunked separately, so every child
+    lies wholly inside its parent: a parent never cuts a child in half. Groups
+    ignore section boundaries; adding the neighbouring section a small,
+    section-bound child cut off is what a parent is for."""
+    groups: list[list[Chunk]] = []
+    for c in chunks:
+        if groups and count(doc.text[groups[-1][0].start:c.end]) <= size:
+            groups[-1].append(c)
+        else:
+            groups.append([c])
+    for g in groups:
+        s, e = g[0].start, max(c.end for c in g)
+        for c in g:
+            c.parent_start, c.parent_end, c.parent_text = s, e, doc.text[s:e]

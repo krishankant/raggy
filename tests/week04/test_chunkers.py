@@ -172,3 +172,14 @@ def test_parents_span_sibling_sections():
     child = next(c for c in chunks if "fix it" in c.text)
     assert "first Thursday" in child.parent_text and "fix it" in child.parent_text
     assert child.parent_text == doc.text[child.parent_start:child.parent_end]
+
+
+@pytest.mark.parametrize("chunker", ["recursive", "structure"])
+@pytest.mark.parametrize("seed", range(20))
+def test_every_child_inside_its_parent(chunker, seed):
+    doc = random_markdown(seed)
+    s = ChunkSettings(chunker=chunker, tokens=40, overlap=8, parent_tokens=150)
+    for c in chunk_document(doc, s, simple_count):
+        assert c.parent_start <= c.start and c.end <= c.parent_end, c.id
+        assert c.parent_text == doc.text[c.parent_start:c.parent_end]
+        assert simple_count(c.parent_text) <= 150 or c.parent_text == c.text

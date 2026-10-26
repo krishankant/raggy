@@ -93,10 +93,7 @@ def _context(title: str, path: list[str]) -> str:
     return SEP.join(parts)
 
 
-def chunk_structure(doc: Document, count: Counter, size: int = 256, overlap: int = 32,
-                    break_at_headings: bool = True) -> list[Chunk]:
-    """``break_at_headings=False`` packs whole blocks across section boundaries:
-    that's how parents are built, so a parent can hold two neighbouring sections."""
+def chunk_structure(doc: Document, count: Counter, size: int = 256, overlap: int = 32) -> list[Chunk]:
     text = doc.text
     title = doc.metadata.get("title", "")
     units: list[Unit] = []
@@ -107,7 +104,7 @@ def chunk_structure(doc: Document, count: Counter, size: int = 256, overlap: int
             # A sibling or higher heading ends the section we're in, so it starts a
             # new chunk. A deeper heading (a subsection) may share its parent's chunk.
             current = path[-1][0] if path else None
-            brk = break_at_headings and has_content and (current is None or b.level <= current)
+            brk = has_content and (current is None or b.level <= current)
             if brk:
                 has_content = False
             while path and path[-1][0] >= b.level:
