@@ -27,6 +27,7 @@ from raggy.store.base import EmbedderMismatchError, Filters, _quote, mismatch
 from raggy.types import Chunk, Hit
 
 TABLE = "chunks"
+ANN_MIN_ROWS = 1000  # an IVF index trains k-means on the vectors; below this there's nothing to cluster
 META = ("type", "title", "modified")  # Document metadata copied onto every row, for filters
 
 
@@ -114,6 +115,24 @@ class LanceStore:
             return {}
         counts = self._tbl.to_arrow().column("source").value_counts().to_pylist()
         return {c["values"]: c["counts"] for c in counts}
+
+    def has_index(self) -> bool:
+        return self._tbl is not None and any("vector" in i.columns for i in self._tbl.list_indices())
+
+    def finish(self, build_ann: bool) -> None:
+        """Build the ANN index once the table is big enough, or fold new rows into it.
+
+        Rows added after the index was built are still found: Lance scans them
+        exactly and merges them with the index results. ``optimize`` moves
+        them into the index so that scan stays small."""
+        if self._tbl is None:
+            return
+        if self.has_index():
+            self._tbl.optimize()
+        elif build_ann and len(self) >= ANN_MIN_ROWS:
+            from lancedb.index import IvfHnswSq
+
+            self._tbl.create_index("vector", config=IvfHnswSq(distance_type="dot"))
 
     def save(self) -> None:
         """Nothing to do: every Lance write is already committed as a new version."""

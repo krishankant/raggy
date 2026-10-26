@@ -84,6 +84,9 @@ class NumpyStore:
             counts[c.source] = counts.get(c.source, 0) + 1
         return counts
 
+    def finish(self, build_ann: bool) -> None:
+        """Exact search only: there is no index to build."""
+
     def save(self) -> None:
         self.path.mkdir(parents=True, exist_ok=True)
         dim = 0 if self.vectors is None else int(self.vectors.shape[1])

@@ -87,6 +87,9 @@ class VectorStore(Protocol):
 
     def save(self) -> None: ...
 
+    def finish(self, build_ann: bool) -> None:
+        """After an ingest: build or update an ANN index if the store has one."""
+
 
 def make_store(config: "Config", create: bool = True) -> VectorStore:
     """Open the configured store. ``create=False`` raises IndexNotFoundError if there's none."""

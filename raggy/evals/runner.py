@@ -118,6 +118,8 @@ def _aggregate(records: list[dict]) -> dict:
     m["refusal_accuracy"] = mean(float(r["refused"] != r["answerable"]) for r in answered)
     m["unanswerable_refused"] = mean(float(r["refused"]) for r in answered if not r["answerable"])
     m["answerable_refused"] = mean(float(r["refused"]) for r in answered if r["answerable"])
+    for k in sorted({k for r in records for k in r.get("ann_overlap", {})}, key=lambda s: int(s[1:])):
+        m[f"ann_overlap{k}"] = mean(r["ann_overlap"][k] for r in records if "ann_overlap" in r)
     tokens = [r.get("context_tokens") for r in records]
     m["context_tokens_p50"] = percentile(tokens, 50)  # a bigger context can look like better retrieval
     m["context_tokens_p95"] = percentile(tokens, 95)
@@ -154,6 +156,13 @@ def run_suite(suite: Suite, raggy: Raggy, judge: Judge | None, *, answers: bool 
         rec["latency_ms"]["retrieve"] = round((time.perf_counter() - t0) * 1000, 2)
         ranked = (collapse_to_documents(hits) if suite.unit == "document" else hits)[:n]
         covers = [chunk_gold(h.chunk, gold[q.id]) for h in ranked]
+        if raggy.config.ann == "on":  # how much of the exact answer did the approximate search find?
+            exact = raggy.search(q.question, k=fetch, exact=True)
+            exact = (collapse_to_documents(exact) if suite.unit == "document" else exact)[:n]
+            key = (lambda h: h.chunk.source) if suite.unit == "document" else (lambda h: h.chunk.id)
+            rec["ann_overlap"] = {
+                f"@{k}": len({key(h) for h in ranked[:k]} & {key(h) for h in exact[:k]}) / max(1, len(exact[:k]))
+                for k in suite.ks}
         rec["retrieved"] = [{"chunk_id": h.chunk.id, "source": h.chunk.source, "score": round(h.score, 4),
                              "gold": sorted(g)} for h, g in zip(ranked[:SAVED_HITS], covers)]
         if q.answerable:
@@ -193,6 +202,10 @@ def run_suite(suite: Suite, raggy: Raggy, judge: Judge | None, *, answers: bool 
             "html_extract": raggy.config.html_extract,
             "chunking": raggy.config.chunk_settings().key(),
             "chunk_context": raggy.config.chunk_context,
+            "store": raggy.config.store,
+            "ann": raggy.config.ann,
+            "ann_nprobes": raggy.config.ann_nprobes,
+            "ann_refine": raggy.config.ann_refine,
             "dedupe": raggy.config.dedupe and suite.dedupe,
             "top_k": raggy.config.top_k,
             "ks": list(suite.ks),

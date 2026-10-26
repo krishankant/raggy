@@ -245,6 +245,7 @@ class Raggy:
         for source in removed:
             reg.delete(source)
         store.save()  # first the store ...
+        store.finish(build_ann=self.config.ann == "on")
         reg.commit()  # ... then the registry: a crash between the two means redo, never loss
 
         for st in status.values():
@@ -357,9 +358,11 @@ class Raggy:
             report.embedded = report.chunks
         if save:
             store.save()
+            store.finish(build_ann=self.config.ann == "on")
         return report
 
-    def search(self, question: str, k: int | None = None, filters: Filters | None = None) -> list[Hit]:
+    def search(self, question: str, k: int | None = None, filters: Filters | None = None,
+               exact: bool | None = None) -> list[Hit]:
         """The k best chunks, or with parent/child on, the k best distinct parents.
 
         Small chunks are precise to search (one idea per vector); bigger parents
@@ -369,7 +372,7 @@ class Raggy:
         store = make_store(self.config, create=False)  # raises IndexNotFoundError
         query = self.embedder.embed_query(question)
         k = k or self.config.top_k
-        exact = self.config.ann == "off"
+        exact = self.config.ann == "off" if exact is None else exact
         if not self.config.parent_tokens:
             return store.search(query, k, embedder_name=self.embedder.name, where=filters, exact=exact)
         out, seen = [], set()
