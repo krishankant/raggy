@@ -1,6 +1,6 @@
 # Week 5: Scale — tens of thousands of documents
 
-**[← Week 4: Chunking](week04-chunking.md)** · **[Course Plan](../COURSE_PLAN.md)** · **[Vector search at scale (guide)](../docs/vector-search-at-scale.md)** · **Week 6: Hybrid search →** *(coming)*
+**[← Week 4: Chunking](week04-chunking.md)** · **[Course Plan](../COURSE_PLAN.md)** · **[Vector search at scale (guide)](../docs/vector-search-at-scale.md)** · **[Week 6: Hybrid search →](week06-hybrid-search.md)**
 
 ---
 
