@@ -438,9 +438,11 @@ class Raggy:
             first = ranked
 
             def ranked(want: int) -> list[Hit]:  # noqa: F811 — retrieve a wider pool, rerank, keep `want`
-                pool = first(max(self.config.rerank_candidates, want))
+                n = self.config.rerank_candidates
+                pool = first(max(n, want))
                 t0 = time.perf_counter()
-                out = reranker.rerank(question, pool)[:want]
+                # Rerank the top n only; deeper candidates keep their retrieval order behind them.
+                out = (reranker.rerank(question, pool[:n]) + pool[n:])[:want]
                 timings["rerank"] = timings.get("rerank", 0.0) + (time.perf_counter() - t0) * 1000
                 return out
 

@@ -140,3 +140,12 @@ def test_rerank_flag_cli(monkeypatch, tmp_path, capsys):
     monkeypatch.setattr("raggy.retrieve.rerank.CrossEncoderReranker._load", lambda self: FakeCrossEncoder())
     assert cli.main(["search", "bikes", "-k", "1", "--rerank", "local"]) == 0
     assert "gold.md" in capsys.readouterr().out
+
+
+def test_rerank_only_top_candidates_rest_keep_order(tmp_path):
+    r = make(tmp_path, rerank="local", rerank_candidates=3)
+    r._reranker = cross()
+    r.ingest_documents(DOCS)
+    hits = r.search("bikes", k=8)
+    assert len(hits) == 8
+    assert all(len(ps) == 3 for _, ps in r._reranker._model.seen)  # only the top 3 were scored
