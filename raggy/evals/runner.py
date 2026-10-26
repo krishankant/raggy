@@ -152,7 +152,8 @@ def run_suite(suite: Suite, raggy: Raggy, judge: Judge | None, *, answers: bool 
     if raggy.config.dedupe and suite.dedupe:
         docs, dups = drop_duplicates(docs)
     questions = suite.questions()[:limit] if limit else suite.questions()
-    gold = resolve_gold(questions, docs)  # fail now, not after 300 model calls
+    gold_missing: list[str] = []
+    gold = resolve_gold(questions, docs, strict=suite.strict_gold, missing=gold_missing)  # fail now, not later
     ingest = prepare_index(suite, raggy, docs, ingest_progress)
     ingest |= {"documents": len(docs), "duplicates": _relative(sorted(dups), docs)}
 
@@ -180,7 +181,7 @@ def run_suite(suite: Suite, raggy: Raggy, judge: Judge | None, *, answers: bool 
         rec["retrieved"] = [{"chunk_id": h.chunk.id, "source": h.chunk.source, "score": round(h.score, 4),
                              "gold": sorted(g)} for h, g in zip(ranked[:SAVED_HITS], covers)]
         if q.answerable:
-            rec["retrieval"] = retrieval_metrics(covers, len(gold[q.id]), suite.ks)
+            rec["retrieval"] = retrieval_metrics(covers, len(q.gold), suite.ks)  # lost gold counts as missed
         context = raggy.context(hits[: raggy.config.top_k])  # what the answer model is (or would be) given
         rec["context_tokens"] = sum(raggy.embedder.count_tokens(source_text(h)) for h in context)
         if answers:
@@ -229,6 +230,8 @@ def run_suite(suite: Suite, raggy: Raggy, judge: Judge | None, *, answers: bool 
             "chunk_size": raggy.config.chunk_size,
             "chunk_overlap": raggy.config.chunk_overlap,
             "html_extract": raggy.config.html_extract,
+            "pdf": raggy.config.pdf,
+            "ocr": raggy.config.ocr,
             "chunking": raggy.config.chunk_settings().key(),
             "chunk_context": raggy.config.chunk_context,
             "store": raggy.config.store,
@@ -260,6 +263,7 @@ def run_suite(suite: Suite, raggy: Raggy, judge: Judge | None, *, answers: bool 
         "ingest": ingest,
         "fallbacks": fallbacks,  # failed transform / rerank calls (each fell back to the plain path)
         "fallback_of": fallback_of,
+        "gold_missing": sorted(gold_missing),  # questions whose evidence no loaded document contains
         "llm_usage": usage,  # answer model tokens this run (calls, input, output, cache_read, cache_write)
         "metrics": _with_budgets(_aggregate(records), raggy.config.budgets),
         "by_tag": {t: _aggregate([r for r in records if t in r["tags"]]) | {"n": sum(t in r["tags"] for r in records)}

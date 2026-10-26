@@ -58,6 +58,7 @@ class Suite:
     unit: str  # "chunk": score chunks against gold spans; "document": score whole documents
     answers: bool  # does this suite have reference answers to judge?
     dedupe: bool = True  # False for a public benchmark: its corpus is part of its definition
+    strict_gold: bool = True  # False: a gold quote a loader lost counts as a miss instead of an error
 
 
 def fictional_suite(root: Path = Path("evals/fictional"), name: str = "fictional") -> Suite:
@@ -186,6 +187,14 @@ def fictional_web_suite(root: Path = Path("evals/fictional-web"),
     )
 
 
+def rich_suite(root: Path = Path("evals/rich")) -> Suite:
+    """Answers in tables, slides, sheets, a CSV and a scanned page (week 9). A loader that
+    can't read a format loses those answers: that's the measurement, so gold isn't strict."""
+    s = fictional_suite(root, name="rich")
+    s.strict_gold = False
+    return s
+
+
 def manual_suite(root: Path = Path("evals/manual")) -> Suite:
     """One long document (a fictional owner's manual, ~3,000 tokens): the suite
     where chunk boundaries matter, because most answers sit in one section of many."""
@@ -204,6 +213,7 @@ def fiqa_suite(data_dir: Path = Path("evals/data")) -> Suite:
 
 
 SUITES: dict[str, Callable[[], Suite]] = {
+    "rich": rich_suite,
     "fiqa": fiqa_suite,
     "manual": manual_suite,
     "fictional": fictional_suite,

@@ -17,8 +17,11 @@ def ocr_image(image) -> str:
     import numpy as np
 
     if _engine is None:
+        import logging
+
         from rapidocr import RapidOCR  # imported here: ~1 s to load, and most runs never OCR
 
         _engine = RapidOCR()
+        logging.getLogger("RapidOCR").setLevel(logging.WARNING)  # it logs every model path at INFO
     result = _engine(np.array(image.convert("RGB")))
     return "\n".join(result.txts or ())

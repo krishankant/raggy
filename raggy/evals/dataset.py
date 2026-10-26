@@ -64,8 +64,12 @@ def _find_doc(source: str, docs_by_source: dict[str, Document], docs_by_name: di
     return docs_by_source.get(source) or docs_by_name.get(source)
 
 
-def resolve_gold(questions: list[EvalQuestion], docs: list[Document]) -> dict[str, list[Located]]:
-    """Turn every gold quote into a character span. Raises on the first miss."""
+def resolve_gold(questions: list[EvalQuestion], docs: list[Document], strict: bool = True,
+                 missing: list[str] | None = None) -> dict[str, list[Located]]:
+    """Turn every gold quote into a character span. Raises on the first miss, unless
+    ``strict=False``: then a quote that isn't in the corpus is left out (its question
+    scores it as a miss) and the question id goes into ``missing``. Only for suites
+    where a loader can legitimately lose the evidence (week 9: a scan without OCR)."""
     by_source = {d.source: d for d in docs}
     by_name = {Path(d.source).name: d for d in docs}
     resolved: dict[str, list[Located]] = {}
@@ -74,6 +78,9 @@ def resolve_gold(questions: list[EvalQuestion], docs: list[Document]) -> dict[st
         for g in q.gold:
             doc = _find_doc(g.source, by_source, by_name)
             if doc is None:
+                if not strict:
+                    missing is not None and q.id not in missing and missing.append(q.id)
+                    continue
                 raise GoldNotFoundError(f"question {q.id}: gold source {g.source!r} is not in the corpus")
             if g.quote is None:
                 spans.append(Located(doc.source, 0, len(doc.text)))
@@ -85,6 +92,9 @@ def resolve_gold(questions: list[EvalQuestion], docs: list[Document]) -> dict[st
             pattern = r"[\s|]+".join(re.escape(w) for w in words)
             m = re.search(pattern, doc.text)
             if m is None:
+                if not strict:
+                    missing is not None and q.id not in missing and missing.append(q.id)
+                    continue
                 raise GoldNotFoundError(
                     f"question {q.id}: quote not found in {g.source!r}: {g.quote!r}")
             spans.append(Located(doc.source, m.start(), m.end()))

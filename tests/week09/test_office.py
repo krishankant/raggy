@@ -64,6 +64,7 @@ def test_docx_headings_and_table(tmp_path):
 def test_pptx_slides_titles_notes_and_labels(tmp_path):
     doc = load_file(make_pptx(tmp_path / "deck.pptx"))
     assert "## Slide 2: Pricing" in doc.text and "4,950 credits at launch" in doc.text
+    assert doc.text.count("Pricing") == 1  # the title isn't repeated as body text
     assert "Speaker notes: Fleet discounts on slide 3." in doc.text
     labels = [label for label, _ in doc.metadata["pages"]]
     assert labels == ["slide 1", "slide 2", "slide 3"]

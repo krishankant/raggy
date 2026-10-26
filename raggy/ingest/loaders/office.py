@@ -65,8 +65,9 @@ def load_pptx(data: bytes, options) -> tuple[list[tuple[str, str]], str | None]:
         title = title_shape.text.strip() if title_shape is not None and title_shape.has_text_frame else ""
         first_title = first_title or title or None
         parts = [f"## Slide {n}: {title}" if title else f"## Slide {n}"]
+        title_id = title_shape.shape_id if title_shape is not None else None
         for shape in slide.shapes:
-            if shape is title_shape:
+            if shape.shape_id == title_id:  # python-pptx returns a new proxy per access: compare ids, not objects
                 continue
             if getattr(shape, "has_table", False) and shape.has_table:
                 parts.append(markdown_table([[c.text for c in row.cells] for row in shape.table.rows]))
