@@ -1,8 +1,8 @@
 """OCR for scanned pages: rapidocr (PaddleOCR models in ONNX, bundled in the wheel).
 
 A scanned PDF page is a picture of text with no text layer, so every text
-extractor returns nothing for it. OCR reads the picture. It's slow (about
-1.4 s a page on a laptop CPU) and can misread, so it only runs on pages that
+extractor returns nothing for it. OCR reads the picture. It's slow (0.5 s a
+page on a laptop CPU, plus about 1 s to load the models once) and can misread, so it only runs on pages that
 have almost no text of their own.
 """
 
