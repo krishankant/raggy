@@ -28,6 +28,9 @@ from raggy.pipeline import Raggy
 from raggy.types import Document
 
 SAVED_HITS = 10  # retrieved items kept per question in the run file
+# Paid-for work that doesn't depend on the settings that make an index stale:
+# a rebuild keeps these files, and a folder holding only them is raggy's own.
+CACHE_FILES = {"context-cache.sqlite", "embed-cache.sqlite"}
 
 
 class UnsafeIndexDirError(RuntimeError):
@@ -50,16 +53,14 @@ def prepare_index(suite: Suite, raggy: Raggy, docs: list[Document] | None = None
         # Stale: built from other data or settings. Only ever delete a folder
         # this function created (it has key.json) or an empty one; anything
         # else may be the user's files, and a wrong path must not destroy them.
-        from raggy.chunking.contextual import CACHE_NAME
-
-        if not key_file.exists() and any(p.name != CACHE_NAME for p in c.index_dir.iterdir()):
+        if not key_file.exists() and any(p.name not in CACHE_FILES for p in c.index_dir.iterdir()):
             raise UnsafeIndexDirError(
                 f"{c.index_dir} isn't empty and wasn't created by `raggy eval`; "
                 "refusing to delete it. Check RAGGY_INDEX_DIR, or remove the folder yourself.")
         # Keep the contextual-retrieval cache: it holds paid-for LLM output that
         # doesn't depend on the settings that made this index stale.
         for child in c.index_dir.iterdir():
-            if child.name == CACHE_NAME:
+            if child.name in CACHE_FILES:
                 continue
             shutil.rmtree(child) if child.is_dir() else child.unlink()
     t0 = time.perf_counter()
@@ -71,7 +72,8 @@ def prepare_index(suite: Suite, raggy: Raggy, docs: list[Document] | None = None
     seconds = time.perf_counter() - t0
     key_file.write_text(json.dumps(key, indent=2))
     return {"cached": False, "documents": report.documents, "chunks": report.chunks,
-            "seconds": round(seconds, 2), "context_calls": report.context_calls,
+            "seconds": round(seconds, 2), "embedded": report.embedded, "embed_cached": report.embed_cached,
+            "context_calls": report.context_calls,
             "context_cached": report.context_cached, "context_failed": report.context_failed}
 
 

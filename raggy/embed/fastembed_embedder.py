@@ -14,7 +14,7 @@ DEFAULT_MODEL = "BAAI/bge-small-en-v1.5"
 
 
 class FastEmbedEmbedder:
-    def __init__(self, model_name: str = DEFAULT_MODEL, batch_size: int = 64):
+    def __init__(self, model_name: str = DEFAULT_MODEL, batch_size: int = 16):
         from fastembed import TextEmbedding  # imported here so tests never load it
 
         self.name = model_name
@@ -35,9 +35,19 @@ class FastEmbedEmbedder:
         return len(self._tokenizer.encode(text, add_special_tokens=False).ids)
 
     def embed_documents(self, texts: list[str]) -> np.ndarray:
+        # A batch is padded to its longest text, so mixing a 20-token title with a
+        # 250-token chunk makes the model compute 230 tokens of padding. Embedding
+        # shortest-first keeps batches even; the input order is restored after.
+        # (Measured on an 8 GB M2: batch 16 beats batch 64, and worker processes
+        # are slower still, because each loads its own copy of the model.)
+        order = sorted(range(len(texts)), key=lambda i: len(texts[i]))
         # passage_embed adds the model's "document" prefix when it has one.
-        vectors = list(self._model.passage_embed(texts, batch_size=self.batch_size))
-        return normalize(np.stack(vectors)) if vectors else np.zeros((0, self.dim), np.float32)
+        vectors = list(self._model.passage_embed([texts[i] for i in order], batch_size=self.batch_size))
+        if not vectors:
+            return np.zeros((0, self.dim), np.float32)
+        out = np.empty((len(texts), len(vectors[0])), np.float32)
+        out[order] = np.stack(vectors)
+        return normalize(out)
 
     def embed_query(self, text: str) -> np.ndarray:
         # query_embed adds the "query" prefix (bge: "Represent this sentence…").

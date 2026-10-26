@@ -94,6 +94,8 @@ def main(argv: list[str] | None = None) -> int:
             print(f"Indexed into {raggy.config.index_dir}: {r.added} added, {r.updated} updated, "
                   f"{r.unchanged} unchanged, {r.removed} removed, {r.duplicates} duplicates, "
                   f"{len(r.failed)} failed ({r.chunks} chunks embedded)")
+            if r.embedded or r.embed_cached:
+                print(f"embeddings: {r.embedded} computed, {r.embed_cached} from cache")
             if raggy.config.chunk_context == "llm":
                 print(f"contextual retrieval: {r.context_calls} LLM calls ({r.context_cached} cached, "
                       f"{r.context_failed} failed)")

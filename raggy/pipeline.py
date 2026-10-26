@@ -18,6 +18,7 @@ import numpy as np
 from raggy.chunking import chunk_document
 from raggy.config import Config
 from raggy.embed.base import Embedder
+from raggy.embed.cache import CACHE_NAME as EMBED_CACHE, CachedEmbedder, EmbeddingCache
 from raggy.generate.answer import generate_answer
 from raggy.generate.llm import LLM, make_llm
 from raggy.ingest.dedupe import DuplicateIndex, content_hash, minhash
@@ -44,6 +45,8 @@ class IngestReport:
     context_calls: int = 0  # contextual retrieval: LLM calls made this run
     context_cached: int = 0
     context_failed: int = 0
+    embedded: int = 0  # texts the model embedded this run
+    embed_cached: int = 0  # texts whose vectors came from the embedding cache
 
 
 def pipeline_key(config: Config, embedder_name: str) -> str:
@@ -85,6 +88,9 @@ class Raggy:
             from raggy.embed.fastembed_embedder import FastEmbedEmbedder
 
             self._embedder = FastEmbedEmbedder(self.config.embed_model)
+        if self.config.embed_cache and not isinstance(self._embedder, CachedEmbedder):
+            self._embedder = CachedEmbedder(self._embedder,
+                                            EmbeddingCache(Path(self.config.index_dir) / EMBED_CACHE))
         return self._embedder
 
     @property
@@ -234,6 +240,7 @@ class Raggy:
         report.documents, report.chunks = done.documents, done.chunks
         report.context_calls, report.context_cached = done.context_calls, done.context_cached
         report.context_failed = done.context_failed
+        report.embedded, report.embed_cached = done.embedded, done.embed_cached
         counts = store.sources()
         for source, row in rows.items():
             reg.upsert(replace(row, chunks=counts.get(source, 0)))
@@ -300,6 +307,8 @@ class Raggy:
         """
         report = IngestReport()
         store = store if store is not None else self._open_store()
+        cached = self._embedder if isinstance(self._embedder, CachedEmbedder) else None
+        hits0, misses0 = (cached.hits, cached.misses) if cached else (0, 0)
         settings = self.config.chunk_settings()
         count = lambda text: self.embedder.count_tokens(text)  # noqa: E731 (fixed never calls it)
         pairs = [(d, c) for d, c in ((d, chunk_document(d, settings, count)) for d in docs) if c]
@@ -338,6 +347,12 @@ class Raggy:
             if len(batch) >= batch_size:
                 flush()
         flush()
+        cached = self._embedder if isinstance(self._embedder, CachedEmbedder) else cached
+        if cached is not None:
+            cached.cache.commit()  # vectors are paid for: keep them even if a later step fails
+            report.embedded, report.embed_cached = cached.misses - misses0, cached.hits - hits0
+        else:
+            report.embedded = report.chunks
         if save:
             store.save()
         return report

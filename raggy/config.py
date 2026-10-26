@@ -74,6 +74,8 @@ class Config:
     chunk_headers: bool = True  # embed "title › section" with each chunk
     parent_tokens: int = 512  # > 0: retrieve small chunks, answer with their parent of this size
     chunk_context: str = "none"  # none | llm (contextual retrieval: one LLM call per chunk, cached)
+    embed_cache: bool = True  # reuse vectors for text this model has embedded before
+    store: str = "numpy"  # numpy | lance
 
     def chunk_settings(self):
         from raggy.chunking import ChunkSettings
@@ -119,4 +121,6 @@ class Config:
             chunk_headers=_bool_env("RAGGY_CHUNK_HEADERS", True),
             parent_tokens=_nonneg_int_env("RAGGY_PARENT_TOKENS", "512"),
             chunk_context=_choice_env("RAGGY_CHUNK_CONTEXT", "none", ("none", "llm")),
+            embed_cache=_bool_env("RAGGY_EMBED_CACHE", True),
+            store=_choice_env("RAGGY_STORE", "numpy", ("numpy", "lance")),
         )
