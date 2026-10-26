@@ -74,3 +74,17 @@ def test_resolve_gold_ignores_table_pipes():
     for text in ("| BW-CH-1142 | 8-speed chain | 24 credits |", "BW-CH-1142 8-speed chain\n24 credits"):
         (span,) = resolve_gold([q], [Document("p", text)])["t"]
         assert text[span.start:span.end].startswith("BW-CH-1142") and text[span.start:span.end].endswith("credits")
+
+
+def test_html_main_strips_leftover_inline_tags_and_escapes(monkeypatch):
+    import trafilatura
+    monkeypatch.setattr(trafilatura, "extract",
+                        lambda *a, **k: "Newer systems (as of 2023<sup>\\[update\\]</sup>) use *agents* and a\\_b.")
+    doc = load_bytes(b"<html><title>t</title><body>x</body></html>", "p.html", "html")
+    assert doc.text == "Newer systems (as of 2023[update]) use *agents* and a_b."
+
+
+def test_title_fallback_keeps_dotted_url_name():
+    doc = load_bytes(b"hello", "https://arxiv.org/pdf/2005.11401", "text")
+    assert doc.metadata["title"] == "2005.11401"
+    assert load_bytes(b"hello", "/docs/notes.txt", "text").metadata["title"] == "notes"

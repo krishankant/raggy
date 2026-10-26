@@ -57,8 +57,9 @@ def load_bytes(data: bytes, source: str, kind: str, options: LoadOptions | None 
     if not body:
         raise LoadError(f"{source}: no text found")
     name = source.rstrip("/").rsplit("/", 1)[-1] or source
+    fallback = Path(name).stem if Path(name).suffix.lower() in SUFFIXES else name  # "2005.11401" stays whole
     return Document(source=source, text=body,
-                    metadata={"name": name, "title": title or Path(name).stem, "type": kind})
+                    metadata={"name": name, "title": title or fallback, "type": kind})
 
 
 def _iso(timestamp: float) -> str:

@@ -10,6 +10,7 @@ visible word: it exists so the lesson can measure what extraction is worth.
 
 from __future__ import annotations
 
+import re
 from html.parser import HTMLParser
 
 from raggy.ingest import loaders
@@ -50,6 +51,17 @@ class _AllText(HTMLParser):
             self.parts.append(data)
 
 
+# trafilatura's Markdown can keep a few inline tags (<sup>, <sub>) and escape
+# brackets and underscores ("\\[update\\]"). Both are noise to an embedding.
+# Pipes stay escaped: "\\|" inside a table cell is a literal pipe.
+_INLINE_TAG = re.compile(r"</?(?:sup|sub|span|small|abbr|mark|u|s|del|ins|kbd|font)\b[^>]*>", re.IGNORECASE)
+_ESCAPE = re.compile(r"\\([\[\]_*#`()])")
+
+
+def _tidy(markdown: str) -> str:
+    return _ESCAPE.sub(r"\1", _INLINE_TAG.sub("", markdown))
+
+
 def _decode(data: bytes) -> str:
     try:
         return data.decode("utf-8")
@@ -76,4 +88,4 @@ def load(data: bytes, options) -> tuple[str, str | None]:
     if not (body or "").strip():
         raise loaders.LoadError("no text found (the page may need JavaScript to render)")
     _, title = _full(data)  # the page's own <title>
-    return body, title
+    return _tidy(body), title
