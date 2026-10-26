@@ -161,6 +161,7 @@ def run_suite(suite: Suite, raggy: Raggy, judge: Judge | None, *, answers: bool 
     reranker = raggy.reranker() if raggy.config.rerank != "none" else None
     t0 = dict(raggy.transform_stats)
     r0 = (reranker.calls, reranker.failures) if reranker is not None else (0, 0)
+    usage0 = dict(getattr(raggy.llm, "usage", {}) or {}) if answers else {}
     records = []
     for i, q in enumerate(questions, start=1):
         rec: dict = {"id": q.id, "question": q.question, "answerable": q.answerable,
@@ -214,6 +215,8 @@ def run_suite(suite: Suite, raggy: Raggy, judge: Judge | None, *, answers: bool 
     if reranker is not None:
         fallbacks["rerank"] = reranker.failures - r0[1]
         fallback_of["rerank"] = reranker.calls - r0[0]
+    usage = dict(getattr(raggy.llm, "usage", {}) or {}) if answers else {}
+    usage = {k: v - usage0.get(k, 0) for k, v in usage.items()}
     tags = sorted({t for q in questions for t in q.tags})
     return {
         "schema": 1,
@@ -245,6 +248,7 @@ def run_suite(suite: Suite, raggy: Raggy, judge: Judge | None, *, answers: bool 
             "context_tokens": raggy.config.context_tokens,
             "citation_check": raggy.config.citation_check,
             "citation_action": raggy.config.citation_action,
+            "refusal_gate": dict(raggy.config.refusal_gate),
             "dedupe": raggy.config.dedupe and suite.dedupe,
             "top_k": raggy.config.top_k,
             "ks": list(suite.ks),
@@ -256,6 +260,7 @@ def run_suite(suite: Suite, raggy: Raggy, judge: Judge | None, *, answers: bool 
         "ingest": ingest,
         "fallbacks": fallbacks,  # failed transform / rerank calls (each fell back to the plain path)
         "fallback_of": fallback_of,
+        "llm_usage": usage,  # answer model tokens this run (calls, input, output, cache_read, cache_write)
         "metrics": _with_budgets(_aggregate(records), raggy.config.budgets),
         "by_tag": {t: _aggregate([r for r in records if t in r["tags"]]) | {"n": sum(t in r["tags"] for r in records)}
                    for t in tags},

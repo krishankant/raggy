@@ -67,8 +67,13 @@ def cache_key(doc: Document, chunk: Chunk, model: str) -> str:
     return hashlib.sha256(f"{doc_hash}:{chunk.start}:{chunk.end}:{model}:{CONTEXT_VERSION}".encode()).hexdigest()
 
 
-def _prompt(doc: Document, chunk: Chunk) -> str:
-    return f"<document>\n{doc.text[:MAX_DOC_CHARS]}\n</document>\n\n<chunk>\n{chunk.text}\n</chunk>"
+def _prefix(doc: Document) -> str:
+    """The part that repeats for every chunk of this document: sent as a cacheable prefix."""
+    return f"<document>\n{doc.text[:MAX_DOC_CHARS]}\n</document>\n\n"
+
+
+def _prompt(chunk: Chunk) -> str:
+    return f"<chunk>\n{chunk.text}\n</chunk>"
 
 
 def _fit(context: str, chunk: Chunk, count: Counter | None, max_tokens: int | None) -> str:
@@ -98,7 +103,7 @@ def add_llm_context(doc: Document, chunks: list[Chunk], llm: LLM, cache: Context
 
     def call(i: int) -> tuple[int, str | None]:
         try:
-            return i, " ".join(llm.complete(CONTEXT_SYSTEM, _prompt(doc, chunks[i])).split())
+            return i, " ".join(llm.complete(CONTEXT_SYSTEM, _prompt(chunks[i]), cache_prefix=_prefix(doc)).split())
         except LLMError:
             return i, None
 

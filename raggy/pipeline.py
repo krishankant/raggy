@@ -21,6 +21,7 @@ from raggy.config import Config
 from raggy.embed.base import Embedder
 from raggy.embed.cache import CACHE_NAME as EMBED_CACHE, CachedEmbedder, EmbeddingCache
 from raggy.generate.answer import generate_answer
+from raggy.generate.prompt import NOT_FOUND
 from raggy.generate.llm import LLM, make_llm
 from raggy.ingest.dedupe import DuplicateIndex, content_hash, minhash
 from raggy.ingest.fetch import fetch_url, is_url
@@ -486,9 +487,18 @@ class Raggy:
         hits = self.search(question, k, filters, mode=mode, rerank=rerank, transform=transform)
         return self.answer_from(question, self.context(hits))
 
+    def gate_key(self) -> str:
+        """Scores mean different things per retrieval mode and reranker: each gets its own threshold."""
+        c = self.config
+        return c.retrieval + (f"+{c.rerank}" if c.rerank != "none" else "")
+
     def answer_from(self, question: str, passages: list[Hit]) -> Answer:
         """Generate (and, if configured, verify) an answer from these passages."""
         c = self.config
+        threshold = c.refusal_gate.get(self.gate_key())
+        if threshold is not None and passages and max(h.score for h in passages) < threshold:
+            # Nothing retrieved is close enough to be the answer: say so without paying for a call.
+            return Answer(question=question, text=NOT_FOUND, citations=[], hits=passages, verification="gated")
         return generate_answer(question, passages, self.llm, check=c.citation_check,
                                threshold=c.citation_threshold, action=c.citation_action)
 

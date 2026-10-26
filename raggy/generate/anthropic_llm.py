@@ -7,7 +7,7 @@ the request on a fallback model inside the same call.
 
 from __future__ import annotations
 
-from raggy.generate.llm import LLMError
+from raggy.generate.llm import LLMError, new_usage
 
 
 class AnthropicLLM:
@@ -17,6 +17,7 @@ class AnthropicLLM:
         self.max_tokens = max_tokens
         self.name = f"anthropic:{model}"
         self._client = None
+        self.usage = new_usage()
 
     def _get_client(self):
         if self._client is None:
@@ -25,15 +26,22 @@ class AnthropicLLM:
             self._client = anthropic.Anthropic()  # reads ANTHROPIC_API_KEY (or an `ant` login)
         return self._client
 
-    def complete(self, system: str, user: str) -> str:
+    def complete(self, system: str, user: str, cache_prefix: str | None = None) -> str:
         import anthropic
 
+        content: str | list = user
+        if cache_prefix:
+            # The repeated part (e.g. a whole document for contextual retrieval) is its own
+            # block marked for caching; later calls with the same prefix read it at ~0.1x price.
+            # Prefixes under the model's minimum (512 tokens on Opus 5.5) silently aren't cached.
+            content = [{"type": "text", "text": cache_prefix, "cache_control": {"type": "ephemeral"}},
+                       {"type": "text", "text": user}]
         try:
             response = self._get_client().beta.messages.create(
                 model=self.model,
                 max_tokens=self.max_tokens,
                 system=system,
-                messages=[{"role": "user", "content": user}],
+                messages=[{"role": "user", "content": content}],
                 output_config={"effort": self.effort},
                 betas=["server-side-fallback-2026-07-01"],
                 fallbacks="default",
@@ -52,6 +60,12 @@ class AnthropicLLM:
             if "authentication" not in str(e):
                 raise
             raise LLMError("anthropic: no credentials — set ANTHROPIC_API_KEY in .env") from e
+        u = response.usage
+        self.usage["calls"] += 1
+        self.usage["input"] += u.input_tokens or 0
+        self.usage["output"] += u.output_tokens or 0
+        self.usage["cache_read"] += getattr(u, "cache_read_input_tokens", 0) or 0
+        self.usage["cache_write"] += getattr(u, "cache_creation_input_tokens", 0) or 0
         if response.stop_reason == "refusal":
             raise LLMError("anthropic: the model declined to answer this request")
         return "".join(b.text for b in response.content if b.type == "text").strip()

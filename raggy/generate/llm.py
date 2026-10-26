@@ -12,8 +12,16 @@ from typing import Protocol
 
 class LLM(Protocol):
     name: str  # "provider:model", shown in output and later in traces
+    usage: dict  # running totals: calls, input, output, cache_read, cache_write (tokens)
 
-    def complete(self, system: str, user: str) -> str: ...
+    def complete(self, system: str, user: str, cache_prefix: str | None = None) -> str:
+        """``cache_prefix`` is text that comes before ``user`` and repeats across calls
+        (week 8): providers that support prompt caching may cache it."""
+        ...
+
+
+def new_usage() -> dict:
+    return {"calls": 0, "input": 0, "output": 0, "cache_read": 0, "cache_write": 0}
 
 
 class LLMError(Exception):

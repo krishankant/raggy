@@ -23,6 +23,20 @@ def _positive_int_env(name: str, default: str) -> int:
 DEFAULT_BUDGETS = {"transform": 2000, "retrieve": 100, "rerank": 500, "generate": 5000}  # ms, on an M2 laptop
 
 
+def _gate_env() -> dict:
+    """RAGGY_REFUSAL_GATE="vector=0.62,hybrid=0.031": per retrieval mode, the top score below
+    which raggy answers "not in the documents" without calling the model. Calibrate it with
+    evals/calibrate_gate.py; scores mean different things per mode, so each needs its own."""
+    gate = {}
+    for part in filter(None, (p.strip() for p in (os.environ.get("RAGGY_REFUSAL_GATE") or "").split(","))):
+        mode, _, value = part.partition("=")
+        try:
+            gate[mode.strip()] = float(value)
+        except ValueError:
+            raise ConfigError(f"RAGGY_REFUSAL_GATE: {mode.strip()} needs a number, got {value!r}") from None
+    return gate
+
+
 def _budgets_env() -> dict:
     """RAGGY_BUDGETS="rerank=300,transform=1500" overrides some stages' p95 budgets (ms)."""
     budgets = dict(DEFAULT_BUDGETS)
@@ -109,6 +123,7 @@ class Config:
     citation_check: str = "off"  # off | lexical | llm: verify each [n] against passage n
     citation_threshold: float = 0.5  # lexical: share of a sentence's content words found in its source
     citation_action: str = "report"  # report | strip (remove unsupported markers) | refuse
+    refusal_gate: dict = field(default_factory=dict)  # mode -> top-score threshold; empty = off
 
     def chunk_settings(self):
         from raggy.chunking import ChunkSettings
@@ -172,4 +187,5 @@ class Config:
             citation_check=_choice_env("RAGGY_CITATION_CHECK", "off", ("off", "lexical", "llm")),
             citation_threshold=float(os.environ.get("RAGGY_CITATION_THRESHOLD") or 0.5),
             citation_action=_choice_env("RAGGY_CITATION_ACTION", "report", ("report", "strip", "refuse")),
+            refusal_gate=_gate_env(),
         )

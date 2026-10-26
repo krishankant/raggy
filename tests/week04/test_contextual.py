@@ -27,7 +27,8 @@ class Counting(FakeLLM):
         self.n, self.prompts, self.fail_on = 0, [], fail_on
         self._lock = threading.Lock()
 
-    def complete(self, system, user):
+    def complete(self, system, user, cache_prefix=None):
+        user = (cache_prefix or "") + user
         with self._lock:
             self.n += 1
             self.prompts.append(user)

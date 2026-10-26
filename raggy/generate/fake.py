@@ -13,7 +13,8 @@ class FakeLLM:
         self.error = error
         self.calls: list[tuple[str, str]] = []
 
-    def complete(self, system: str, user: str) -> str:
+    def complete(self, system: str, user: str, cache_prefix: str | None = None) -> str:
+        user = (cache_prefix or "") + user
         self.calls.append((system, user))
         if self.error:
             raise self.error
