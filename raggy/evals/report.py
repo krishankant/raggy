@@ -70,18 +70,22 @@ def format_run(run: dict) -> str:
 
 
 def format_compare(base: dict, new: dict) -> str:
-    lines = [f"{'metric':<22}{base['label'] or 'base':>10}{new['label'] or 'new':>10}{'delta':>10}"]
+    names = (base["label"] or "base", new["label"] or "new")
+    w = max(10, *(len(n) + 2 for n in names))  # long labels must not run into each other
+    lines = [f"{'metric':<22}{names[0]:>{w}}{names[1]:>{w}}{'delta':>10}"]
     for k in base["metrics"]:
         if k not in new["metrics"]:
             continue
         a, b = base["metrics"][k], new["metrics"][k]
         delta = f"{b - a:+.3f}" if a is not None and b is not None else "—"
-        lines.append(f"{k:<22}{_fmt(a):>10}{_fmt(b):>10}{delta:>10}")
+        lines.append(f"{k:<22}{_fmt(a):>{w}}{_fmt(b):>{w}}{delta:>10}")
     for side, run in (("base", base), ("new", new)):
         c = run.get("config", {})
         if c:
             lines.append(f"{side}: {c.get('embed_model')} · chunks {c.get('chunk_size')}/{c.get('chunk_overlap')}"
-                         f" · llm {c.get('llm')} · judge {c.get('judge_version')}")
+                         f" · llm {c.get('llm')} · judge {c.get('judge_version')}"
+                         + (f" · html {c['html_extract']} · dedupe {'on' if c.get('dedupe') else 'off'}"
+                            if "html_extract" in c else ""))
     if base.get("config", {}).get("judge_version") != new.get("config", {}).get("judge_version"):
         lines.append("note: judge versions differ, so answer scores aren't comparable")
     return "\n".join(lines)
