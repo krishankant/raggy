@@ -13,5 +13,6 @@ Concept guides that sit beside the weekly lessons. Lessons walk through raggy's 
 | [Vector search at scale](vector-search-at-scale.md) | Week 5 | Exact search as a matrix multiply; IVF, HNSW, SQ/PQ and refine; measuring ANN by overlap with exact; when you need ANN; embedding throughput |
 | [Hybrid search](hybrid-search.md) | Week 6 | Why vectors and keywords miss different things; BM25 worked by hand (idf, saturation, length); reciprocal rank fusion worked by hand; filters and parents in hybrid search |
 | [Reranking and query transforms](reranking.md) | Week 7 | Bi-encoders against cross-encoders; what reranking can and can't fix; listwise LLM ranking; rewrite, multi-query and HyDE; latency budgets per stage |
+| [Grounded generation](grounded-generation.md) | Week 8 | Packing (merge, order, budget); lexical citation support worked by hand; LLM checks; refusal gates and split-half calibration; run-to-run noise; when prompt caching pays |
 
 More guides arrive with each week.

@@ -145,7 +145,7 @@ Applied:
 
 So the defaults don't change: `RAGGY_RERANK=none`, `RAGGY_QUERY_TRANSFORM=none`.
 
-That isn't "reranking doesn't work". It took recall@1 from 0.80 to 0.95 on the fictional suites, which is the difference between the answer being the first passage the model reads and the third. The rule weighed that against two things: no gain on the public benchmarks, and half a second per question on an 8 GB laptop. If your questions look like the fictional suites (product names, policies, a manual), and half a second is fine for you, turn it on: `RAGGY_RERANK=local`. Week 8 measures whether the better order changes the *answers*.
+That isn't "reranking doesn't work". It took recall@1 from 0.80 to 0.95 on the fictional suites, which is the difference between the answer being the first passage the model reads and the third. The rule weighed that against two things: no gain on the public benchmarks, and half a second per question on an 8 GB laptop. If your questions look like the fictional suites (product names, policies, a manual), and half a second is fine for you, turn it on: `RAGGY_RERANK=local`. Whether the better order changes the *answers* is worth measuring on your own suite, with repeated runs: week 8 shows why one answer run isn't enough.
 
 ### 5.4 An 8 GB note
 

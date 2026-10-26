@@ -4,7 +4,7 @@
 [![Models](https://img.shields.io/badge/answers-Ollama%20%7C%20Claude%20%7C%20OpenAI-6f42c1.svg)](lessons/week01-naive-rag.md#36-one-interface-three-model-providers)
 [![Tests](https://img.shields.io/badge/tests-offline%20pytest-2ea44f.svg)](#commands)
 
-**[Course Plan](COURSE_PLAN.md)** · **[Week 1: Naive RAG](lessons/week01-naive-rag.md)** · **[Week 7: Reranking](lessons/week07-rerank-and-query-transforms.md)** · **[Docs hub](docs/README.md)**
+**[Course Plan](COURSE_PLAN.md)** · **[Week 1: Naive RAG](lessons/week01-naive-rag.md)** · **[Week 8: Grounded generation](lessons/week08-grounded-generation.md)** · **[Docs hub](docs/README.md)**
 
 ---
 
@@ -81,6 +81,9 @@ Point it at your own files, folders or web pages: `uv run raggy ingest ~/notes ~
 | `RAGGY_RERANK` / `RAGGY_RERANK_MODEL` / `RAGGY_RERANK_CANDIDATES` | `none` (`local` cross-encoder, `llm`) / `Xenova/ms-marco-MiniLM-L-6-v2` / `20` |
 | `RAGGY_QUERY_TRANSFORM` | `none` (`rewrite`, `multi`, `hyde`: one cached LLM call per question) |
 | `RAGGY_BUDGETS` | `transform=2000,retrieve=100,rerank=500,generate=5000` (p95 ms per stage, reported by `raggy eval`) |
+| `RAGGY_PACK` / `RAGGY_CONTEXT_TOKENS` | `0` (merge, order and budget the passages) / `3000` |
+| `RAGGY_CITATION_CHECK` / `RAGGY_CITATION_ACTION` / `RAGGY_CITATION_THRESHOLD` | `off` (`lexical`, `llm`) / `report` (`strip`, `refuse`) / `0.5` |
+| `RAGGY_REFUSAL_GATE` | empty = off (`vector=0.63`: refuse without a model call below that top score; calibrate with `evals/calibrate_gate.py`) |
 
 ## The course
 
@@ -95,13 +98,14 @@ See **[COURSE_PLAN.md](COURSE_PLAN.md)** for all 12 weeks. Ready so far:
 | 5 | [Scale: tens of thousands of documents](lessons/week05-scale.md) | `git checkout week-05` |
 | 6 | [Hybrid search](lessons/week06-hybrid-search.md) | `git checkout week-06` |
 | 7 | [Reranking and query transforms](lessons/week07-rerank-and-query-transforms.md) | `git checkout week-07` |
+| 8 | [Grounded generation](lessons/week08-grounded-generation.md) | `git checkout week-08` |
 
 ## Repository layout
 
 ```
 raggy/            the package: ingest/ chunking/ embed/ store/ generate/ evals/ pipeline.py cli.py
 lessons/          one lesson per week
-docs/             concept guides (embeddings, evals, ingestion, chunking, vector search at scale, hybrid search, reranking, and more each week)
+docs/             concept guides (embeddings, evals, ingestion, chunking, vector search at scale, hybrid search, reranking, grounded generation, and more each week)
 samples/          small demo corpora (fictional, so models can't answer from memory)
 evals/            eval suites (fictional corpus, its web-site version, a long manual), committed baselines; data/ and runs/ are local
 tests/            offline pytest suite, one folder per week
