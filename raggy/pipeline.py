@@ -80,6 +80,7 @@ class Raggy:
         self.config = config
         self._embedder = embedder
         self._llm = llm
+        self._store: VectorStore | None = None  # opened once for searching; any write closes it
 
     # Models are built on first use: `raggy sources` shouldn't load an
     # embedding model, and `raggy search` shouldn't need an LLM.
@@ -101,7 +102,15 @@ class Raggy:
         return self._llm
 
     def _open_store(self) -> VectorStore:
+        self._store = None  # we're about to write: the next search must see the new rows
         return make_store(self.config, create=True)
+
+    def _search_store(self) -> VectorStore:
+        """The store, opened once and kept: re-opening per question would re-read the
+        numpy store's whole vector file (113 MB at FiQA scale) for every search."""
+        if self._store is None:
+            self._store = make_store(self.config, create=False)
+        return self._store
 
     def _registry(self) -> Registry:
         return Registry(Path(self.config.index_dir) / "registry.sqlite")
@@ -263,6 +272,7 @@ class Raggy:
     def remove(self, target: str) -> int:
         """Remove a source, or everything under a folder or URL prefix, from the
         index and the registry. Files on disk are never touched."""
+        self._store = None
         store = make_store(self.config, create=False)
         reg = self._registry()
         try:
@@ -369,7 +379,7 @@ class Raggy:
         give the model the surrounding text. Each child found is swapped for its
         parent, and a parent found twice is kept once. ``filters`` restrict the
         search to some documents (type, folder or URL prefix, modified date)."""
-        store = make_store(self.config, create=False)  # raises IndexNotFoundError
+        store = self._search_store()  # raises IndexNotFoundError
         query = self.embedder.embed_query(question)
         k = k or self.config.top_k
         exact = self.config.ann == "off" if exact is None else exact
