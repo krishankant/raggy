@@ -17,7 +17,7 @@ from typing import Callable
 import numpy as np
 
 from raggy.chunking import chunk_document
-from raggy.config import Config
+from raggy.config import Config, ConfigError
 from raggy.embed.base import Embedder
 from raggy.embed.cache import CACHE_NAME as EMBED_CACHE, CachedEmbedder, EmbeddingCache
 from raggy.generate.answer import generate_answer
@@ -62,6 +62,7 @@ def pipeline_key(config: Config, embedder_name: str) -> str:
                        "chunk_context": config.chunk_context, "html_extract": config.html_extract,
                        "pdf": config.pdf, "ocr": config.ocr,
                        "images": config.images, "vision": config.vision_key(),
+                       "image_search": config.image_search,
                        "normalize": NORMALIZE_VERSION, "dedupe": config.dedupe, "store": config.store},
                       sort_keys=True)
 
@@ -87,7 +88,7 @@ def _signature(rec: Record) -> np.ndarray | None:
 
 class Raggy:
     def __init__(self, config: Config, embedder: Embedder | None = None, llm: LLM | None = None,
-                 vision_llm: LLM | None = None):
+                 vision_llm: LLM | None = None, clip=None):
         self.config = config
         self._embedder = embedder
         self._llm = llm
@@ -99,6 +100,7 @@ class Raggy:
         self.last_timings: dict[str, float] = {}  # ms per stage of the latest search
         self._vision_llm = vision_llm
         self._image_reader = None
+        self._clip = clip
 
     # Models are built on first use: `raggy sources` shouldn't load an
     # embedding model, and `raggy search` shouldn't need an LLM.
@@ -135,6 +137,37 @@ class Raggy:
             self._image_reader = ImageReader(self.config.images, llm=llm,
                                              cache_path=Path(self.config.index_dir) / VISION_CACHE)
         return self._image_reader
+
+    @property
+    def clip(self):
+        if self._clip is None:
+            from raggy.embed.clip import ClipEmbedder
+
+            self._clip = ClipEmbedder()
+        return self._clip
+
+    def _image_store(self, create: bool = True):
+        """The picture table; None if image search was never on for this index."""
+        from raggy.store.images import ImageStore
+
+        path = Path(self.config.index_dir) / "lance"
+        if not create and not path.exists():
+            return None
+        store = ImageStore(path, self.clip.dim)
+        return store if create or store.exists else None
+
+    def search_images(self, text: str | None = None, image: bytes | None = None, k: int = 5):
+        """Pictures by what they look like (CLIP): a text query, or a picture to match."""
+        if not self.config.image_search:
+            raise ConfigError("image search is off: set RAGGY_IMAGE_SEARCH=on (and RAGGY_IMAGES=ocr or vision), "
+                              "then run `raggy ingest` again")
+        if (text is None) == (image is None):
+            raise ValueError("give a text or an image, not both")
+        store = self._image_store(create=False)
+        if store is None:
+            return []
+        vector = self.clip.embed_texts([text])[0] if text is not None else self.clip.embed_images([image])[0]
+        return store.search(vector, k)
 
     def image_counts(self) -> tuple[int, int, int]:
         """(vision calls, cache hits, failed descriptions) so far, for per-run deltas."""
@@ -289,9 +322,12 @@ class Raggy:
                 title=m.get("title"), doc_type=m.get("type"), modified=m.get("modified"),
                 chunks=0, ingested_at=_now())
 
+        images = self._image_store(create=False)
         for source, st in status.items():
             if st in ("removed", "duplicate"):
                 store.remove_source(source)  # the index only: never the file
+                if images is not None:
+                    images.remove_source(source)
         done = self.ingest_documents(to_embed, progress=progress, store=store, save=False)
         report.documents, report.chunks = done.documents, done.chunks
         report.context_calls, report.context_cached = done.context_calls, done.context_cached
@@ -327,12 +363,12 @@ class Raggy:
         store = make_store(self.config, create=False)
         reg = self._registry()
         try:
-            return self._remove(store, reg, target)
+            return self._remove(store, reg, target, self._image_store(create=False))
         finally:
             reg.close()
 
     @staticmethod
-    def _remove(store: VectorStore, reg: Registry, target: str) -> int:
+    def _remove(store: VectorStore, reg: Registry, target: str, images=None) -> int:
         if is_url(target):
             exact, prefix = target, target.rstrip("/") + "/"
         else:
@@ -342,6 +378,8 @@ class Raggy:
         matches = sorted(s for s in sources if s == exact or s.startswith(prefix))
         for s in matches:
             store.remove_source(s)
+            if images is not None:
+                images.remove_source(s)
             reg.delete(s)
         store.save()
         reg.commit()
@@ -423,6 +461,12 @@ class Raggy:
             report.embedded, report.embed_cached = cached.misses - misses0, cached.hits - hits0
         else:
             report.embedded = report.chunks
+        if self.config.image_search:
+            images = self._image_store()
+            for d in docs:  # every (re)indexed document replaces its pictures, even with none left
+                kept = d.metadata.get("images") or []
+                vectors = self.clip.embed_images([b for b, _, _ in kept]) if kept else np.zeros((0, self.clip.dim))
+                images.replace(d.source, kept, vectors)
         if save:
             store.save()
             store.finish(build_ann=self.config.ann == "on")

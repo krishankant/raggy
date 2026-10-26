@@ -129,6 +129,7 @@ class Config:
     images: str = "off"  # off | ocr (text in the image) | vision (a model's description + that text)
     vision_provider: str | None = None  # ollama | openai | anthropic; None: the answer model's provider
     vision_model: str | None = None  # None: the answer model if same provider, else the adapter default
+    image_search: bool = False  # CLIP vectors for every picture: `raggy images "query"` (week 10, optional)
 
     def chunk_settings(self):
         from raggy.chunking import ChunkSettings
@@ -140,7 +141,8 @@ class Config:
     def load_options(self):
         from raggy.ingest.loaders import LoadOptions
 
-        return LoadOptions(html_extract=self.html_extract, pdf=self.pdf, ocr=self.ocr, images=self.images)
+        return LoadOptions(html_extract=self.html_extract, pdf=self.pdf, ocr=self.ocr, images=self.images,
+                           keep_images=self.image_search)
 
     def vision_key(self) -> dict | None:
         """What decides an image's text, beyond its bytes; None unless a model reads images."""
@@ -152,6 +154,10 @@ class Config:
                 "version": VISION_VERSION}
 
     def __post_init__(self):
+        if self.image_search and self.images == "off":
+            raise ConfigError("RAGGY_IMAGE_SEARCH needs pictures to be read: set RAGGY_IMAGES=ocr or vision")
+        if self.image_search and self.store != "lance":
+            raise ConfigError("RAGGY_IMAGE_SEARCH needs RAGGY_STORE=lance")
         if self.chunk_overlap_tokens >= self.chunk_tokens:
             raise ConfigError(f"RAGGY_CHUNK_OVERLAP_TOKENS ({self.chunk_overlap_tokens}) must be smaller than "
                               f"RAGGY_CHUNK_TOKENS ({self.chunk_tokens})")
@@ -213,4 +219,5 @@ class Config:
             images=_choice_env("RAGGY_IMAGES", "off", ("off", "ocr", "vision")),
             vision_provider=vision_provider,
             vision_model=vision_model,
+            image_search=_bool_env("RAGGY_IMAGE_SEARCH", False),
         )

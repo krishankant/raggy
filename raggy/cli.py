@@ -86,6 +86,10 @@ def _parser() -> argparse.ArgumentParser:
     a.add_argument("--timings", action="store_true", help="print how long each stage took")
     _add_filters(a)
     sub.add_parser("sources", help="list indexed sources")
+    im = sub.add_parser("images", help="find pictures by a description or by another picture (needs RAGGY_IMAGE_SEARCH)")
+    im.add_argument("query", nargs="?", help="what the picture shows")
+    im.add_argument("--like", type=Path, help="a picture to find similar ones to")
+    im.add_argument("-k", type=int, default=5)
     rm = sub.add_parser("remove", help="drop a source, or everything under a folder or URL, from the index")
     rm.add_argument("target")
     from raggy.evals.suites import SUITES
@@ -185,6 +189,15 @@ def main(argv: list[str] | None = None) -> int:
             for rec in records:
                 note = f"dup of {display_source(rec.duplicate_of)}" if rec.duplicate_of else f"{rec.chunks:5d} chunks"
                 print(f"{note:>16}  {rec.doc_type or '?':8}  {(rec.title or '')[:40]:40}  {rec.source}")
+        elif args.command == "images":
+            if (args.query is None) == (args.like is None):
+                print("give a query or --like PICTURE", file=sys.stderr)
+                return 2
+            hits = raggy.search_images(text=args.query, image=args.like.read_bytes() if args.like else None, k=args.k)
+            if not hits:
+                print("no pictures indexed yet: run `raggy ingest` with RAGGY_IMAGE_SEARCH=on")
+            for h in hits:
+                print(f"{h.score:.3f}  {h.label}  ({display_source(h.source)})")
         elif args.command == "remove":
             n = raggy.remove(args.target)
             print(f"Removed {n} source{'s' if n != 1 else ''} from the index (files on disk are untouched)")
@@ -197,7 +210,7 @@ def main(argv: list[str] | None = None) -> int:
     except IndexNotFoundError:
         print("No index found — run `raggy ingest <path>` first.", file=sys.stderr)
         return 1
-    except (LLMError, EmbedderMismatchError, KeywordSearchUnavailable) as e:
+    except (LLMError, EmbedderMismatchError, KeywordSearchUnavailable, ConfigError) as e:
         print(f"error: {e}", file=sys.stderr)
         return 1
     return 0

@@ -34,6 +34,7 @@ class LoadOptions:
     read_image: Callable[[bytes, str], str | None] | None = field(default=None, compare=False, hash=False)
     on_image: Callable[[bytes, str, str | None], None] | None = field(default=None, compare=False, hash=False)
     name: str = field(default="", compare=False, hash=False)  # the file's name, set by load_bytes for labels
+    keep_images: bool = field(default=False, compare=False, hash=False)  # put the pictures read in metadata["images"]
 
 
 from raggy.ingest.loaders import csv_loader, html, image, office, pdf, pdf_layout, text  # noqa: E402  (they import LoadError above)
@@ -80,8 +81,19 @@ def load_bytes(data: bytes, source: str, kind: str, options: LoadOptions | None 
     from dataclasses import replace
 
     name = source.rstrip("/").rsplit("/", 1)[-1] or source
+    opts = replace(options or LoadOptions(), name=name)
+    kept: list[tuple[bytes, str, str | None]] = []
+    if opts.keep_images:  # for CLIP image search: (bytes, label, page) of every picture that was read
+        outer = opts.on_image
+
+        def keep(data: bytes, label: str, page: str | None) -> None:
+            kept.append((data, label, page))
+            if outer is not None:
+                outer(data, label, page)
+
+        opts = replace(opts, on_image=keep)
     try:
-        raw, title = LOADERS[kind](data, replace(options or LoadOptions(), name=name))
+        raw, title = LOADERS[kind](data, opts)
     except LoadError as e:
         raise LoadError(f"{source}: {e}") from e
     pages = None
@@ -103,6 +115,8 @@ def load_bytes(data: bytes, source: str, kind: str, options: LoadOptions | None 
     meta = {"name": name, "title": title or fallback, "type": kind}
     if pages:
         meta["pages"] = pages  # (label, start offset): "p. 3", "slide 4", "sheet Prices"
+    if opts.keep_images:
+        meta["images"] = kept
     return Document(source=source, text=body, metadata=meta)
 
 
