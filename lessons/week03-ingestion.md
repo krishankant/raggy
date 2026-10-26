@@ -1,6 +1,6 @@
 # Week 3: Ingestion — files, folders, URLs
 
-**[← Week 2: Evals](week02-evals.md)** · **[Course Plan](../COURSE_PLAN.md)** · **[Ingestion (guide)](../docs/ingestion.md)** · **Week 4: Chunking →** *(coming)*
+**[← Week 2: Evals](week02-evals.md)** · **[Course Plan](../COURSE_PLAN.md)** · **[Ingestion (guide)](../docs/ingestion.md)** · **[Week 4: Chunking →](week04-chunking.md)**
 
 ---
 
