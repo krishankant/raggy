@@ -81,14 +81,19 @@ class VisionCache:
         self.conn = sqlite3.connect(path, check_same_thread=False)
         self.conn.execute("CREATE TABLE IF NOT EXISTS images (key TEXT PRIMARY KEY, body TEXT NOT NULL)")
         self.conn.commit()
+        import threading
+
+        self._lock = threading.Lock()  # ingest loads files in parallel (week 12)
 
     def get(self, key: str) -> str | None:
-        row = self.conn.execute("SELECT body FROM images WHERE key = ?", (key,)).fetchone()
+        with self._lock:
+            row = self.conn.execute("SELECT body FROM images WHERE key = ?", (key,)).fetchone()
         return row[0] if row else None
 
     def put(self, key: str, body: str) -> None:
-        self.conn.execute("INSERT OR REPLACE INTO images (key, body) VALUES (?, ?)", (key, body))
-        self.conn.commit()
+        with self._lock:
+            self.conn.execute("INSERT OR REPLACE INTO images (key, body) VALUES (?, ?)", (key, body))
+            self.conn.commit()
 
 
 def _default_ocr(image) -> str:

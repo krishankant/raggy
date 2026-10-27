@@ -23,3 +23,8 @@ class FakeLLM:
         if self.error:
             raise self.error
         return self.reply(system, user) if callable(self.reply) else self.reply
+
+    def stream(self, system: str, user: str):
+        import re
+
+        yield from re.findall(r"\S+\s*", self.complete(system, user))

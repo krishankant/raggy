@@ -84,6 +84,9 @@ def _parser() -> argparse.ArgumentParser:
     a.add_argument("-k", type=_positive_int, default=None)
     a.add_argument("--show-context", action="store_true", help="also print the retrieved chunks")
     a.add_argument("--timings", action="store_true", help="print how long each stage took")
+    a.add_argument("--stream", action="store_true", help="print the answer as it's written")
+    tr = sub.add_parser("trace", help="show the latest traced answers (RAGGY_TRACE=on)")
+    tr.add_argument("-n", type=_positive_int, default=5)
     _add_filters(a)
     sub.add_parser("sources", help="list indexed sources")
     im = sub.add_parser("images", help="find pictures by a description or by another picture (needs RAGGY_IMAGE_SEARCH)")
@@ -159,18 +162,34 @@ def main(argv: list[str] | None = None) -> int:
                 print("no chunks match these filters", file=sys.stderr)
             _print_hits(hits)
         elif args.command == "ask":
-            t0 = time.perf_counter()
+            streamed = []
+
+            def show(piece: str) -> None:
+                streamed.append(piece)
+                print(piece, end="", flush=True)
+
             answer = raggy.ask(args.question, args.k, _filters(args), mode=args.mode, rerank=args.rerank,
-                               transform=args.transform)
-            total = (time.perf_counter() - t0) * 1000
+                               transform=args.transform, on_token=show if args.stream else None)
             if args.show_context:
                 _print_hits(answer.hits)
                 print()
-            print(answer.text)
+            if args.stream:
+                print()
+                if answer.text != "".join(streamed).strip():  # the citation check changed it after streaming
+                    print(f"\n(after the citation check:)\n{answer.text}")
+            else:
+                print(answer.text)
             if args.timings:
-                stages = dict(raggy.last_timings)
-                stages["generate"] = total - sum(stages.values())
-                print("\nTimings: " + "  ".join(f"{k} {v:.0f} ms" for k, v in stages.items()))
+                print("\nTimings: " + "  ".join(f"{k} {v:.0f} ms" for k, v in raggy.last_timings.items()))
+            u = raggy.last_usage
+            if answer.cached:
+                print("\n(answered from the cache: no model call)")
+            elif u.get("calls"):
+                spent = f", {raggy.last_cost:.4f}" if raggy.last_cost is not None else ""
+                print(f"\nTokens: {u.get('input', 0)} in ({u.get('cache_read', 0)} cached), "
+                      f"{u.get('output', 0)} out{spent}")
+            if raggy.trace_error:
+                print(f"⚠ couldn't write the trace: {raggy.trace_error}", file=sys.stderr)
             for n in answer.unsupported:
                 print(f"⚠ citation [{n}] is not supported by its source ({answer.verification} check)")
             if answer.verification == "failed":
@@ -180,6 +199,19 @@ def main(argv: list[str] | None = None) -> int:
                 for c in answer.citations:
                     where = f", {c.location}" if c.location else ""
                     print(f"[{c.number}] {display_source(c.source)}{where} — \"{c.snippet[:100]}…\"")
+        elif args.command == "trace":
+            from raggy.trace import Tracer
+
+            rows = Tracer(Path(raggy.config.index_dir) / "traces").latest(args.n)
+            if not rows:
+                print("no traces yet: set RAGGY_TRACE=on and ask something")
+            for r in rows:
+                t = r["timings"]
+                print(f"{r['time']}  {t.get('total', 0):.0f} ms  {'cached' if r['cached'] else ''}  {r['question']}")
+                for h in r["hits"]:
+                    where = f" {h['location']}" if h.get("location") else ""
+                    print(f"    {h['score']:.3f}  {display_source(h['source'])}{where}")
+                print(f"  → {r['answer'][:160]}")
         elif args.command == "sources":
             counts = raggy.sources()  # raises IndexNotFoundError before anything is ingested
             records = raggy.documents()

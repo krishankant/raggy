@@ -21,7 +21,7 @@ from raggy.config import Config, ConfigError
 from raggy.embed.base import Embedder
 from raggy.embed.cache import CACHE_NAME as EMBED_CACHE, CachedEmbedder, EmbeddingCache
 from raggy.generate.answer import generate_answer
-from raggy.generate.prompt import NOT_FOUND
+from raggy.generate.prompt import NOT_FOUND, parse_citations
 from raggy.generate.llm import LLM, make_llm
 from raggy.ingest.dedupe import DuplicateIndex, content_hash, minhash
 from raggy.ingest.fetch import fetch_url, is_url
@@ -102,6 +102,10 @@ class Raggy:
         self._image_reader = None
         self._clip = clip
         self._transcriber = None
+        self._answer_cache = None
+        self.last_usage: dict = {}
+        self.last_cost: float | None = None
+        self.trace_error: str | None = None
 
     # Models are built on first use: `raggy sources` shouldn't load an
     # embedding model, and `raggy search` shouldn't need an LLM.
@@ -251,20 +255,37 @@ class Raggy:
                 return
             pending[doc.source] = (doc, digest, rec, stat)
 
+        loading: dict[str, object] = {}  # source -> Future of its Document, started ahead (week 12)
+
+        def unchanged(path: Path, rec: Record | None, force: bool) -> tuple[bool, tuple]:
+            st = path.stat()
+            stat = (st.st_size, st.st_mtime_ns)
+            return (not full and not force and rec is not None and rec.pipeline_key == key
+                    and (rec.size, rec.mtime_ns) == stat and not self._orphaned(rec, known)), stat
+
         def consider_file(path: Path, force: bool = False) -> None:
             source = str(path.resolve())
             rec = reg.get(source)
             try:
-                st = path.stat()
-                stat = (st.st_size, st.st_mtime_ns)
-                if (not full and not force and rec is not None and rec.pipeline_key == key
-                        and (rec.size, rec.mtime_ns) == stat and not self._orphaned(rec, known)):
+                same, stat = unchanged(path, rec, force)
+                if same:
                     status[source] = "unchanged"
                     return
-                doc = load_file(path, opts)
+                future = loading.pop(source, None)
+                doc = future.result() if future is not None else load_file(path, opts)
             except (LoadError, OSError) as e:
                 return fail(source, str(e))
             consider(doc, rec, stat, force)
+
+        def preload(files: list[Path], pool) -> None:
+            """Start loading every changed file in the pool; consider_file collects them in order.
+            Only loading runs in threads: the registry and the store stay on this thread."""
+            for f in files:
+                try:
+                    if not unchanged(f, reg.get(str(f.resolve())), False)[0]:
+                        loading[str(f.resolve())] = pool.submit(load_file, f, opts)
+                except OSError:
+                    pass  # consider_file reports it
 
         def consider_url(url: str, force: bool = False) -> None:
             try:
@@ -284,8 +305,16 @@ class Raggy:
                 consider_file(path)
             else:
                 files = iter_files(path)
-                for f in files:
-                    consider_file(f)
+                if self.config.ingest_workers > 1 and len(files) > 1:
+                    from concurrent.futures import ThreadPoolExecutor
+
+                    with ThreadPoolExecutor(max_workers=self.config.ingest_workers) as pool:
+                        preload(files, pool)
+                        for f in files:
+                            consider_file(f)
+                else:
+                    for f in files:
+                        consider_file(f)
                 walked = {str(f.resolve()) for f in files}
                 for rec in reg.under(str(path.resolve())):
                     if rec.source not in walked:
@@ -595,24 +624,72 @@ class Raggy:
             want *= 2
 
     def ask(self, question: str, k: int | None = None, filters: Filters | None = None,
-            mode: str | None = None, rerank: str | None = None, transform: str | None = None) -> Answer:
+            mode: str | None = None, rerank: str | None = None, transform: str | None = None,
+            on_token=None) -> Answer:
+        """Search, answer and (if RAGGY_TRACE is on) trace. ``on_token`` streams the answer."""
+        usage0 = dict(getattr(self.llm, "usage", {}) or {})
+        t0 = time.perf_counter()
         hits = self.search(question, k, filters, mode=mode, rerank=rerank, transform=transform)
-        return self.answer_from(question, self.context(hits))
+        timings = dict(self.last_timings)
+        t1 = time.perf_counter()
+        answer = self.answer_from(question, self.context(hits), on_token=on_token)
+        timings["generate"] = (time.perf_counter() - t1) * 1000
+        timings["total"] = (time.perf_counter() - t0) * 1000
+        self.last_timings = timings
+        usage = {k: v - usage0.get(k, 0) for k, v in (getattr(self.llm, "usage", {}) or {}).items()}
+        self.last_usage = usage
+        self.last_cost = self._cost(usage)
+        if self.config.trace:
+            from raggy.trace import Tracer
+
+            try:
+                Tracer(Path(self.config.index_dir) / "traces").record(
+                    question=question, answer=answer, config=self.config, timings=timings, usage=usage,
+                    cost=self.last_cost)
+            except OSError as e:  # a trace is a record, never a reason to lose the answer
+                self.trace_error = str(e)
+        return answer
+
+    def _cost(self, usage: dict):
+        from raggy.costs import cost
+
+        return cost(usage, getattr(self.llm, "name", ""), self.config.prices)
 
     def gate_key(self) -> str:
         """Scores mean different things per retrieval mode and reranker: each gets its own threshold."""
         c = self.config
         return c.retrieval + (f"+{c.rerank}" if c.rerank != "none" else "")
 
-    def answer_from(self, question: str, passages: list[Hit]) -> Answer:
-        """Generate (and, if configured, verify) an answer from these passages."""
+    def answer_from(self, question: str, passages: list[Hit], on_token=None, use_cache: bool = True) -> Answer:
+        """Generate (and, if configured, verify) an answer from these passages. Evals pass
+        ``use_cache=False``: a cached answer would hide the run-to-run noise they measure."""
         c = self.config
         threshold = c.refusal_gate.get(self.gate_key())
         if threshold is not None and passages and max(h.score for h in passages) < threshold:
             # Nothing retrieved is close enough to be the answer: say so without paying for a call.
             return Answer(question=question, text=NOT_FOUND, citations=[], hits=passages, verification="gated")
-        return generate_answer(question, passages, self.llm, check=c.citation_check,
-                               threshold=c.citation_threshold, action=c.citation_action)
+        cache = key = None
+        if use_cache and c.answer_cache and passages:
+            from raggy.generate.answer_cache import ANSWER_CACHE, AnswerCache, answer_key
+
+            if self._answer_cache is None:
+                self._answer_cache = AnswerCache(Path(c.index_dir) / ANSWER_CACHE)
+            cache = self._answer_cache
+            key = answer_key(question, passages, self.llm.name,
+                             f"{c.citation_check}|{c.citation_threshold}|{c.citation_action}")
+            hit = cache.get(key)
+            if hit is not None:
+                if on_token is not None:
+                    on_token(hit["text"])
+                return Answer(question=question, text=hit["text"], citations=parse_citations(hit["text"], passages),
+                              hits=passages, unsupported=hit["unsupported"], verification=hit["verification"],
+                              cached=True)
+        answer = generate_answer(question, passages, self.llm, check=c.citation_check,
+                                 threshold=c.citation_threshold, action=c.citation_action, on_token=on_token)
+        if cache is not None and answer.verification != "failed":
+            cache.put(key, {"text": answer.text, "unsupported": answer.unsupported,
+                            "verification": answer.verification})
+        return answer
 
     def sources(self) -> dict[str, int]:
         return make_store(self.config, create=False).sources()

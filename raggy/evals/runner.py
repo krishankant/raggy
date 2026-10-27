@@ -33,7 +33,7 @@ SAVED_HITS = 10  # retrieved items kept per question in the run file
 # Paid-for work that doesn't depend on the settings that make an index stale:
 # a rebuild keeps these files, and a folder holding only them is raggy's own.
 CACHE_FILES = {"context-cache.sqlite", "embed-cache.sqlite", "transform-cache.sqlite", "vision-cache.sqlite",
-               "transcript-cache.sqlite"}
+               "transcript-cache.sqlite", "answer-cache.sqlite"}
 
 
 class UnsafeIndexDirError(RuntimeError):
@@ -199,7 +199,7 @@ def run_suite(suite: Suite, raggy: Raggy, judge: Judge | None, *, answers: bool 
         if answers:
             t0 = time.perf_counter()
             try:
-                answer = raggy.answer_from(q.question, context)
+                answer = raggy.answer_from(q.question, context, use_cache=False)
             except LLMError as e:
                 rec["error"] = str(e)
             else:

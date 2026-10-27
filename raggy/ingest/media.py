@@ -144,6 +144,9 @@ class Transcriber:
         self._model = model  # built on first use: the first call downloads the model once
         self.calls = self.cached = 0
         self._db = None
+        import threading
+
+        self._lock = threading.Lock()  # ingest loads files in parallel (week 12)
         if cache_path:
             Path(cache_path).parent.mkdir(parents=True, exist_ok=True)
             self._db = sqlite3.connect(cache_path, check_same_thread=False)
@@ -156,7 +159,8 @@ class Transcriber:
     def transcribe(self, data: bytes, name: str = "") -> list[Segment]:
         key = self._key(data)
         if self._db is not None:
-            row = self._db.execute("SELECT segments FROM transcripts WHERE key = ?", (key,)).fetchone()
+            with self._lock:
+                row = self._db.execute("SELECT segments FROM transcripts WHERE key = ?", (key,)).fetchone()
             if row:
                 self.cached += 1
                 return [Segment(**s) for s in json.loads(row[0])]
@@ -174,9 +178,10 @@ class Transcriber:
             raise loaders.LoadError(f"can't read the audio ({type(e).__name__}: {e})") from e
         segs = [s for s in segs if s.text]
         if self._db is not None:
-            self._db.execute("INSERT OR REPLACE INTO transcripts (key, segments) VALUES (?, ?)",
-                             (key, json.dumps([asdict(s) for s in segs])))
-            self._db.commit()
+            with self._lock:
+                self._db.execute("INSERT OR REPLACE INTO transcripts (key, segments) VALUES (?, ?)",
+                                 (key, json.dumps([asdict(s) for s in segs])))
+                self._db.commit()
         return segs
 
 

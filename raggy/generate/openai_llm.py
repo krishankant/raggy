@@ -35,6 +35,28 @@ class OpenAILLM:
             return f"is Ollama running (`ollama serve`) and is the model pulled (`ollama pull {self.model}`)?"
         return "check OPENAI_API_KEY in .env and the model name"
 
+    def stream(self, system: str, user: str):
+        """The answer as it's written, piece by piece (week 12); usage is counted at the end."""
+        import openai
+
+        extra = {"reasoning_effort": "none"} if self.provider == "ollama" else {}
+        try:
+            chunks = self._get_client().chat.completions.create(
+                model=self.model, stream=True, stream_options={"include_usage": True},
+                messages=[{"role": "system", "content": system}, {"role": "user", "content": user}], **extra)
+            self.usage["calls"] += 1
+            for chunk in chunks:
+                if chunk.choices and chunk.choices[0].delta.content:
+                    yield chunk.choices[0].delta.content
+                u = getattr(chunk, "usage", None)
+                if u is not None:
+                    self.usage["input"] += u.prompt_tokens or 0
+                    self.usage["output"] += u.completion_tokens or 0
+                    details = getattr(u, "prompt_tokens_details", None)
+                    self.usage["cache_read"] += (getattr(details, "cached_tokens", 0) or 0) if details else 0
+        except openai.OpenAIError as e:
+            raise LLMError(f"{self.provider} request failed ({type(e).__name__}): {self._hint()}") from e
+
     def complete(self, system: str, user: str, cache_prefix: str | None = None,
                  images: list[bytes] | None = None) -> str:
         import base64

@@ -26,6 +26,30 @@ class AnthropicLLM:
             self._client = anthropic.Anthropic()  # reads ANTHROPIC_API_KEY (or an `ant` login)
         return self._client
 
+    def stream(self, system: str, user: str):
+        """The answer as it's written (week 12), through the SDK's streaming helper."""
+        import anthropic
+
+        try:
+            with self._get_client().beta.messages.stream(
+                    model=self.model, max_tokens=self.max_tokens, system=system,
+                    messages=[{"role": "user", "content": user}], output_config={"effort": self.effort},
+                    betas=["server-side-fallback-2026-07-01"], fallbacks="default") as s:
+                yield from s.text_stream
+                final = s.get_final_message()
+        except anthropic.AuthenticationError as e:
+            raise LLMError("anthropic: authentication failed — set ANTHROPIC_API_KEY in .env") from e
+        except anthropic.APIStatusError as e:
+            raise LLMError(f"anthropic: API error {e.status_code}: {e.message}") from e
+        except anthropic.APIConnectionError as e:
+            raise LLMError("anthropic: could not reach the API — check your network") from e
+        u = final.usage
+        self.usage["calls"] += 1
+        self.usage["input"] += u.input_tokens or 0
+        self.usage["output"] += u.output_tokens or 0
+        self.usage["cache_read"] += getattr(u, "cache_read_input_tokens", 0) or 0
+        self.usage["cache_write"] += getattr(u, "cache_creation_input_tokens", 0) or 0
+
     def complete(self, system: str, user: str, cache_prefix: str | None = None,
                  images: list[bytes] | None = None) -> str:
         import base64

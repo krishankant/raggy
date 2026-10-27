@@ -62,6 +62,40 @@ def _nonneg_int_env(name: str, default: str) -> int:
     return int(raw)
 
 
+# Named starting points (week 12). A profile only fills in settings you haven't set:
+# anything in your environment or .env wins. Each choice is explained in the week 12 lesson.
+PROFILES: dict[str, dict[str, str]] = {
+    # everything on this machine: a local answer model, OCR for pictures, local transcription
+    "local": {"RAGGY_LLM": "ollama", "RAGGY_JUDGE": "ollama", "RAGGY_IMAGES": "ocr", "RAGGY_MEDIA": "on"},
+    # the lowest latency: no stage that adds a model call or a second ranker
+    "fast": {"RAGGY_RETRIEVAL": "vector", "RAGGY_RERANK": "none", "RAGGY_QUERY_TRANSFORM": "none",
+             "RAGGY_CITATION_CHECK": "off", "RAGGY_PACK": "0"},
+    # the measured accuracy wins, paying their latency: hybrid (week 6 wins 4 of 5 suites),
+    # the local reranker (recall@1 0.80 -> 0.95 in week 7), packing, a free citation check,
+    # and every format read
+    "accurate": {"RAGGY_RETRIEVAL": "hybrid", "RAGGY_RERANK": "local", "RAGGY_PACK": "1",
+                 "RAGGY_CITATION_CHECK": "lexical", "RAGGY_CITATION_ACTION": "report",
+                 "RAGGY_IMAGES": "ocr", "RAGGY_MEDIA": "on"},
+}
+
+
+def _apply_profile() -> None:
+    name = (os.environ.get("RAGGY_PROFILE") or "").strip().lower()
+    if not name:
+        return
+    if name not in PROFILES:
+        raise ConfigError(f"RAGGY_PROFILE must be one of {', '.join(PROFILES)}, got {name!r}")
+    for key, value in PROFILES[name].items():
+        if not os.environ.get(key):
+            os.environ[key] = value
+
+
+def _prices_env() -> dict:
+    from raggy.costs import parse_prices
+
+    return parse_prices(os.environ.get("RAGGY_PRICES"))
+
+
 def _choice_env(name: str, default: str, choices: tuple[str, ...]) -> str:
     raw = (os.environ.get(name) or default).strip().lower()
     if raw not in choices:
@@ -133,6 +167,10 @@ class Config:
     whisper_model: str = "base"  # tiny | base | small | medium | large-v3
     media_window: int = 60  # seconds per transcript window
     keyframe_seconds: int = 30  # video: one frame per this many seconds (needs RAGGY_IMAGES on)
+    answer_cache: bool = True  # serve a repeated question over identical passages without a model call
+    trace: bool = False  # append one JSON line per answer to index_dir/traces/ (stores questions)
+    ingest_workers: int = 4  # files loaded in parallel during ingest
+    prices: dict = field(default_factory=dict)  # "provider:model" -> (input, output, cached) per 1M tokens
     image_search: bool = False  # CLIP vectors for every picture: `raggy images "query"` (week 10, optional)
 
     def chunk_settings(self):
@@ -187,6 +225,7 @@ class Config:
         from dotenv import find_dotenv, load_dotenv
 
         load_dotenv(find_dotenv(usecwd=True))  # keys live in .env, never in your shell rc
+        _apply_profile()
         llm_provider = os.environ.get("RAGGY_LLM", "ollama")
         llm_model = os.environ.get("RAGGY_LLM_MODEL") or None
         vision_provider = (_choice_env("RAGGY_VISION", "ollama", ("ollama", "openai", "anthropic"))
@@ -235,6 +274,10 @@ class Config:
             vision_model=vision_model,
             image_search=_bool_env("RAGGY_IMAGE_SEARCH", False),
             media=_choice_env("RAGGY_MEDIA", "off", ("off", "on")),
+            answer_cache=_bool_env("RAGGY_ANSWER_CACHE", True),
+            trace=_bool_env("RAGGY_TRACE", False),
+            ingest_workers=_positive_int_env("RAGGY_INGEST_WORKERS", "4"),
+            prices=_prices_env(),
             whisper_model=os.environ.get("RAGGY_WHISPER_MODEL") or "base",
             media_window=_positive_int_env("RAGGY_MEDIA_WINDOW", "60"),
             keyframe_seconds=_positive_int_env("RAGGY_KEYFRAME_SECONDS", "30"),

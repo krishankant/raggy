@@ -58,6 +58,7 @@ class Answer:
     hits: list[Hit]
     unsupported: list[int] = field(default_factory=list)  # cited passages the check found no support in
     verification: str = "off"  # off | lexical | llm | failed
+    cached: bool = False  # served from the answer cache (week 12): no model call was made
 
 
 def embed_text(chunk: Chunk) -> str:
