@@ -2,6 +2,8 @@
 
 **[← Docs hub](README.md)** · **[Week 10 lesson](../lessons/week10-images.md)**
 
+> **New to the ideas?** The general concepts behind this page, with diagrams, worked examples and reading links: [13 Multimodal RAG](../concepts/13-multimodal-rag.md).
+
 This guide sits beside week 10. A retriever searches text, so a picture is only findable through text about it, or through a model that puts pictures and text in one space. This guide compares the three readers raggy uses, explains the block format and the cache, and lists what still slips through.
 
 ---

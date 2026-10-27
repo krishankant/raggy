@@ -2,6 +2,8 @@
 
 **[← Week 9: Rich documents](week09-rich-documents.md)** · **[Course Plan](../COURSE_PLAN.md)** · **[Images (guide)](../docs/images.md)** · **[Week 11: Audio and video →](week11-audio-video.md)**
 
+> **New to the ideas?** The general concepts behind this page, with diagrams, worked examples and reading links: [13 Multimodal RAG](../concepts/13-multimodal-rag.md).
+
 ---
 
 **Time:** about 4 hours (1 reading, 1.5 reading and running the code, 1.5 on the experiments).

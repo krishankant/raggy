@@ -2,6 +2,8 @@
 
 **[← Week 10: Images](week10-images.md)** · **[Course Plan](../COURSE_PLAN.md)** · **[Audio and video (guide)](../docs/audio-video.md)** · **[Week 12: Production →](week12-production.md)**
 
+> **New to the ideas?** The general concepts behind this page, with diagrams, worked examples and reading links: [13 Multimodal RAG](../concepts/13-multimodal-rag.md).
+
 ---
 
 **Time:** about 4 hours (1 reading, 1.5 reading and running the code, 1.5 on the experiments).

@@ -2,6 +2,8 @@
 
 **[← Docs hub](README.md)** · **[Bonus lesson](../lessons/bonus-agentic-and-graph-rag.md)**
 
+> **New to the ideas?** The general concepts behind this page, with diagrams, worked examples and reading links: [15 Agentic and graph RAG](../concepts/15-agentic-and-graph-rag.md).
+
 This guide sits beside the bonus week. It explains why some questions can't be answered by any single retrieval, describes the two families of fixes (search again at question time, or connect facts at index time), and shows how each would fit into raggy.
 
 ---

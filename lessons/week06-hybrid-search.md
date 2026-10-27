@@ -2,6 +2,8 @@
 
 **[← Week 5: Scale](week05-scale.md)** · **[Course Plan](../COURSE_PLAN.md)** · **[Hybrid search (guide)](../docs/hybrid-search.md)** · **[Week 7: Reranking →](week07-rerank-and-query-transforms.md)**
 
+> **New to the ideas?** The general concepts behind this page, with diagrams, worked examples and reading links: [07 Keyword search and BM25](../concepts/07-keyword-search-bm25.md) · [08 Hybrid search and rank fusion](../concepts/08-hybrid-search.md).
+
 ---
 
 **Time:** about 4 hours (1 reading, 1.5 reading and running the code, 1.5 on the experiments).

@@ -2,6 +2,8 @@
 
 **[← Week 1: Naive RAG](week01-naive-rag.md)** · **[Course Plan](../COURSE_PLAN.md)** · **[Evaluating RAG (guide)](../docs/evaluating-rag.md)** · **[Week 3: Ingestion →](week03-ingestion.md)**
 
+> **New to the ideas?** The general concepts behind this page, with diagrams, worked examples and reading links: [12 Evaluating RAG](../concepts/12-evaluation.md).
+
 ---
 
 **Time:** about 5 hours (1 reading, 2.5 reading and running the code, 1.5 on the experiments).

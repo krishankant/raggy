@@ -2,6 +2,8 @@
 
 **[← Week 2: Evals](week02-evals.md)** · **[Course Plan](../COURSE_PLAN.md)** · **[Ingestion (guide)](../docs/ingestion.md)** · **[Week 4: Chunking →](week04-chunking.md)**
 
+> **New to the ideas?** The general concepts behind this page, with diagrams, worked examples and reading links: [03 Document parsing](../concepts/03-document-parsing.md).
+
 ---
 
 **Time:** about 5 hours (1 reading, 2.5 reading and running the code, 1.5 on the experiments).

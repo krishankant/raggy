@@ -2,6 +2,8 @@
 
 **[← Week 6: Hybrid search](week06-hybrid-search.md)** · **[Course Plan](../COURSE_PLAN.md)** · **[Reranking (guide)](../docs/reranking.md)** · **[Week 8: Grounded generation →](week08-grounded-generation.md)**
 
+> **New to the ideas?** The general concepts behind this page, with diagrams, worked examples and reading links: [09 Reranking and cross-encoders](../concepts/09-reranking.md) · [10 Query transformation](../concepts/10-query-transformation.md).
+
 ---
 
 **Time:** about 4 hours (1 reading, 1.5 reading and running the code, 1.5 on the experiments).

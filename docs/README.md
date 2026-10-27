@@ -4,6 +4,8 @@
 
 Concept guides that sit beside the weekly lessons. Lessons walk through raggy's code; guides explain the idea behind it in more depth.
 
+**Starting from zero?** The [concepts folder](../concepts/README.md) teaches the general ideas first (what RAG, embeddings, BM25, reranking, cross-encoders and the rest *are* and how they work), with diagrams, worked examples and reading links, and no raggy code. These guides then explain the choices raggy makes.
+
 | Guide | Used in | What it covers |
 | --- | --- | --- |
 | [Embeddings and vector search](embeddings-and-vector-search.md) | Week 1 | What an embedding is, cosine similarity with a worked example, normalisation, query vs passage embeddings, exact vs approximate search |

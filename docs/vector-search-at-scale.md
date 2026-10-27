@@ -2,6 +2,8 @@
 
 **[← Docs hub](README.md)** · **[Week 5 lesson](../lessons/week05-scale.md)**
 
+> **New to the ideas?** The general concepts behind this page, with diagrams, worked examples and reading links: [06 Vector similarity and search](../concepts/06-vector-search.md).
+
 This guide sits beside week 5. It explains how a vector store finds the nearest chunks, what approximate (ANN) indexes trade away, and how to decide whether you need one. Numbers marked *measured* come from this machine (Apple M2, 8 GB) with raggy's code. The week 5 lesson has the ones from real embeddings.
 
 ---

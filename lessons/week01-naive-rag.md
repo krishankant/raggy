@@ -2,6 +2,8 @@
 
 **[← Course Plan](../COURSE_PLAN.md)** · **[Embeddings & Vector Search](../docs/embeddings-and-vector-search.md)** · **[Week 2: Evals before optimisation →](week02-evals.md)**
 
+> **New to the ideas?** The general concepts behind this page, with diagrams, worked examples and reading links: [01 What is RAG?](../concepts/01-what-is-rag.md) · [02 LLM basics](../concepts/02-llm-basics.md) · [05 Embeddings](../concepts/05-embeddings.md) · [06 Vector similarity and search](../concepts/06-vector-search.md).
+
 ---
 
 **Time:** about 5 hours (1.5 reading, 2.5 reading and running the code, 1 on notes and experiments).

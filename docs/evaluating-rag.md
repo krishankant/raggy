@@ -1,5 +1,7 @@
 # Evaluating RAG: the metrics, worked by hand
 
+> **New to the ideas?** The general concepts behind this page, with diagrams, worked examples and reading links: [12 Evaluating RAG](../concepts/12-evaluation.md).
+
 This is the reference for week 2. The lesson (`lessons/week02-evals.md`) explains *why* we measure. This page explains *what each number means*, with one example small enough to check on paper. Every number below was printed by `raggy/evals/metrics.py`.
 
 A RAG pipeline can fail in two places, so there are two families of metrics:

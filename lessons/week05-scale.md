@@ -2,6 +2,8 @@
 
 **[← Week 4: Chunking](week04-chunking.md)** · **[Course Plan](../COURSE_PLAN.md)** · **[Vector search at scale (guide)](../docs/vector-search-at-scale.md)** · **[Week 6: Hybrid search →](week06-hybrid-search.md)**
 
+> **New to the ideas?** The general concepts behind this page, with diagrams, worked examples and reading links: [06 Vector similarity and search](../concepts/06-vector-search.md).
+
 ---
 
 **Time:** about 5 hours (1 reading, 2 reading and running the code, 2 on the experiments; the first FiQA ingest alone takes about 45 minutes).

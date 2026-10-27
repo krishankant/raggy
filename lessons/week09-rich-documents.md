@@ -2,6 +2,8 @@
 
 **[← Week 8: Grounded generation](week08-grounded-generation.md)** · **[Course Plan](../COURSE_PLAN.md)** · **[Rich documents (guide)](../docs/rich-documents.md)** · **[Week 10: Images →](week10-images.md)**
 
+> **New to the ideas?** The general concepts behind this page, with diagrams, worked examples and reading links: [03 Document parsing](../concepts/03-document-parsing.md) · [13 Multimodal RAG](../concepts/13-multimodal-rag.md).
+
 ---
 
 **Time:** about 4 hours (1 reading, 1.5 reading and running the code, 1.5 on the experiments).

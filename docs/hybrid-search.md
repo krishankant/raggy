@@ -2,6 +2,8 @@
 
 **[← Docs hub](README.md)** · **[Week 6 lesson](../lessons/week06-hybrid-search.md)**
 
+> **New to the ideas?** The general concepts behind this page, with diagrams, worked examples and reading links: [07 Keyword search and BM25](../concepts/07-keyword-search-bm25.md) · [08 Hybrid search and rank fusion](../concepts/08-hybrid-search.md).
+
 This guide sits beside week 6. It explains why embeddings and keywords fail on different questions, how BM25 scores a document (worked by hand), and why hybrid search fuses *ranks* instead of scores. The numbers in the worked examples were computed with the formulas shown.
 
 ---

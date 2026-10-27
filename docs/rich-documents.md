@@ -2,6 +2,8 @@
 
 **[← Docs hub](README.md)** · **[Week 9 lesson](../lessons/week09-rich-documents.md)**
 
+> **New to the ideas?** The general concepts behind this page, with diagrams, worked examples and reading links: [03 Document parsing](../concepts/03-document-parsing.md) · [13 Multimodal RAG](../concepts/13-multimodal-rag.md).
+
 This guide sits beside week 9. It explains what a PDF actually stores, how raggy rebuilds headings and tables from it, when a page needs OCR and what that costs, and why slides and sheets need *locations* as much as pages do.
 
 ---

@@ -2,6 +2,8 @@
 
 **[← Docs hub](README.md)** · **[Week 11 lesson](../lessons/week11-audio-video.md)**
 
+> **New to the ideas?** The general concepts behind this page, with diagrams, worked examples and reading links: [13 Multimodal RAG](../concepts/13-multimodal-rag.md).
+
 This guide sits beside week 11. It explains how a speech model produces timed text, how raggy groups that text into retrievable windows that keep their times, how video frames join the transcript, and what to do about speakers.
 
 ---

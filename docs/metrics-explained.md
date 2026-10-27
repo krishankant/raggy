@@ -2,6 +2,8 @@
 
 **[← Docs hub](README.md)** · **[Evaluating RAG (week 2 guide)](evaluating-rag.md)**
 
+> **New to the ideas?** The general concepts behind this page, with diagrams, worked examples and reading links: [12 Evaluating RAG](../concepts/12-evaluation.md).
+
 Every `raggy eval` run prints a block of numbers: recall@1, recall@4, MRR, nDCG, correctness, faithfulness, citation precision, refusal rates, p50 and p95. This guide explains each one with small worked examples you can check by hand: what it measures, how it's computed, how to read it, and what to do when it's low.
 
 The metrics come in three families:

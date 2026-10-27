@@ -2,6 +2,8 @@
 
 **[← Docs hub](README.md)** · **[Week 4 lesson](../lessons/week04-chunking.md)**
 
+> **New to the ideas?** The general concepts behind this page, with diagrams, worked examples and reading links: [04 Chunking](../concepts/04-chunking.md).
+
 This guide sits beside week 4. The lesson walks through raggy's chunkers and the numbers. This page explains the ideas: why sizes are measured in tokens, what each splitting strategy does, how parent/child retrieval works, and how to compare strategies without fooling yourself. Numbers marked *measured* come from raggy's own code with `BAAI/bge-small-en-v1.5`.
 
 ---

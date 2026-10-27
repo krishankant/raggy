@@ -2,6 +2,8 @@
 
 **[← Week 7: Reranking](week07-rerank-and-query-transforms.md)** · **[Course Plan](../COURSE_PLAN.md)** · **[Grounded generation (guide)](../docs/grounded-generation.md)** · **[Week 9: Rich documents →](week09-rich-documents.md)**
 
+> **New to the ideas?** The general concepts behind this page, with diagrams, worked examples and reading links: [11 Grounded generation](../concepts/11-grounded-generation.md).
+
 ---
 
 **Time:** about 4 hours (1 reading, 1.5 reading and running the code, 1.5 on the experiments).

@@ -2,6 +2,8 @@
 
 **[← Docs hub](README.md)** · **[Week 8 lesson](../lessons/week08-grounded-generation.md)**
 
+> **New to the ideas?** The general concepts behind this page, with diagrams, worked examples and reading links: [11 Grounded generation](../concepts/11-grounded-generation.md).
+
 This guide sits beside week 8. Retrieval decides which passages the model may use. This guide is about the step after: how the passages are laid out, how to check that each citation is honest, how to say "not in the documents" reliably, and when prompt caching saves money.
 
 ---

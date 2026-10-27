@@ -2,6 +2,8 @@
 
 **[← Course Plan](../COURSE_PLAN.md)** · **[Week 1 lesson](../lessons/week01-naive-rag.md)** · **[Docs hub](README.md)**
 
+> **New to the ideas?** The general concepts behind this page, with diagrams, worked examples and reading links: [05 Embeddings](../concepts/05-embeddings.md) · [06 Vector similarity and search](../concepts/06-vector-search.md).
+
 ---
 
 Retrieval in raggy rests on one idea: **turn text into a direction in space, so that "similar meaning" becomes "pointing the same way"**. This guide explains that idea without assuming any machine-learning background.

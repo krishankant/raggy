@@ -4,7 +4,7 @@
 [![Models](https://img.shields.io/badge/answers-Ollama%20%7C%20Claude%20%7C%20OpenAI-6f42c1.svg)](lessons/week01-naive-rag.md#36-one-interface-three-model-providers)
 [![Tests](https://img.shields.io/badge/tests-offline%20pytest-2ea44f.svg)](#commands)
 
-**[Course Plan](COURSE_PLAN.md)** · **[Week 1: Naive RAG](lessons/week01-naive-rag.md)** · **[Bonus: Agentic RAG](lessons/bonus-agentic-and-graph-rag.md)** · **[Docs hub](docs/README.md)** · **[Metrics explained](docs/metrics-explained.md)**
+**[Course Plan](COURSE_PLAN.md)** · **[Week 1: Naive RAG](lessons/week01-naive-rag.md)** · **[Bonus: Agentic RAG](lessons/bonus-agentic-and-graph-rag.md)** · **[Concepts (start here)](concepts/README.md)** · **[Docs hub](docs/README.md)** · **[Metrics explained](docs/metrics-explained.md)**
 
 ---
 
@@ -13,6 +13,8 @@
 It's a course you **read and run**, not one you fill in. Every week adds working code and a lesson that explains what was added, why it's built that way and what it changed, with eval numbers from real runs. Each week is preserved on its own branch, so you can check out any stage of the build.
 
 > **RAG in one sentence.** Instead of trusting what a language model memorised, *retrieve* the passages from your own documents that are relevant to a question, then have the model *generate* an answer from those passages only, citing them.
+
+**New to RAG?** Read the [concepts folder](concepts/README.md) first: 15 short pages on what each technique is and how it works (embeddings, vector search, BM25, hybrid search, reranking and cross-encoders, query transforms, grounded generation, evaluation, multimodal, production, agentic and graph RAG), with diagrams, worked examples and reading links. The lessons then show the code.
 
 No RAG framework (no LangChain or LlamaIndex): only focused libraries and the official model SDKs, so every stage is code you can read.
 

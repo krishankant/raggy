@@ -2,6 +2,8 @@
 
 **[← Week 11: Audio and video](week11-audio-video.md)** · **[Course Plan](../COURSE_PLAN.md)** · **[Running RAG in production (guide)](../docs/production.md)** · **[Bonus: Agentic and graph RAG →](bonus-agentic-and-graph-rag.md)**
 
+> **New to the ideas?** The general concepts behind this page, with diagrams, worked examples and reading links: [14 RAG in production](../concepts/14-production.md).
+
 ---
 
 **Time:** about 4 hours (1 reading, 1.5 reading and running the code, 1.5 on the benchmark and experiments).

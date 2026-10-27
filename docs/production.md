@@ -2,6 +2,8 @@
 
 **[← Docs hub](README.md)** · **[Week 12 lesson](../lessons/week12-production.md)**
 
+> **New to the ideas?** The general concepts behind this page, with diagrams, worked examples and reading links: [14 RAG in production](../concepts/14-production.md).
+
 This guide sits beside week 12. It covers the engineering that turns a pipeline that answers well into one you can run every day: caching, streaming, concurrency, cost, tracing and configuration. It also has a checklist for taking raggy, or any RAG system, to real users.
 
 ---

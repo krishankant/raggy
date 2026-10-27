@@ -1,6 +1,6 @@
 # raggy: 12-week course plan
 
-**[← Repository Home](README.md)** · **[Docs hub](docs/README.md)**
+**[← Repository Home](README.md)** · **[Concepts](concepts/README.md)** · **[Docs hub](docs/README.md)**
 
 ---
 
@@ -8,6 +8,7 @@ Over 12 weeks (plus a bonus) at about 5 hours a week, raggy grows from a naive R
 
 ## How this course works
 
+- **Concepts first, if you need them.** Each lesson links to the general concept pages in [`concepts/`](concepts/README.md) (what the technique is and how it works, independent of raggy). Read them before the lesson if the idea is new.
 - **The code is already written.** Each week adds working code, and the lesson walks through it: the concept, why it's built this way, the alternatives, what breaks without it, and the measured before and after.
 - **Every week is a branch.** `git checkout week-03` gives you the code exactly as it stood after week 3, nothing from later weeks. `main` holds everything. (Matching tags `week-NN` exist too.)
 - **Improvements are measured, not assumed.** From week 2 on, every lesson reports eval numbers from real runs: retrieval hit rate, answer correctness, faithfulness, refusals, and latency.

@@ -2,6 +2,8 @@
 
 **[← Docs hub](README.md)** · **[Week 3 lesson](../lessons/week03-ingestion.md)**
 
+> **New to the ideas?** The general concepts behind this page, with diagrams, worked examples and reading links: [03 Document parsing](../concepts/03-document-parsing.md).
+
 This guide sits beside week 3. The lesson walks through raggy's code. This page explains the ideas underneath: why boilerplate hurts retrieval, what normalisation is for, how MinHash finds near-copies, and how incremental re-ingest decides what to do with each file. Numbers marked *computed* were printed by raggy's own functions.
 
 ---

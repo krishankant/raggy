@@ -2,6 +2,8 @@
 
 **[← Week 3: Ingestion](week03-ingestion.md)** · **[Course Plan](../COURSE_PLAN.md)** · **[Chunking (guide)](../docs/chunking.md)** · **[Week 5: Scale →](week05-scale.md)**
 
+> **New to the ideas?** The general concepts behind this page, with diagrams, worked examples and reading links: [04 Chunking](../concepts/04-chunking.md).
+
 ---
 
 **Time:** about 5 hours (1 reading, 2.5 reading and running the code, 1.5 on the experiments).

@@ -2,6 +2,8 @@
 
 **[← Week 12: Production](week12-production.md)** · **[Course Plan](../COURSE_PLAN.md)** · **[Agentic and graph RAG (guide)](../docs/agentic-and-graph-rag.md)**
 
+> **New to the ideas?** The general concepts behind this page, with diagrams, worked examples and reading links: [15 Agentic and graph RAG](../concepts/15-agentic-and-graph-rag.md).
+
 ---
 
 **Time:** about 4 hours (1 reading, 1.5 reading and running the code, 1.5 on the experiments).

@@ -2,6 +2,8 @@
 
 **[← Docs hub](README.md)** · **[Week 7 lesson](../lessons/week07-rerank-and-query-transforms.md)**
 
+> **New to the ideas?** The general concepts behind this page, with diagrams, worked examples and reading links: [09 Reranking and cross-encoders](../concepts/09-reranking.md) · [10 Query transformation](../concepts/10-query-transformation.md).
+
 This guide sits beside week 7. It explains why a second, slower ranker over the top few results is worth having, how cross-encoders and LLM rankers differ from the embedding model that retrieved the candidates, what the three query transforms change, and how to budget latency per stage.
 
 ---
