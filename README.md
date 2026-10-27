@@ -14,9 +14,29 @@ It's a course you **read and run**, not one you fill in. Every week adds working
 
 > **RAG in one sentence.** Instead of trusting what a language model memorised, *retrieve* the passages from your own documents that are relevant to a question, then have the model *generate* an answer from those passages only, citing them.
 
-**New to RAG?** Read the [concepts folder](concepts/README.md) first: 15 short pages on what each technique is and how it works (embeddings, vector search, BM25, hybrid search, reranking and cross-encoders, query transforms, grounded generation, evaluation, multimodal, production, agentic and graph RAG), with diagrams, worked examples and reading links. The lessons then show the code.
-
 No RAG framework (no LangChain or LlamaIndex): only focused libraries and the official model SDKs, so every stage is code you can read.
+
+## Concepts: start here if you're new to RAG
+
+Fifteen pages that teach each idea from the ground up, independent of raggy's code, with diagrams, worked examples and reading links. Read a page before the week that uses it. Index and glossary: [`concepts/README.md`](concepts/README.md).
+
+| # | Concept | What you'll learn | Used in |
+| --- | --- | --- | --- |
+| 01 | [What is RAG?](concepts/01-what-is-rag.md) | Why LLMs need retrieval; RAG vs fine-tuning vs long context; where RAG fails | Week 1 |
+| 02 | [LLM basics for RAG](concepts/02-llm-basics.md) | Tokens, context windows, how generation works, temperature, hallucination, cost | Week 1 |
+| 03 | [Document parsing](concepts/03-document-parsing.md) | What's inside a PDF, HTML boilerplate, OCR, tables, normalisation, de-duplication | Weeks 3, 9 |
+| 04 | [Chunking](concepts/04-chunking.md) | Fixed, recursive, structural and semantic splitting; overlap; parent/child; contextual retrieval | Week 4 |
+| 05 | [Embeddings](concepts/05-embeddings.md) | How text becomes a vector; contrastive training; pooling; query prefixes; choosing a model | Week 1 |
+| 06 | [Vector similarity and search](concepts/06-vector-search.md) | Cosine worked by hand; exact search; IVF, HNSW, quantisation; vector databases | Weeks 1, 5 |
+| 07 | [Keyword search and BM25](concepts/07-keyword-search-bm25.md) | Inverted indexes, TF-IDF, BM25 worked by hand, learned sparse retrieval | Week 6 |
+| 08 | [Hybrid search and rank fusion](concepts/08-hybrid-search.md) | Why combine vectors and keywords; score normalisation; RRF worked by hand | Week 6 |
+| 09 | [Reranking and cross-encoders](concepts/09-reranking.md) | Retrieve-then-rerank; bi- vs cross-encoders; ColBERT; LLM rerankers; costs | Week 7 |
+| 10 | [Query transformation](concepts/10-query-transformation.md) | Rewriting, multi-query, HyDE, step-back, decomposition, routing | Week 7 |
+| 11 | [Grounded generation](concepts/11-grounded-generation.md) | Prompt anatomy, context packing, lost-in-the-middle, citations, refusals | Week 8 |
+| 12 | [Evaluating RAG](concepts/12-evaluation.md) | Test sets, retrieval vs answer metrics, LLM-as-judge, RAGAS, noise | Week 2+ |
+| 13 | [Multimodal RAG](concepts/13-multimodal-rag.md) | Images (OCR, vision models, CLIP, ColPali), tables, audio, video | Weeks 9–11 |
+| 14 | [RAG in production](concepts/14-production.md) | Latency, streaming, caching, cost per answer, tracing, security | Week 12 |
+| 15 | [Agentic and graph RAG](concepts/15-agentic-and-graph-rag.md) | Agents and ReAct, Self-RAG, CRAG, multi-hop, knowledge graphs, GraphRAG | Bonus |
 
 ## Quick start
 
