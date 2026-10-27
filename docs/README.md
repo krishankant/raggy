@@ -19,4 +19,4 @@ Concept guides that sit beside the weekly lessons. Lessons walk through raggy's 
 | [Audio and video](audio-video.md) | Week 11 | Whisper's timed segments and failure modes; windows by time and speaker; time labels as citations; keyframes and repeat skipping; diarization; captions first |
 | [Running RAG in production](production.md) | Week 12 | Caching at every layer and how to key it; streaming; parallel reads, serial writes; cost per answer; what a trace must hold; profiles; a checklist before real users |
 
-More guides arrive with each week.
+One guide per week, weeks 1–12.
