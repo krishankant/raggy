@@ -4,7 +4,7 @@
 [![Models](https://img.shields.io/badge/answers-Ollama%20%7C%20Claude%20%7C%20OpenAI-6f42c1.svg)](lessons/week01-naive-rag.md#36-one-interface-three-model-providers)
 [![Tests](https://img.shields.io/badge/tests-offline%20pytest-2ea44f.svg)](#commands)
 
-**[Course Plan](COURSE_PLAN.md)** · **[Week 1: Naive RAG](lessons/week01-naive-rag.md)** · **[Week 10: Images](lessons/week10-images.md)** · **[Docs hub](docs/README.md)**
+**[Course Plan](COURSE_PLAN.md)** · **[Week 1: Naive RAG](lessons/week01-naive-rag.md)** · **[Week 11: Audio and video](lessons/week11-audio-video.md)** · **[Docs hub](docs/README.md)**
 
 ---
 
@@ -54,7 +54,7 @@ Point it at your own files, folders or web pages: `uv run raggy ingest ~/notes ~
 | `uv run raggy ask "question" [-k N] [--show-context]` | Answer with numbered citations. |
 | `uv run raggy sources` | List what's indexed: chunks, type, title, source, and which documents were skipped as duplicates. |
 | `uv run raggy remove PATH_OR_URL` | Drop a source, or everything under a folder or URL, from the index. Never touches the files. |
-| `uv run raggy eval [--suite fictional\|fictional-web\|manual\|rich\|images\|scifact\|fiqa] [--retrieval-only] [--no-judge] [--limit N] [--label L]` | Measure retrieval and answer quality; saves a JSON run to `evals/runs/`. |
+| `uv run raggy eval [--suite fictional\|fictional-web\|manual\|rich\|images\|media\|scifact\|fiqa] [--retrieval-only] [--no-judge] [--limit N] [--label L]` | Measure retrieval and answer quality; saves a JSON run to `evals/runs/`. |
 | `uv run raggy compare BASE.json NEW.json` | Show each metric's change between two runs. |
 | `uv run pytest` | Run the offline test suite (no keys, no downloads). |
 
@@ -85,6 +85,8 @@ Point it at your own files, folders or web pages: `uv run raggy ingest ~/notes ~
 | `RAGGY_CITATION_CHECK` / `RAGGY_CITATION_ACTION` / `RAGGY_CITATION_THRESHOLD` | `off` (`lexical`, `llm`) / `report` (`strip`, `refuse`) / `0.5` |
 | `RAGGY_PDF` / `RAGGY_OCR` | `layout` (headings, ruled tables, page labels; `text` = week 3's text layer) / `on` (OCR pages with no text layer) |
 | `RAGGY_IMAGES` / `RAGGY_VISION` / `RAGGY_VISION_MODEL` | `off` (`ocr`, `vision`) / the answer model's provider / the answer model, or `qwen3.5:4b` for Ollama |
+| `RAGGY_MEDIA` / `RAGGY_WHISPER_MODEL` | `off` (`on`: transcribe audio and video locally) / `base` (`tiny`, `small`, `medium`, `large-v3`) |
+| `RAGGY_MEDIA_WINDOW` / `RAGGY_KEYFRAME_SECONDS` | `60` (seconds per transcript window) / `30` (video frames, read when `RAGGY_IMAGES` is on) |
 | `RAGGY_IMAGE_SEARCH` | `off` (`on`: CLIP vectors for every picture, `raggy images "query"`) |
 | `RAGGY_REFUSAL_GATE` | empty = off (`vector=0.63`: refuse without a model call below that top score; calibrate with `evals/calibrate_gate.py`) |
 
@@ -104,13 +106,14 @@ See **[COURSE_PLAN.md](COURSE_PLAN.md)** for all 12 weeks. Ready so far:
 | 8 | [Grounded generation](lessons/week08-grounded-generation.md) | `git checkout week-08` |
 | 9 | [Rich documents: PDF layout, tables, OCR, Office files](lessons/week09-rich-documents.md) | `git checkout week-09` |
 | 10 | [Images: OCR, vision descriptions, picture search](lessons/week10-images.md) | `git checkout week-10` |
+| 11 | [Audio and video: transcripts, keyframes, time citations](lessons/week11-audio-video.md) | `git checkout week-11` |
 
 ## Repository layout
 
 ```
 raggy/            the package: ingest/ chunking/ embed/ store/ generate/ evals/ pipeline.py cli.py
 lessons/          one lesson per week
-docs/             concept guides (embeddings, evals, ingestion, chunking, vector search at scale, hybrid search, reranking, grounded generation, rich documents, images, and more each week)
+docs/             concept guides (embeddings, evals, ingestion, chunking, vector search at scale, hybrid search, reranking, grounded generation, rich documents, images, audio and video, and more each week)
 samples/          small demo corpora (fictional, so models can't answer from memory)
 evals/            eval suites (fictional corpus, its web-site version, a long manual), committed baselines; data/ and runs/ are local
 tests/            offline pytest suite, one folder per week

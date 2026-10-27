@@ -1,6 +1,6 @@
 # Week 10: Images — OCR, vision descriptions and picture search
 
-**[← Week 9: Rich documents](week09-rich-documents.md)** · **[Course Plan](../COURSE_PLAN.md)** · **[Images (guide)](../docs/images.md)** · **Week 11: Audio and video →** *(coming)*
+**[← Week 9: Rich documents](week09-rich-documents.md)** · **[Course Plan](../COURSE_PLAN.md)** · **[Images (guide)](../docs/images.md)** · **[Week 11: Audio and video →](week11-audio-video.md)**
 
 ---
 

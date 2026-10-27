@@ -204,6 +204,15 @@ def images_suite(root: Path = Path("evals/images")) -> Suite:
     return s
 
 
+def media_suite(root: Path = Path("evals/media")) -> Suite:
+    """Answers spoken in a podcast, narrated over a video, or in published captions (week 11).
+    Gold quotes are words from the script: a transcriber that hears them differently loses
+    that gold, which is part of what's measured, so gold isn't strict."""
+    s = fictional_suite(root, name="media")
+    s.strict_gold = False
+    return s
+
+
 def manual_suite(root: Path = Path("evals/manual")) -> Suite:
     """One long document (a fictional owner's manual, ~3,000 tokens): the suite
     where chunk boundaries matter, because most answers sit in one section of many."""
@@ -224,6 +233,7 @@ def fiqa_suite(data_dir: Path = Path("evals/data")) -> Suite:
 SUITES: dict[str, Callable[[], Suite]] = {
     "rich": rich_suite,
     "images": images_suite,
+    "media": media_suite,
     "fiqa": fiqa_suite,
     "manual": manual_suite,
     "fictional": fictional_suite,

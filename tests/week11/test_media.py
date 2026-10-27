@@ -190,3 +190,17 @@ def test_media_url_without_yt_dlp_is_a_load_error(monkeypatch):
     monkeypatch.setitem(sys.modules, "yt_dlp", None)  # import fails
     with pytest.raises(LoadError, match="uv sync --extra media"):
         fetch.fetch_url("https://youtu.be/abc123")
+
+
+def test_media_suite_captions_resolve_and_media_off_loses_the_rest():
+    from pathlib import Path
+
+    from raggy.evals.dataset import resolve_gold
+    from raggy.evals.suites import SUITES, media_suite
+
+    s = media_suite(Path(__file__).resolve().parents[2] / "evals" / "media")
+    qs = s.questions()
+    assert "media" in SUITES and len(qs) == 18 and s.strict_gold is False
+    missing: list[str] = []
+    resolve_gold(qs, s.documents(LoadOptions()), strict=False, missing=missing)  # media off: captions only
+    assert sorted(missing) == sorted(q.id for q in qs if q.answerable and not q.id.startswith("c"))
