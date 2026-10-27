@@ -4,7 +4,7 @@
 [![Models](https://img.shields.io/badge/answers-Ollama%20%7C%20Claude%20%7C%20OpenAI-6f42c1.svg)](lessons/week01-naive-rag.md#36-one-interface-three-model-providers)
 [![Tests](https://img.shields.io/badge/tests-offline%20pytest-2ea44f.svg)](#commands)
 
-**[Course Plan](COURSE_PLAN.md)** · **[Week 1: Naive RAG](lessons/week01-naive-rag.md)** · **[Week 12: Production](lessons/week12-production.md)** · **[Docs hub](docs/README.md)** · **[Metrics explained](docs/metrics-explained.md)**
+**[Course Plan](COURSE_PLAN.md)** · **[Week 1: Naive RAG](lessons/week01-naive-rag.md)** · **[Bonus: Agentic RAG](lessons/bonus-agentic-and-graph-rag.md)** · **[Docs hub](docs/README.md)** · **[Metrics explained](docs/metrics-explained.md)**
 
 ---
 
@@ -54,7 +54,7 @@ Point it at your own files, folders or web pages: `uv run raggy ingest ~/notes ~
 | `uv run raggy ask "question" [-k N] [--show-context]` | Answer with numbered citations. |
 | `uv run raggy sources` | List what's indexed: chunks, type, title, source, and which documents were skipped as duplicates. |
 | `uv run raggy remove PATH_OR_URL` | Drop a source, or everything under a folder or URL, from the index. Never touches the files. |
-| `uv run raggy eval [--suite fictional\|fictional-web\|manual\|rich\|images\|media\|scifact\|fiqa] [--retrieval-only] [--no-judge] [--limit N] [--label L]` | Measure retrieval and answer quality; saves a JSON run to `evals/runs/`. |
+| `uv run raggy eval [--suite fictional\|fictional-web\|manual\|rich\|images\|media\|multihop\|scifact\|fiqa] [--retrieval-only] [--no-judge] [--limit N] [--label L]` | Measure retrieval and answer quality; saves a JSON run to `evals/runs/`. |
 | `uv run raggy compare BASE.json NEW.json` | Show each metric's change between two runs. |
 | `uv run pytest` | Run the offline test suite (no keys, no downloads). |
 
@@ -88,6 +88,7 @@ Point it at your own files, folders or web pages: `uv run raggy ingest ~/notes ~
 | `RAGGY_MEDIA` / `RAGGY_WHISPER_MODEL` | `off` (`on`: transcribe audio and video locally) / `base` (`tiny`, `small`, `medium`, `large-v3`) |
 | `RAGGY_MEDIA_WINDOW` / `RAGGY_KEYFRAME_SECONDS` | `60` (seconds per transcript window) / `30` (video frames, read when `RAGGY_IMAGES` is on) |
 | `RAGGY_PROFILE` | unset (`local`, `fast`, `accurate`: fill in settings you haven't set) |
+| `RAGGY_AGENT` / `RAGGY_AGENT_STEPS` | `0` (`1`: the model decides what to search next, for multi-hop questions; or `raggy ask --agent`) / `4` |
 | `RAGGY_ANSWER_CACHE` / `RAGGY_TRACE` / `RAGGY_INGEST_WORKERS` | `1` (repeat questions over identical passages cost nothing) / `0` (`1`: one JSON line per answer) / `4` |
 | `RAGGY_PRICES` | empty (`openai:gpt-5.5=1.25/10/0.125,...`: input/output/cached per 1M tokens, for cost per answer) |
 | `RAGGY_IMAGE_SEARCH` | `off` (`on`: CLIP vectors for every picture, `raggy images "query"`) |
@@ -95,7 +96,7 @@ Point it at your own files, folders or web pages: `uv run raggy ingest ~/notes ~
 
 ## The course
 
-See **[COURSE_PLAN.md](COURSE_PLAN.md)** for all 12 weeks. All twelve weeks are ready:
+See **[COURSE_PLAN.md](COURSE_PLAN.md)** for all 12 weeks. All twelve weeks and the bonus are ready:
 
 | Week | Lesson | Code |
 | --- | --- | --- |
@@ -111,6 +112,7 @@ See **[COURSE_PLAN.md](COURSE_PLAN.md)** for all 12 weeks. All twelve weeks are 
 | 10 | [Images: OCR, vision descriptions, picture search](lessons/week10-images.md) | `git checkout week-10` |
 | 11 | [Audio and video: transcripts, keyframes, time citations](lessons/week11-audio-video.md) | `git checkout week-11` |
 | 12 | [Production: streaming, caching, concurrency, cost, traces, profiles](lessons/week12-production.md) | `git checkout week-12` |
+| Bonus | [Agentic and graph RAG: when one search isn't enough](lessons/bonus-agentic-and-graph-rag.md) | `git checkout bonus` |
 
 ## Repository layout
 

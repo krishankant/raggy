@@ -31,7 +31,7 @@ For each week: check out its branch, read the lesson with the code open beside i
 | **10** | [Images](lessons/week10-images.md) | Picture files and figures in PDFs, slides and Word files become `[Image: …]` blocks via OCR or a vision model (local or hosted, cached); optional CLIP picture search; an `images` suite with pre-set rules (not yet measured, so defaults stay off) | ✅ `week-10` |
 | **11** | [Audio and video](lessons/week11-audio-video.md) | Local transcription (faster-whisper, cached); windows by time and speaker; subtitles (.srt/.vtt with voice tags); video keyframes read as pictures; `file @ mm:ss` citations; media URLs via yt-dlp, captions first; a `media` suite (not yet measured, so media stays off) | ✅ `week-11` |
 | **12** | [Production](lessons/week12-production.md) | Streaming answers; an answer cache keyed on the passages' text; concurrent ingest; cost per answer from your prices; JSONL traces and `raggy trace`; `local` / `fast` / `accurate` profiles; a final benchmark across every suite and profile | ✅ `week-12` |
-| *Bonus* | Agentic and graph RAG | The model decides when to retrieve (multi-hop), linking back to [harnessy](https://github.com/krishankant/harnessy) | coming |
+| *Bonus* | [Agentic and graph RAG](lessons/bonus-agentic-and-graph-rag.md) | A retrieval loop where the model reads what it found and writes the next search (harnessy's agent loop with one tool, JSON decisions on every provider); a `multihop` suite of two-document questions; GraphRAG compared. Off by default until measured | ✅ `bonus` |
 
 ## Setup (about 30 minutes)
 

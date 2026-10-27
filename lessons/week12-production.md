@@ -1,6 +1,6 @@
 # Week 12: Production — streaming, caching, concurrency, cost, traces, profiles
 
-**[← Week 11: Audio and video](week11-audio-video.md)** · **[Course Plan](../COURSE_PLAN.md)** · **[Running RAG in production (guide)](../docs/production.md)**
+**[← Week 11: Audio and video](week11-audio-video.md)** · **[Course Plan](../COURSE_PLAN.md)** · **[Running RAG in production (guide)](../docs/production.md)** · **[Bonus: Agentic and graph RAG →](bonus-agentic-and-graph-rag.md)**
 
 ---
 

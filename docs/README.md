@@ -19,5 +19,6 @@ Concept guides that sit beside the weekly lessons. Lessons walk through raggy's 
 | [Images](images.md) | Week 10 | OCR vs a vision model vs CLIP; why OCR text is kept beside a description; the header as citation and gold; caching by image bytes; what gets skipped |
 | [Audio and video](audio-video.md) | Week 11 | Whisper's timed segments and failure modes; windows by time and speaker; time labels as citations; keyframes and repeat skipping; diarization; captions first |
 | [Running RAG in production](production.md) | Week 12 | Caching at every layer and how to key it; streaming; parallel reads, serial writes; cost per answer; what a trace must hold; profiles; a checklist before real users |
+| [Agentic and graph RAG](agentic-and-graph-rag.md) | Bonus | Single-hop vs multi-hop and bridge entities; the retrieval loop and its design choices; GraphRAG's pipeline; a minimal graph index for raggy; when each pays |
 
-One guide per week, weeks 1–12.
+One guide per week, weeks 1–12, plus the bonus.
