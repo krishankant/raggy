@@ -7,6 +7,7 @@ Concept guides that sit beside the weekly lessons. Lessons walk through raggy's 
 | Guide | Used in | What it covers |
 | --- | --- | --- |
 | [Embeddings and vector search](embeddings-and-vector-search.md) | Week 1 | What an embedding is, cosine similarity with a worked example, normalisation, query vs passage embeddings, exact vs approximate search |
+| [RAG metrics, explained with examples](metrics-explained.md) | Every week | recall@k, MRR, nDCG (worked by hand, with graded relevance), precision@k; correctness, faithfulness, citation precision, refusal rates; run-to-run noise; p50/p95, context tokens, cost; what to fix when each is low |
 | [Evaluating RAG](evaluating-rag.md) | Week 2 | Span-level gold evidence; recall@k, MRR and nDCG worked by hand; chunk vs document scoring; refusal accuracy, correctness, faithfulness, citation precision; versioned judge prompts; p50/p95 latency; how big a change is real |
 | [Ingestion](ingestion.md) | Week 3 | Why boilerplate hurts retrieval; main-content extraction; Unicode normalisation; MinHash and LSH worked through; incremental re-ingest as a state machine; what "deleted" should mean |
 | [Chunking](chunking.md) | Week 4 | Tokens vs characters; fixed, recursive and structure-aware splitting; overlap; contextual headers; parent/child retrieval and its two traps; contextual retrieval; comparing chunkers at equal context |
