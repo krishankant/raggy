@@ -167,6 +167,8 @@ class Config:
     whisper_model: str = "base"  # tiny | base | small | medium | large-v3
     media_window: int = 60  # seconds per transcript window
     keyframe_seconds: int = 30  # video: one frame per this many seconds (needs RAGGY_IMAGES on)
+    agent: bool = False  # bonus week: the model decides what to search next (multi-hop), then answers
+    agent_steps: int = 4  # at most this many searches per question, the first being the question itself
     answer_cache: bool = True  # serve a repeated question over identical passages without a model call
     trace: bool = False  # append one JSON line per answer to index_dir/traces/ (stores questions)
     ingest_workers: int = 4  # files loaded in parallel during ingest
@@ -275,6 +277,8 @@ class Config:
             image_search=_bool_env("RAGGY_IMAGE_SEARCH", False),
             media=_choice_env("RAGGY_MEDIA", "off", ("off", "on")),
             answer_cache=_bool_env("RAGGY_ANSWER_CACHE", True),
+            agent=_bool_env("RAGGY_AGENT", False),
+            agent_steps=_positive_int_env("RAGGY_AGENT_STEPS", "4"),
             trace=_bool_env("RAGGY_TRACE", False),
             ingest_workers=_positive_int_env("RAGGY_INGEST_WORKERS", "4"),
             prices=_prices_env(),

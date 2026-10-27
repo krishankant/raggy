@@ -213,6 +213,24 @@ def media_suite(root: Path = Path("evals/media")) -> Suite:
     return s
 
 
+def multihop_suite(root: Path = Path("evals/multihop"), docs: Path = Path("evals/fictional/docs")) -> Suite:
+    """Questions that need two facts from two documents, the second found only through the
+    first (bonus week). Same corpus as `fictional`; every question has two gold passages."""
+    s = fictional_suite(root, name="multihop")
+    root, docs = Path(root), Path(docs)
+
+    def fingerprint() -> str:
+        h = hashlib.sha256()
+        for f in sorted(docs.rglob("*")) + [root / "questions.jsonl"]:
+            if f.is_file():
+                h.update(f.name.encode() + b"\0" + f.read_bytes())
+        return h.hexdigest()
+
+    s.documents = lambda options=None: load_path(docs, options)
+    s.fingerprint = fingerprint
+    return s
+
+
 def manual_suite(root: Path = Path("evals/manual")) -> Suite:
     """One long document (a fictional owner's manual, ~3,000 tokens): the suite
     where chunk boundaries matter, because most answers sit in one section of many."""
@@ -234,6 +252,7 @@ SUITES: dict[str, Callable[[], Suite]] = {
     "rich": rich_suite,
     "images": images_suite,
     "media": media_suite,
+    "multihop": multihop_suite,
     "fiqa": fiqa_suite,
     "manual": manual_suite,
     "fictional": fictional_suite,

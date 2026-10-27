@@ -106,6 +106,7 @@ class Raggy:
         self.last_usage: dict = {}
         self.last_cost: float | None = None
         self.trace_error: str | None = None
+        self.last_agent = None  # the latest agent run's steps, when RAGGY_AGENT is on
 
     # Models are built on first use: `raggy sources` shouldn't load an
     # embedding model, and `raggy search` shouldn't need an LLM.
@@ -629,10 +630,18 @@ class Raggy:
         """Search, answer and (if RAGGY_TRACE is on) trace. ``on_token`` streams the answer."""
         usage0 = dict(getattr(self.llm, "usage", {}) or {})
         t0 = time.perf_counter()
-        hits = self.search(question, k, filters, mode=mode, rerank=rerank, transform=transform)
-        timings = dict(self.last_timings)
-        t1 = time.perf_counter()
-        answer = self.answer_from(question, self.context(hits), on_token=on_token)
+        if self.config.agent and filters is None:  # bonus week: let the model decide the searches
+            from raggy.agent import run_agent
+
+            t1 = time.perf_counter()
+            self.last_agent = run_agent(self, question, k, on_token=on_token)
+            answer = self.last_agent.answer
+            timings = {"agent": (time.perf_counter() - t1) * 1000}
+        else:
+            hits = self.search(question, k, filters, mode=mode, rerank=rerank, transform=transform)
+            timings = dict(self.last_timings)
+            t1 = time.perf_counter()
+            answer = self.answer_from(question, self.context(hits), on_token=on_token)
         timings["generate"] = (time.perf_counter() - t1) * 1000
         timings["total"] = (time.perf_counter() - t0) * 1000
         self.last_timings = timings

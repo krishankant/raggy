@@ -85,6 +85,7 @@ def _parser() -> argparse.ArgumentParser:
     a.add_argument("--show-context", action="store_true", help="also print the retrieved chunks")
     a.add_argument("--timings", action="store_true", help="print how long each stage took")
     a.add_argument("--stream", action="store_true", help="print the answer as it's written")
+    a.add_argument("--agent", action="store_true", help="let the model decide what to search next (multi-hop)")
     tr = sub.add_parser("trace", help="show the latest traced answers (RAGGY_TRACE=on)")
     tr.add_argument("-n", type=_positive_int, default=5)
     _add_filters(a)
@@ -168,6 +169,8 @@ def main(argv: list[str] | None = None) -> int:
                 streamed.append(piece)
                 print(piece, end="", flush=True)
 
+            if args.agent:
+                raggy.config.agent = True
             answer = raggy.ask(args.question, args.k, _filters(args), mode=args.mode, rerank=args.rerank,
                                transform=args.transform, on_token=show if args.stream else None)
             if args.show_context:
@@ -179,6 +182,13 @@ def main(argv: list[str] | None = None) -> int:
                     print(f"\n(after the citation check:)\n{answer.text}")
             else:
                 print(answer.text)
+            if raggy.last_agent is not None:
+                ag = raggy.last_agent
+                print(f"\nSearches ({ag.stopped}):")
+                for n, step in enumerate(ag.steps, start=1):
+                    print(f"  {n}. {step.query}  (+{step.new} new passage{'s' if step.new != 1 else ''})")
+                if ag.failures:
+                    print(f"⚠ {ag.failures} agent decision(s) failed; it answered from what it had")
             if args.timings:
                 print("\nTimings: " + "  ".join(f"{k} {v:.0f} ms" for k, v in raggy.last_timings.items()))
             u = raggy.last_usage

@@ -96,6 +96,22 @@ def prepare_index(suite: Suite, raggy: Raggy, docs: list[Document] | None = None
             **_image_delta(raggy, images0)}
 
 
+class _RetrievalOnly:
+    """A Raggy whose answer step is free: the agent's searches still use the model to decide,
+    but a retrieval-only eval shouldn't pay for answers it won't grade."""
+
+    def __init__(self, raggy: Raggy):
+        self._r = raggy
+
+    def __getattr__(self, name):
+        return getattr(self._r, name)
+
+    def answer_from(self, question, passages, **kw):
+        from raggy.types import Answer
+
+        return Answer(question=question, text="", citations=[], hits=passages)
+
+
 def _image_delta(raggy: Raggy, before: tuple[int, int, int]) -> dict:
     """Image reads while loading this suite: a failed description fell back to OCR and must show."""
     if raggy.config.images == "off":
@@ -179,7 +195,22 @@ def run_suite(suite: Suite, raggy: Raggy, judge: Judge | None, *, answers: bool 
     for i, q in enumerate(questions, start=1):
         rec: dict = {"id": q.id, "question": q.question, "answerable": q.answerable,
                      "tags": q.tags, "latency_ms": {}}
-        hits = raggy.search(q.question, k=fetch)
+        agent = None
+        if raggy.config.agent:  # bonus week: the passages are what the agent's searches gathered
+            from raggy.agent import run_agent
+
+            ta = time.perf_counter()
+            try:  # retrieval-only runs still pay for the decisions, never for answers
+                agent = run_agent(raggy if answers else _RetrievalOnly(raggy), q.question, use_cache=False)
+            except LLMError as e:  # the answer call failed; the decisions' failures are inside the result
+                rec["error"] = str(e)
+            hits = agent.passages if agent is not None else raggy.search(q.question, k=fetch)
+            rec["latency_ms"]["agent"] = round((time.perf_counter() - ta) * 1000, 2)
+            if agent is not None:
+                rec["agent"] = {"searches": [s.query for s in agent.steps], "stopped": agent.stopped,
+                                "failures": agent.failures}
+        else:
+            hits = raggy.search(q.question, k=fetch)
         rec["latency_ms"].update(raggy.last_timings)  # transform / retrieve / rerank, ms
         ranked = (collapse_to_documents(hits) if suite.unit == "document" else hits)[:n]
         covers = [chunk_gold(h.chunk, gold[q.id]) for h in ranked]
@@ -194,12 +225,13 @@ def run_suite(suite: Suite, raggy: Raggy, judge: Judge | None, *, answers: bool 
                              "gold": sorted(g)} for h, g in zip(ranked[:SAVED_HITS], covers)]
         if q.answerable:
             rec["retrieval"] = retrieval_metrics(covers, len(q.gold), suite.ks)  # lost gold counts as missed
-        context = raggy.context(hits[: raggy.config.top_k])  # what the answer model is (or would be) given
+        # what the answer model is (or would be) given: the agent's gathered passages, or the top k
+        context = hits if agent is not None else raggy.context(hits[: raggy.config.top_k])
         rec["context_tokens"] = sum(raggy.embedder.count_tokens(source_text(h)) for h in context)
         if answers:
             t0 = time.perf_counter()
             try:
-                answer = raggy.answer_from(q.question, context, use_cache=False)
+                answer = agent.answer if agent is not None else raggy.answer_from(q.question, context, use_cache=False)
             except LLMError as e:
                 rec["error"] = str(e)
             else:
