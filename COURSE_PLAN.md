@@ -30,7 +30,7 @@ For each week: check out its branch, read the lesson with the code open beside i
 | **9** | [Rich documents](lessons/week09-rich-documents.md) | PDF layout (headings by font size, ruled tables as Markdown, page labels); OCR for scanned pages (RapidOCR, offline); DOCX, PPTX with speaker notes, XLSX, CSV; page/slide/sheet locations in citations; a `rich` suite. Layout + OCR become the defaults (rich recall@4 0.875 → 1.000, answers 0.875 → 1.000) | ✅ `week-09` |
 | **10** | [Images](lessons/week10-images.md) | Picture files and figures in PDFs, slides and Word files become `[Image: …]` blocks via OCR or a vision model (local or hosted, cached); optional CLIP picture search; an `images` suite with pre-set rules (not yet measured, so defaults stay off) | ✅ `week-10` |
 | **11** | [Audio and video](lessons/week11-audio-video.md) | Local transcription (faster-whisper, cached); windows by time and speaker; subtitles (.srt/.vtt with voice tags); video keyframes read as pictures; `file @ mm:ss` citations; media URLs via yt-dlp, captions first; a `media` suite (not yet measured, so media stays off) | ✅ `week-11` |
-| **12** | Production | Caching, streaming, concurrent ingest, cost accounting, traces, config profiles, final benchmark | coming |
+| **12** | [Production](lessons/week12-production.md) | Streaming answers; an answer cache keyed on the passages' text; concurrent ingest; cost per answer from your prices; JSONL traces and `raggy trace`; `local` / `fast` / `accurate` profiles; a final benchmark across every suite and profile | ✅ `week-12` |
 | *Bonus* | Agentic and graph RAG | The model decides when to retrieve (multi-hop), linking back to [harnessy](https://github.com/krishankant/harnessy) | coming |
 
 ## Setup (about 30 minutes)

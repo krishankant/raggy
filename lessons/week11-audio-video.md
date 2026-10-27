@@ -1,6 +1,6 @@
 # Week 11: Audio and video — transcripts, keyframes and time citations
 
-**[← Week 10: Images](week10-images.md)** · **[Course Plan](../COURSE_PLAN.md)** · **[Audio and video (guide)](../docs/audio-video.md)** · **Week 12: Production →** *(coming)*
+**[← Week 10: Images](week10-images.md)** · **[Course Plan](../COURSE_PLAN.md)** · **[Audio and video (guide)](../docs/audio-video.md)** · **[Week 12: Production →](week12-production.md)**
 
 ---
 

@@ -4,7 +4,7 @@
 [![Models](https://img.shields.io/badge/answers-Ollama%20%7C%20Claude%20%7C%20OpenAI-6f42c1.svg)](lessons/week01-naive-rag.md#36-one-interface-three-model-providers)
 [![Tests](https://img.shields.io/badge/tests-offline%20pytest-2ea44f.svg)](#commands)
 
-**[Course Plan](COURSE_PLAN.md)** · **[Week 1: Naive RAG](lessons/week01-naive-rag.md)** · **[Week 11: Audio and video](lessons/week11-audio-video.md)** · **[Docs hub](docs/README.md)**
+**[Course Plan](COURSE_PLAN.md)** · **[Week 1: Naive RAG](lessons/week01-naive-rag.md)** · **[Week 12: Production](lessons/week12-production.md)** · **[Docs hub](docs/README.md)**
 
 ---
 
@@ -87,12 +87,15 @@ Point it at your own files, folders or web pages: `uv run raggy ingest ~/notes ~
 | `RAGGY_IMAGES` / `RAGGY_VISION` / `RAGGY_VISION_MODEL` | `off` (`ocr`, `vision`) / the answer model's provider / the answer model, or `qwen3.5:4b` for Ollama |
 | `RAGGY_MEDIA` / `RAGGY_WHISPER_MODEL` | `off` (`on`: transcribe audio and video locally) / `base` (`tiny`, `small`, `medium`, `large-v3`) |
 | `RAGGY_MEDIA_WINDOW` / `RAGGY_KEYFRAME_SECONDS` | `60` (seconds per transcript window) / `30` (video frames, read when `RAGGY_IMAGES` is on) |
+| `RAGGY_PROFILE` | unset (`local`, `fast`, `accurate`: fill in settings you haven't set) |
+| `RAGGY_ANSWER_CACHE` / `RAGGY_TRACE` / `RAGGY_INGEST_WORKERS` | `1` (repeat questions over identical passages cost nothing) / `0` (`1`: one JSON line per answer) / `4` |
+| `RAGGY_PRICES` | empty (`openai:gpt-5.5=1.25/10/0.125,...`: input/output/cached per 1M tokens, for cost per answer) |
 | `RAGGY_IMAGE_SEARCH` | `off` (`on`: CLIP vectors for every picture, `raggy images "query"`) |
 | `RAGGY_REFUSAL_GATE` | empty = off (`vector=0.63`: refuse without a model call below that top score; calibrate with `evals/calibrate_gate.py`) |
 
 ## The course
 
-See **[COURSE_PLAN.md](COURSE_PLAN.md)** for all 12 weeks. Ready so far:
+See **[COURSE_PLAN.md](COURSE_PLAN.md)** for all 12 weeks. All twelve weeks are ready:
 
 | Week | Lesson | Code |
 | --- | --- | --- |
@@ -107,13 +110,14 @@ See **[COURSE_PLAN.md](COURSE_PLAN.md)** for all 12 weeks. Ready so far:
 | 9 | [Rich documents: PDF layout, tables, OCR, Office files](lessons/week09-rich-documents.md) | `git checkout week-09` |
 | 10 | [Images: OCR, vision descriptions, picture search](lessons/week10-images.md) | `git checkout week-10` |
 | 11 | [Audio and video: transcripts, keyframes, time citations](lessons/week11-audio-video.md) | `git checkout week-11` |
+| 12 | [Production: streaming, caching, concurrency, cost, traces, profiles](lessons/week12-production.md) | `git checkout week-12` |
 
 ## Repository layout
 
 ```
 raggy/            the package: ingest/ chunking/ embed/ store/ generate/ evals/ pipeline.py cli.py
 lessons/          one lesson per week
-docs/             concept guides (embeddings, evals, ingestion, chunking, vector search at scale, hybrid search, reranking, grounded generation, rich documents, images, audio and video, and more each week)
+docs/             concept guides (embeddings, evals, ingestion, chunking, vector search at scale, hybrid search, reranking, grounded generation, rich documents, images, audio and video, production)
 samples/          small demo corpora (fictional, so models can't answer from memory)
 evals/            eval suites (fictional corpus, its web-site version, a long manual), committed baselines; data/ and runs/ are local
 tests/            offline pytest suite, one folder per week
