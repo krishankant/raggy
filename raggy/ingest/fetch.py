@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from email.utils import parsedate_to_datetime
 from importlib.metadata import PackageNotFoundError, version
-from pathlib import PurePosixPath
+from pathlib import Path, PurePosixPath
 from urllib.parse import urlparse
 
 import httpx
@@ -58,8 +58,63 @@ def _kind(content_type: str, url: str) -> str:
     raise FetchError(f"{url}: unsupported content type {mime!r}")
 
 
+MEDIA_HOSTS = ("youtube.com", "youtu.be", "vimeo.com", "soundcloud.com", "twitch.tv", "dailymotion.com")
+
+
+def is_media_url(url: str) -> bool:
+    host = (urlparse(url).hostname or "").lower()
+    return any(host == h or host.endswith("." + h) for h in MEDIA_HOSTS)
+
+
+def _get_text(url: str) -> str:
+    with httpx.Client(follow_redirects=True, timeout=20.0) as c:
+        r = c.get(url, headers={"user-agent": _user_agent()})
+        if r.status_code >= 400:
+            raise FetchError(f"{url}: HTTP {r.status_code}")
+        return r.text
+
+
+def fetch_media(url: str, options: LoadOptions | None = None) -> Document:
+    """A video or podcast page (week 11), through yt-dlp: its published English captions
+    if it has any (no model needed), else its audio, transcribed like a local file."""
+    try:
+        import yt_dlp
+    except ImportError:
+        raise LoadError(f"{url}: media pages need yt-dlp: run `uv sync --extra media`") from None
+    if yt_dlp is None:
+        raise LoadError(f"{url}: media pages need yt-dlp: run `uv sync --extra media`")
+    try:
+        with yt_dlp.YoutubeDL({"quiet": True, "no_warnings": True, "skip_download": True}) as ydl:
+            info = ydl.extract_info(url, download=False)
+        tracks = info.get("subtitles") or {}
+        lang = next((k for k in tracks if k == "en" or k.startswith("en-") or k.startswith("en_")), None)
+        vtt = next((t for t in tracks.get(lang, []) if t.get("ext") == "vtt"), None) if lang else None
+        if vtt is not None:
+            doc = load_bytes(_get_text(vtt["url"]).encode(), url, "subtitles", options)
+        else:
+            import tempfile
+
+            with tempfile.TemporaryDirectory() as tmp:
+                opts = {"quiet": True, "no_warnings": True, "format": "bestaudio[ext=m4a]/bestaudio",
+                        "outtmpl": f"{tmp}/audio.%(ext)s"}
+                with yt_dlp.YoutubeDL(opts) as ydl:
+                    ydl.extract_info(url, download=True)
+                audio = next(Path(tmp).glob("audio.*"))
+                doc = load_bytes(audio.read_bytes(), url, "audio", options)
+    except LoadError:
+        raise
+    except Exception as e:  # yt-dlp raises its own DownloadError / ExtractorError for pages it can't handle
+        raise LoadError(f"{url}: yt-dlp couldn't read it ({type(e).__name__}: {e})") from e
+    doc.metadata.update(kind="url", final_url=info.get("webpage_url") or url)
+    if info.get("title"):
+        doc.metadata["title"] = info["title"]
+    return doc
+
+
 def fetch_url(url: str, options: LoadOptions | None = None, client: httpx.Client | None = None,
               max_bytes: int = 20_000_000) -> Document:
+    if is_media_url(url):
+        return fetch_media(url, options)
     own = client is None
     client = client or httpx.Client(follow_redirects=True, timeout=20.0)
     try:

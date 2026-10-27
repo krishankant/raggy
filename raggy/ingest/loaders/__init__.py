@@ -30,13 +30,19 @@ class LoadOptions:
     pdf: str = "layout"  # "layout": headings, tables, page labels (week 9 default); "text": week 3's pypdf layer
     ocr: bool = True  # OCR pages with no text layer (scans): ~0.5 s a page, only on pages without text
     images: str = "off"  # off | ocr | vision: how pictures become text (week 10)
+    media: str = "off"  # off | on: transcribe audio and video (week 11)
+    whisper_model: str = "base"  # faster-whisper size: tiny | base | small | medium | large-v3
+    media_window: int = 60  # seconds per transcript window (a speaker change also starts one)
+    keyframe_seconds: int = 30  # video: one frame per this many seconds, read like a picture
     # Bound by Raggy to a cached reader. Not settings: they never change what a key means.
     read_image: Callable[[bytes, str], str | None] | None = field(default=None, compare=False, hash=False)
+    transcribe: Callable[[bytes, str], list] | None = field(default=None, compare=False, hash=False)
     on_image: Callable[[bytes, str, str | None], None] | None = field(default=None, compare=False, hash=False)
     name: str = field(default="", compare=False, hash=False)  # the file's name, set by load_bytes for labels
     keep_images: bool = field(default=False, compare=False, hash=False)  # put the pictures read in metadata["images"]
 
 
+from raggy.ingest import media  # noqa: E402
 from raggy.ingest.loaders import csv_loader, html, image, office, pdf, pdf_layout, text  # noqa: E402  (they import LoadError above)
 
 
@@ -53,6 +59,9 @@ LOADERS: dict[str, Callable[[bytes, LoadOptions], tuple[str, str | None]]] = {
     "xlsx": office.load_xlsx,
     "csv": csv_loader.load,
     "image": image.load,
+    "audio": media.load_audio,
+    "video": media.load_video,
+    "subtitles": media.load_subtitles,
 }
 
 SUFFIXES: dict[str, str] = {
@@ -74,6 +83,10 @@ SUFFIXES: dict[str, str] = {
     ".bmp": "image",
     ".tif": "image",
     ".tiff": "image",
+    **dict.fromkeys((".mp3", ".wav", ".m4a", ".flac", ".ogg", ".opus", ".aac", ".aiff", ".aif"), "audio"),
+    **dict.fromkeys((".mp4", ".mov", ".mkv", ".webm", ".avi", ".m4v"), "video"),
+    ".srt": "subtitles",
+    ".vtt": "subtitles",
 }
 
 

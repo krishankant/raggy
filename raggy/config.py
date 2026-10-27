@@ -129,6 +129,10 @@ class Config:
     images: str = "off"  # off | ocr (text in the image) | vision (a model's description + that text)
     vision_provider: str | None = None  # ollama | openai | anthropic; None: the answer model's provider
     vision_model: str | None = None  # None: the answer model if same provider, else the adapter default
+    media: str = "off"  # off | on: transcribe audio and video locally (week 11)
+    whisper_model: str = "base"  # tiny | base | small | medium | large-v3
+    media_window: int = 60  # seconds per transcript window
+    keyframe_seconds: int = 30  # video: one frame per this many seconds (needs RAGGY_IMAGES on)
     image_search: bool = False  # CLIP vectors for every picture: `raggy images "query"` (week 10, optional)
 
     def chunk_settings(self):
@@ -142,7 +146,17 @@ class Config:
         from raggy.ingest.loaders import LoadOptions
 
         return LoadOptions(html_extract=self.html_extract, pdf=self.pdf, ocr=self.ocr, images=self.images,
-                           keep_images=self.image_search)
+                           keep_images=self.image_search, media=self.media, whisper_model=self.whisper_model,
+                           media_window=self.media_window, keyframe_seconds=self.keyframe_seconds)
+
+    def media_key(self) -> dict | None:
+        """What shapes a transcript's chunks; None while media is off."""
+        if self.media != "on":
+            return None
+        from raggy.ingest.media import TRANSCRIBE_VERSION
+
+        return {"whisper": self.whisper_model, "window": self.media_window,
+                "keyframes": self.keyframe_seconds, "version": TRANSCRIBE_VERSION}
 
     def vision_key(self) -> dict | None:
         """What decides an image's text, beyond its bytes; None unless a model reads images."""
@@ -220,4 +234,8 @@ class Config:
             vision_provider=vision_provider,
             vision_model=vision_model,
             image_search=_bool_env("RAGGY_IMAGE_SEARCH", False),
+            media=_choice_env("RAGGY_MEDIA", "off", ("off", "on")),
+            whisper_model=os.environ.get("RAGGY_WHISPER_MODEL") or "base",
+            media_window=_positive_int_env("RAGGY_MEDIA_WINDOW", "60"),
+            keyframe_seconds=_positive_int_env("RAGGY_KEYFRAME_SECONDS", "30"),
         )

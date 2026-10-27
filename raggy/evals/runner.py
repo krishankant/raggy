@@ -32,7 +32,8 @@ STAGES = ("transform", "retrieve", "rerank", "generate")  # in the order a quest
 SAVED_HITS = 10  # retrieved items kept per question in the run file
 # Paid-for work that doesn't depend on the settings that make an index stale:
 # a rebuild keeps these files, and a folder holding only them is raggy's own.
-CACHE_FILES = {"context-cache.sqlite", "embed-cache.sqlite", "transform-cache.sqlite", "vision-cache.sqlite"}
+CACHE_FILES = {"context-cache.sqlite", "embed-cache.sqlite", "transform-cache.sqlite", "vision-cache.sqlite",
+               "transcript-cache.sqlite"}
 
 
 class UnsafeIndexDirError(RuntimeError):
@@ -63,7 +64,7 @@ def prepare_index(suite: Suite, raggy: Raggy, docs: list[Document] | None = None
     key = {"fingerprint": suite.fingerprint(), "sources": sources, "embedder": raggy.embedder.name,
            "chunk_size": c.chunk_size, "chunk_overlap": c.chunk_overlap,
            "html_extract": c.html_extract, "pdf": c.pdf, "ocr": c.ocr, "images": c.images,
-           "vision": c.vision_key(), "dedupe": c.dedupe and suite.dedupe, "normalize": NORMALIZE_VERSION,
+           "vision": c.vision_key(), "media": c.media_key(), "dedupe": c.dedupe and suite.dedupe, "normalize": NORMALIZE_VERSION,
            "chunking": c.chunk_settings().key(), "chunk_context": c.chunk_context, "store": c.store,
            "ann": c.ann, "fts": FTS_VERSION}
     key_file = c.index_dir / "key.json"

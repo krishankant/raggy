@@ -45,7 +45,7 @@ def _iso_date(value: str) -> str:
 
 def _add_filters(p: argparse.ArgumentParser) -> None:
     g = p.add_argument_group("filters")
-    g.add_argument("--type", dest="doc_type", choices=["markdown", "text", "html", "pdf", "docx", "pptx", "xlsx", "csv", "image"],
+    g.add_argument("--type", dest="doc_type", choices=["markdown", "text", "html", "pdf", "docx", "pptx", "xlsx", "csv", "image", "audio", "video", "subtitles"],
                    help="only documents of this type")
     g.add_argument("--source", help="only documents inside this folder or under this URL")
     g.add_argument("--after", type=_iso_date, help="only documents modified on or after this date")

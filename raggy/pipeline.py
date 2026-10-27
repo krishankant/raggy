@@ -62,7 +62,7 @@ def pipeline_key(config: Config, embedder_name: str) -> str:
                        "chunk_context": config.chunk_context, "html_extract": config.html_extract,
                        "pdf": config.pdf, "ocr": config.ocr,
                        "images": config.images, "vision": config.vision_key(),
-                       "image_search": config.image_search,
+                       "image_search": config.image_search, "media": config.media_key(),
                        "normalize": NORMALIZE_VERSION, "dedupe": config.dedupe, "store": config.store},
                       sort_keys=True)
 
@@ -101,6 +101,7 @@ class Raggy:
         self._vision_llm = vision_llm
         self._image_reader = None
         self._clip = clip
+        self._transcriber = None
 
     # Models are built on first use: `raggy sources` shouldn't load an
     # embedding model, and `raggy search` shouldn't need an LLM.
@@ -180,7 +181,16 @@ class Raggy:
 
         opts = self.config.load_options()
         reader = self.image_reader()
-        return opts if reader is None else _replace(opts, read_image=reader.read)
+        if reader is not None:
+            opts = _replace(opts, read_image=reader.read)
+        if self.config.media == "on":
+            if self._transcriber is None:
+                from raggy.ingest.media import TRANSCRIPT_CACHE, Transcriber
+
+                self._transcriber = Transcriber(self.config.whisper_model,
+                                                cache_path=Path(self.config.index_dir) / TRANSCRIPT_CACHE)
+            opts = _replace(opts, transcribe=self._transcriber.transcribe)
+        return opts
 
     def _open_store(self) -> VectorStore:
         self._store = None  # we're about to write: the next search must see the new rows
