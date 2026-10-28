@@ -35,7 +35,7 @@ flowchart LR
     K -.-> R2
 ```
 
-The numbers are the concept pages below. Evaluation (12) measures every box; production (14) is about running the whole thing fast, cheaply and safely; agentic and graph RAG (15) turn the one-way pipeline into a loop.
+The numbers are the concept pages below. Evaluation (12) measures every box; production (14) is about running the whole thing fast, cheaply and safely; agentic and graph RAG (15) turn the one-way pipeline into a loop; and 16 maps where each box can fail and how to fix it.
 
 ## Reading order
 
@@ -56,6 +56,7 @@ The numbers are the concept pages below. Evaluation (12) measures every box; pro
 | 13 | [Multimodal RAG](13-multimodal-rag.md) | Images (OCR, vision models, CLIP, ColPali), tables, audio (speech-to-text), video | Weeks 9–11 |
 | 14 | [RAG in production](14-production.md) | Latency, streaming, caching layers, cost per answer, tracing, security and permissions | Week 12 |
 | 15 | [Agentic and graph RAG](15-agentic-and-graph-rag.md) | Agents and ReAct, Self-RAG and CRAG, multi-hop questions, knowledge graphs, GraphRAG | Bonus |
+| 16 | [Where RAG fails](16-failure-modes.md) | The seven failure points (missing content to incomplete answers), diagnosing a wrong answer stage by stage, the fixes for each, and failures beyond the seven | Every week |
 
 Also: **[RAG metrics, explained with examples](../docs/metrics-explained.md)**, the long worked guide to recall@k, MRR, nDCG, faithfulness and the rest.
 

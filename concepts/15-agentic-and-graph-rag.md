@@ -1,6 +1,6 @@
 # 15 · Agentic and graph RAG
 
-**[← 14 RAG in production](14-production.md)** · **[Concepts](README.md)** · **In the course:** [Bonus week](../lessons/bonus-agentic-and-graph-rag.md)
+**[← 14 RAG in production](14-production.md)** · **[Concepts](README.md)** · **Next: [16 Where RAG fails →](16-failure-modes.md)** · **In the course:** [Bonus week](../lessons/bonus-agentic-and-graph-rag.md)
 
 Everything so far is a **pipeline**: search once, answer once. Some questions can't be answered that way. **Agentic RAG** lets the model decide when and what to search, in a loop. **Graph RAG** connects facts ahead of time, in a knowledge graph. Both target questions that need more than one piece of evidence.
 

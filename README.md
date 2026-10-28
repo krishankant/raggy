@@ -18,7 +18,7 @@ No RAG framework (no LangChain or LlamaIndex): only focused libraries and the of
 
 ## Concepts: start here if you're new to RAG
 
-Fifteen pages that teach each idea from the ground up, independent of raggy's code, with diagrams, worked examples and reading links. Read a page before the week that uses it. Index and glossary: [`concepts/README.md`](concepts/README.md).
+Sixteen pages that teach each idea from the ground up, independent of raggy's code, with diagrams, worked examples and reading links. Read a page before the week that uses it. Index and glossary: [`concepts/README.md`](concepts/README.md).
 
 | # | Concept | What you'll learn | Used in |
 | --- | --- | --- | --- |
@@ -37,6 +37,7 @@ Fifteen pages that teach each idea from the ground up, independent of raggy's co
 | 13 | [Multimodal RAG](concepts/13-multimodal-rag.md) | Images (OCR, vision models, CLIP, ColPali), tables, audio, video | Weeks 9–11 |
 | 14 | [RAG in production](concepts/14-production.md) | Latency, streaming, caching, cost per answer, tracing, security | Week 12 |
 | 15 | [Agentic and graph RAG](concepts/15-agentic-and-graph-rag.md) | Agents and ReAct, Self-RAG, CRAG, multi-hop, knowledge graphs, GraphRAG | Bonus |
+| 16 | [Where RAG fails](concepts/16-failure-modes.md) | The seven failure points, diagnosing a wrong answer, fixes for each, failures beyond the seven | Every week |
 
 ## Quick start
 
